@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 public final class TrieNode<V> {
 
     private V value = null;
-    private ArrayList<TrieEdge<V>> children = new ArrayList<TrieEdge<V>>(0);
+    private final ArrayList<TrieEdge<V>> children = new ArrayList<TrieEdge<V>>(0);
 
     public TrieNode(V value) {
         this.value = value;
@@ -37,39 +37,27 @@ public final class TrieNode<V> {
         return children.get(index);
     }
 
-    private final int search(char c, boolean exact) {
-        int low = 0;
-        int high = children.size() - 1;
 
-        while (low <= high) {
-            int middle = (low + high) / 2;
-            char midChar = getChildAt(middle).getFirstChar();
-            if (midChar == c) {
-                return middle;
-            }
-
-            if (midChar < c) {
-                low = middle + 1;
-            } else if (midChar > c) {
-                high = middle - 1;
-            }
-        }
-
-        if (exact) {
-            return -1;
-        }
-        return high; // return closest lower or equal match
-    }
-
-
-
-    public void addChild(String label, TrieNode<V> nodeForEgde) {
+    /**
+     * Inserts an edge to this.
+     * Insertion position will be determined by searching closest lower or equal one.
+     * If there's not match, 1) Trie is empty or 2) the closest position is the last edge location
+     *
+     * @param label - the label to add
+     * @param child - the child node for the edge to add
+     */
+    public void addChild(String label, TrieNode<V> child) {
         int index = closestFirstCharIndexOf(label.charAt(0));
-        children.add(index + 1, new TrieEdge<V>(label, nodeForEgde));
+        children.add(index + 1, new TrieEdge<V>(label, child));
     }
 
-    public boolean remove(char startsWith) {
-        int index = search(startsWith, true);
+    /**
+     * Removes the edge whose label starts with the given character.
+     * @param c - the character to search
+     * @return true if an edge removed.
+     */
+    public boolean remove(char c) {
+        int index = startsWithIndexOf(c);
         if (index < 0) {
             return false;
         }
@@ -77,52 +65,57 @@ public final class TrieNode<V> {
         return true;
     }
 
+    /**
+     * Trims the capacity of this <tt>ArrayList</tt> instance to be the
+     * list's current size.  An application can use this operation to minimize
+     * the storage of an <tt>ArrayList</tt> instance.
+     * This method should be invoked after numerous calls to add().
+     */
     public void trim() {
         children.trimToSize();
     }
 
-    public Iterator childrentForward() {
-        return new ChildrenForwardIterator();
-    }
+//    public Iterator childrentForward() {
+//        return new ChildrenForwardIterator();
+//    }
 
 
+//    private class ChildrenForwardIterator extends UnmodifiableIterator {
+//        int index = 0;
+//        @Override
+//        public boolean hasNext() {
+//            return index < children.size();
+//        }
+//
+//        @Override
+//        public Object next() {
+//            if (index < children.size()) {
+//                return getChildAt(index++).getChild();
+//            }
+//            throw new NoSuchElementException();
+//        }
+//    }
 
-    private class ChildrenForwardIterator extends UnmodifiableIterator {
-        int index = 0;
-        @Override
-        public boolean hasNext() {
-            return index < children.size();
-        }
+//    private class LabelForwardIterator extends UnmodifiableIterator {
+//
+//        int index = 0;
+//        @Override
+//        public boolean hasNext() {
+//            return index < children.size();
+//        }
+//
+//        @Override
+//        public Object next() {
+//            if (index < children.size()) {
+//                return getChildAt(index++).getLabel();
+//            }
+//            throw new NoSuchElementException();
+//        }
+//    }
 
-        @Override
-        public Object next() {
-            if (index < children.size()) {
-                return getChildAt(index++).getChild();
-            }
-            throw new NoSuchElementException();
-        }
-    }
-
-    private class LabelForwardIterator extends UnmodifiableIterator {
-
-        int index = 0;
-        @Override
-        public boolean hasNext() {
-            return index < children.size();
-        }
-
-        @Override
-        public Object next() {
-            if (index < children.size()) {
-                return getChildAt(index++).getLabel();
-            }
-            throw new NoSuchElementException();
-        }
-    }
-
-    public Iterator labelsForward() {
-        return new LabelForwardIterator();
-    }
+//    public Iterator labelsForward() {
+//        return new LabelForwardIterator();
+//    }
 
     @Override
     public String toString() {
@@ -140,16 +133,25 @@ public final class TrieNode<V> {
 
     /**
      * Returns the edge whose label starts with the given character, or null if no such edge
-      * @param c - the character to find
-     * @return
+     * @param c - the character to find
+     *
+     * @return TrieEdge whose label start with the given character, or null if no such edge
      */
     public TrieEdge<V> findChildWhoseLabelStartsWith(char c) {
-        int index = firstCharIndexOf(c);
+        int index = startsWithIndexOf(c);
         return index < 0 ? null : getChildAt(index);
     }
 
+    private int closestFirstCharIndexOf(char c) {
+        return startsWithIndexOf(c, false);
+    }
 
-    public final int firstCharIndexOf(char c) {
+    private int startsWithIndexOf(char c) {
+        return startsWithIndexOf(c, true);
+    }
+
+
+    private int startsWithIndexOf(char c, boolean exactMatch) {
         int low = 0;
         int high = children.size() - 1;
 
@@ -167,27 +169,11 @@ public final class TrieNode<V> {
             }
         }
 
-        return -1;
-    }
-
-    public final int closestFirstCharIndexOf(char c) {
-        int low = 0;
-        int high = children.size() - 1;
-
-        while (low <= high) {
-            int middle = (low + high) / 2;
-            char midChar = getChildAt(middle).getFirstChar();
-            if (midChar == c) {
-                return middle;
-            }
-
-            if (midChar < c) {
-                low = middle + 1;
-            } else if (midChar > c) {
-                high = middle - 1;
-            }
+        if (exactMatch) {
+            return -1;
         }
 
         return high;
     }
+
 }

@@ -29,7 +29,7 @@ public final class TrieEdge<V> {
 
     /**
      * Returns the first character of the label
-     * @return
+     * @return the first character of the label
      */
     public char getFirstChar() {
         return label.charAt(0);

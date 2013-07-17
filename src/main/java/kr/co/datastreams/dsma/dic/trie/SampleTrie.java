@@ -17,7 +17,7 @@ public class SampleTrie<S, V> {
     private static final Logger logger = LoggerFactory.getLogger(SampleTrie.class);
     private TrieNode<V> root;
     private boolean ignoreCase;
-    private final static Iterator EMPTY_ITER =  new EmptyIterator();
+//    private final static Iterator EMPTY_ITER =  new EmptyIterator();
 
     public SampleTrie(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
@@ -97,7 +97,7 @@ public class SampleTrie<S, V> {
             String label = edge.getLabel();
 //            System.out.println("1-2) Edge found: "+ edge);
             int j = match(key, i, key.length(), label);
-//            if (j >= 0) System.out.println("!!!=====> match result:"+ j + ", key="+ key + ",label="+label);
+
             if (j >= 0) {
                 // 2) Prefix overlaps perfectly with just part of edge label
                 // Do split insert as follows...
@@ -165,31 +165,6 @@ public class SampleTrie<S, V> {
         return root;
     }
 
-    public void printNodes() {
-        print(root, 0);
-    }
 
-    private void print(TrieNode<V> node, int depth) {
-        String space = "";
-        for (int i=0; i < depth;i++) {
-            space += "  ";
-        }
 
-        //System.out.println(space + "" + node);
-        for (Iterator iter=node.childrentForward(); iter.hasNext();) {
-            TrieNode cnode = (TrieNode)iter.next();
-            System.out.println(space + "" +cnode);
-
-            if (iter.hasNext()) {
-                if (cnode.getValue() == null) {
-                    depth = 0;
-                    System.out.println("==================================\n");
-                }
-                if (cnode.getChildren().size() > 0) {
-                    print(cnode, ++depth);
-                }
-
-            }
-        }
-    }
 }

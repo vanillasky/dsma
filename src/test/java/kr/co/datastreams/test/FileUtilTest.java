@@ -24,34 +24,17 @@ public class FileUtilTest {
     @Test
     public void test() throws Exception {
         List<String> lines = FileUtil.readLines(fileName, "UTF-8");
-        int i = 0;
+
         for (String each : lines) {
             String[] wordData = each.split(",");
             Morpheme morpheme = new Morpheme(wordData[0]);
             dic.add(morpheme.getWord(), morpheme);
         }
 
-        printLabels(dic.getRoot(), 0);
+
     }
 
-    private void printLabels(TrieNode node, int depth) {
-        String space = "";
-        for (int i=0; i < depth;i++) {
-            space += "-";
-        }
 
-
-        int i=0;
-        for (Iterator iter=node.childrentForward(); iter.hasNext();) {
-            TrieNode cnode = (TrieNode)iter.next();
-            if (cnode.getValue() == null) depth = 0;
-            System.out.println(space + "" +cnode);
-            if (cnode.getChildren().size() > 0) {
-                printLabels(cnode, ++depth);
-            }
-            i++;
-        }
-    }
 
 
 
