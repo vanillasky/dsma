@@ -1,10 +1,17 @@
 package kr.co.datastreams.test;
 
+import kr.co.datastreams.commons.util.FileUtil;
+import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.dic.trie.Trie;
-import kr.co.datastreams.dsma.ma.Morpheme;
+import kr.co.datastreams.dsma.dic.trie.ValueIterator;
+import kr.co.datastreams.dsma.ma.WordEntry;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 /**
@@ -16,20 +23,19 @@ import static org.junit.Assert.*;
  */
 public class TrieTest {
 
-    Trie<String, Morpheme> dic = new Trie<String, Morpheme>();
+    Trie<String, WordEntry> dic = new Trie<String, WordEntry>();
+
 
     @Test
     public void testAdd() throws Exception {
-//        Morpheme m1 = new Morpheme("가게");
-        Morpheme m3 = new Morpheme("가게방");
-        Morpheme m2 = new Morpheme("가게집");
-        Morpheme m4 = new Morpheme("가게집은");
-        Morpheme m5 = new Morpheme("나비");
-        Morpheme m6 = new Morpheme("나비효");
-        Morpheme m8 = new Morpheme("나비효과");
-        Morpheme m7 = new Morpheme("나비효리");
+        WordEntry m3 = new WordEntry("가게방");
+        WordEntry m2 = new WordEntry("가게집");
+        WordEntry m4 = new WordEntry("가게집은");
+        WordEntry m5 = new WordEntry("나비");
+        WordEntry m6 = new WordEntry("나비효");
+        WordEntry m8 = new WordEntry("나비효과");
+        WordEntry m7 = new WordEntry("나비효리");
 
-//        dic.add(m1.getWord(), m1);
         dic.add(m3.getWord(), m3);
         dic.add(m2.getWord(), m2);
         dic.add(m4.getWord(), m4);
@@ -38,22 +44,19 @@ public class TrieTest {
         dic.add(m8.getWord(), m8);
         dic.add(m7.getWord(), m7);
 
-//        assertNotNull(dic.get(m1.getWord()));
         dic.print(new PrintWriter(System.out));
     }
 
     @Test
     public void testGet() throws Exception {
-//        Morpheme m1 = new Morpheme("가게");
-        Morpheme m3 = new Morpheme("가게방");
-        Morpheme m2 = new Morpheme("가게집");
-        Morpheme m4 = new Morpheme("가게집은");
-        Morpheme m5 = new Morpheme("나비");
-        Morpheme m6 = new Morpheme("나비효");
-        Morpheme m8 = new Morpheme("나비효과");
-        Morpheme m7 = new Morpheme("나비효리");
+        WordEntry m3 = new WordEntry("가게방");
+        WordEntry m2 = new WordEntry("가게집");
+        WordEntry m4 = new WordEntry("가게집은");
+        WordEntry m5 = new WordEntry("나비");
+        WordEntry m6 = new WordEntry("나비효");
+        WordEntry m8 = new WordEntry("나비효과");
+        WordEntry m7 = new WordEntry("나비효리");
 
-//        dic.add(m1.getWord(), m1);
         dic.add(m3.getWord(), m3);
         dic.add(m2.getWord(), m2);
         dic.add(m4.getWord(), m4);
@@ -62,9 +65,46 @@ public class TrieTest {
         dic.add(m8.getWord(), m8);
         dic.add(m7.getWord(), m7);
 
-        assertNotNull(dic.get("나비효과"));
-        System.out.println(dic.get("나비효과"));
+        assertNotNull(dic.get("나비효과를"));
+        System.out.println(dic.get("나비효과를"));
     }
+
+    @Test
+    public void testGetPrefixedBy() throws  Exception {
+        WordEntry m1 = new WordEntry("가게");
+        WordEntry m3 = new WordEntry("가게방");
+        WordEntry m2 = new WordEntry("가게집");
+        WordEntry m4 = new WordEntry("가게집은");
+        WordEntry m5 = new WordEntry("나비");
+        WordEntry m6 = new WordEntry("나비효");
+        WordEntry m8 = new WordEntry("나비효과");
+        WordEntry m7 = new WordEntry("나비효는");
+        WordEntry m9 = new WordEntry("나비효다");
+        WordEntry m10 = new WordEntry("나비효리다");
+        WordEntry m11 = new WordEntry("나비효리다가");
+        WordEntry m12 = new WordEntry("나비효리다가나");
+
+        dic.add(m1.getWord(), m1);
+        dic.add(m3.getWord(), m3);
+        dic.add(m2.getWord(), m2);
+        dic.add(m4.getWord(), m4);
+        dic.add(m5.getWord(), m5);
+        dic.add(m6.getWord(), m6);
+        dic.add(m8.getWord(), m8);
+        dic.add(m7.getWord(), m7);
+        dic.add(m9.getWord(), m9);
+        dic.add(m10.getWord(), m10);
+        dic.add(m11.getWord(), m11);
+        dic.add(m12.getWord(), m12);
+
+
+
+        ValueIterator iter = dic.getPrefixedBy("나비");
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+    }
+
 
     @Test
     public void testMatch() throws Exception {

@@ -1,6 +1,7 @@
 package kr.co.datastreams.dsma.dic.trie;
 
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class Trie<S, V> {
             String label = edge.getLabel();
             int matchResult = findOverlapedPrefix(key, edge.getLabel(), charPos, key.length());
             if (matchResult >= 0) {
+                //System.out.println("overlaped prefix found:"+ key + "," + edge.getLabel() + ": " + matchResult);
                 // key의 나머지 부분을 처리한다.
                 // key의 일부(prefix)가 기존의 label과 매칭되는지 확인해서 prefix가 일치하는 부분이 있으면 쪼개거나 연결한다.
 
@@ -67,6 +69,38 @@ public class Trie<S, V> {
         return node.getValue();
     }
 
+    /**
+     * prefix와 매핑되는 항목과 그 하위 노드를 Iterator로 반환한다.
+     *
+     * @param prefix
+     * @return
+     */
+    public ValueIterator getPrefixedBy(String prefix) {
+        assert prefix != null;
+        TrieNode node = root;
+        for (int i=0, len=prefix.length(); i < len;) {
+            char c = prefix.charAt(i);
+            TrieEdge edge = node.findChildWhoseLabelStartsWith(c);
+            if (edge == null) {
+                return null;
+            }
+
+            String label = edge.getLabel();
+            node = edge.getChild();
+            int result = match(prefix, label, i, len);
+            if (result >= 0) { // prefix and label differ
+                //node = null;
+                break;
+            } else if (result + i == len) { // part of edge label
+                break;
+            }
+
+            i += label.length();
+        }
+
+        return new ValueIterator(node);
+    }
+
     // Returns overlaped prefix location or -1 if there's no overlap prefix
     private int findOverlapedPrefix(String key, String label, int start, int end) {
         return match(key, label, start, end);
@@ -90,6 +124,8 @@ public class Trie<S, V> {
         }
         return node;
     }
+
+
 
     /**
      * Matches the pattern <tt>str2</tt> against the <tt>str1[startOffset..stopOffset-1]</tt>.<br/>
@@ -146,6 +182,7 @@ public class Trie<S, V> {
         writer.flush();
     }
 
+
     /**
      * 단어간에 prefix가 일치하는 경우에 노드를 쪼개거나 연결하는 역할을 한다.
      */
@@ -179,7 +216,7 @@ public class Trie<S, V> {
 
             intermediate.addChild(suffix, child);
             intermediate.setValue(value);
-            node.addChild(addedSuffix, intermediate);
+            node.addChild(commonPrefix, intermediate);
         }
 
         private void split(TrieNode node, V value) {

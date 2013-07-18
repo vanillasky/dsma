@@ -7,10 +7,10 @@ package kr.co.datastreams.dsma.ma;
  * Time: 오전 10:10
  * To change this template use File | Settings | File Templates.
  */
-public class Morpheme {
+public class WordEntry {
     private String word;
 
-    public Morpheme(String word) {
+    public WordEntry(String word) {
         this.word = word;
     }
 
@@ -19,6 +19,6 @@ public class Morpheme {
     }
 
     public String toString() {
-       return new StringBuilder("Morpheme { word: ").append(word).append("}").toString();
+       return new StringBuilder("WordEntry { word: ").append(word).append("}").toString();
     }
 }

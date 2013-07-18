@@ -1,5 +1,7 @@
 package kr.co.datastreams.dsma.dic.trie;
 
+import kr.co.datastreams.commons.util.UnmodifiableIterator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -49,6 +51,7 @@ public final class TrieNode<V> {
     public void addChild(String label, TrieNode<V> child) {
         int index = closestFirstCharIndexOf(label.charAt(0));
         children.add(index + 1, new TrieEdge<V>(label, child));
+        trim();
     }
 
     /**
@@ -75,26 +78,26 @@ public final class TrieNode<V> {
         children.trimToSize();
     }
 
-//    public Iterator childrentForward() {
-//        return new ChildrenForwardIterator();
-//    }
+    public Iterator childrenForward() {
+        return new ChildrenForwardIterator();
+    }
 
 
-//    private class ChildrenForwardIterator extends UnmodifiableIterator {
-//        int index = 0;
-//        @Override
-//        public boolean hasNext() {
-//            return index < children.size();
-//        }
-//
-//        @Override
-//        public Object next() {
-//            if (index < children.size()) {
-//                return getChildAt(index++).getChild();
-//            }
-//            throw new NoSuchElementException();
-//        }
-//    }
+    private class ChildrenForwardIterator extends UnmodifiableIterator {
+        int index = 0;
+        @Override
+        public boolean hasNext() {
+            return index < children.size();
+        }
+
+        @Override
+        public Object next() {
+            if (index < children.size()) {
+                return getChildAt(index++).getChild();
+            }
+            throw new NoSuchElementException();
+        }
+    }
 
 //    private class LabelForwardIterator extends UnmodifiableIterator {
 //
