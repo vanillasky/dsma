@@ -9,9 +9,15 @@ package kr.co.datastreams.dsma.ma;
  */
 public class WordEntry {
     private String word;
+    private char[] features;
 
     public WordEntry(String word) {
         this.word = word;
+    }
+
+    public WordEntry(String word, char[] features) {
+        this.word = word;
+        this.features = features;
     }
 
     public String getWord() {

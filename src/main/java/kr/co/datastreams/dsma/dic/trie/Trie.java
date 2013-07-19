@@ -161,7 +161,8 @@ public class Trie<S, V> {
     public void print(PrintWriter writer) {
         writer.println(root);
         print(writer, root, 0);
-
+        writer.flush();
+        writer.close();
     }
 
     private void print(PrintWriter writer, TrieNode node, int depth) {
@@ -180,6 +181,7 @@ public class Trie<S, V> {
             }
         }
         writer.flush();
+
     }
 
 

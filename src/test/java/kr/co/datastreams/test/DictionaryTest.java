@@ -1,5 +1,6 @@
 package kr.co.datastreams.test;
 
+import kr.co.datastreams.commons.util.FileUtil;
 import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.ma.WordEntry;
 import org.junit.Before;
@@ -7,10 +8,7 @@ import org.junit.Test;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -37,14 +35,28 @@ public class DictionaryTest {
 
     @Test
     public void testGetPrefixedBy() throws Exception {
-        String[] expected = {"포르노", "포르르", "포르말린", "포르노그라피"};
+        String[] expected = {"포르노", "포르르", "포르말린", "포르볼", "포르노그라피"};
         List<String> candidates = new ArrayList<String>();
         Iterator iter = Dictionary.getPrefixedBy("포르");
         assertNotNull(iter);
         while (iter.hasNext()) {
             WordEntry entry = (WordEntry)iter.next();
             candidates.add(entry.getWord());
+            System.out.println(entry);
         }
-        assertTrue(Arrays.equals(expected, candidates.toArray(new String[candidates.size()])));
+        System.out.println(candidates.size());
+        assertArrayEquals(expected, candidates.toArray(new String[candidates.size()]));
     }
+
+//    @Test
+//    public void testSort() throws Exception {
+//        List<String> sourceLines = FileUtil.readLines("dic/total.dic");
+//        List<String> sortList = FileUtil.readLines("dic/total.dic");
+//        Collections.sort(sortList);
+//
+//        int i=0;
+//        for (String each : sourceLines) {
+//            System.out.println("source:" + each + ", =>" + sortList.get(i++));
+//        }
+//    }
 }
