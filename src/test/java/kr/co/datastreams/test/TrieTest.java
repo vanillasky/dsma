@@ -5,6 +5,7 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.dic.trie.Trie;
 import kr.co.datastreams.dsma.dic.trie.ValueIterator;
 import kr.co.datastreams.dsma.ma.WordEntry;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -23,28 +24,11 @@ import static org.junit.Assert.*;
  */
 public class TrieTest {
 
-    Trie<String, WordEntry> dic = new Trie<String, WordEntry>();
+    Trie<String, WordEntry> dic;
 
-
-    @Test
-    public void testAdd() throws Exception {
-        WordEntry m3 = new WordEntry("가게방");
-        WordEntry m2 = new WordEntry("가게집");
-        WordEntry m4 = new WordEntry("가게집은");
-        WordEntry m5 = new WordEntry("나비");
-        WordEntry m6 = new WordEntry("나비효");
-        WordEntry m8 = new WordEntry("나비효과");
-        WordEntry m7 = new WordEntry("나비효리");
-
-        dic.add(m3.getWord(), m3);
-        dic.add(m2.getWord(), m2);
-        dic.add(m4.getWord(), m4);
-        dic.add(m5.getWord(), m5);
-        dic.add(m6.getWord(), m6);
-        dic.add(m8.getWord(), m8);
-        dic.add(m7.getWord(), m7);
-
-        dic.print(new PrintWriter(System.out));
+    @Before
+    public void setUp() throws Exception {
+        dic = new Trie<String, WordEntry>();
     }
 
     @Test
@@ -57,16 +41,15 @@ public class TrieTest {
         WordEntry m8 = new WordEntry("나비효과");
         WordEntry m7 = new WordEntry("나비효리");
 
-        dic.add(m3.getWord(), m3);
-        dic.add(m2.getWord(), m2);
-        dic.add(m4.getWord(), m4);
-        dic.add(m5.getWord(), m5);
-        dic.add(m6.getWord(), m6);
-        dic.add(m8.getWord(), m8);
-        dic.add(m7.getWord(), m7);
+        dic.add(m3.getString(), m3);
+        dic.add(m2.getString(), m2);
+        dic.add(m4.getString(), m4);
+        dic.add(m5.getString(), m5);
+        dic.add(m6.getString(), m6);
+        dic.add(m8.getString(), m8);
+        dic.add(m7.getString(), m7);
 
-        assertNotNull(dic.get("나비효과를"));
-        System.out.println(dic.get("나비효과를"));
+        assertNotNull(dic.get("나비효과"));
     }
 
     @Test
@@ -84,18 +67,18 @@ public class TrieTest {
         WordEntry m11 = new WordEntry("나비효리다가");
         WordEntry m12 = new WordEntry("나비효리다가나");
 
-        dic.add(m1.getWord(), m1);
-        dic.add(m3.getWord(), m3);
-        dic.add(m2.getWord(), m2);
-        dic.add(m4.getWord(), m4);
-        dic.add(m5.getWord(), m5);
-        dic.add(m6.getWord(), m6);
-        dic.add(m8.getWord(), m8);
-        dic.add(m7.getWord(), m7);
-        dic.add(m9.getWord(), m9);
-        dic.add(m10.getWord(), m10);
-        dic.add(m11.getWord(), m11);
-        dic.add(m12.getWord(), m12);
+        dic.add(m1.getString(), m1);
+        dic.add(m3.getString(), m3);
+        dic.add(m2.getString(), m2);
+        dic.add(m4.getString(), m4);
+        dic.add(m5.getString(), m5);
+        dic.add(m6.getString(), m6);
+        dic.add(m8.getString(), m8);
+        dic.add(m7.getString(), m7);
+        dic.add(m9.getString(), m9);
+        dic.add(m10.getString(), m10);
+        dic.add(m11.getString(), m11);
+        dic.add(m12.getString(), m12);
 
 
 

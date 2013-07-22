@@ -65,7 +65,7 @@ public class Dictionary {
 
     private void addToTrie(List<WordEntry> entries) {
         for (WordEntry entry : entries) {
-            trie.add(entry.getWord(), entry);
+            trie.add(entry.getString(), entry);
         }
     }
 

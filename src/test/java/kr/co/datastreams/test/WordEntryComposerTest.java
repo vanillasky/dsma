@@ -27,7 +27,7 @@ public class WordEntryComposerTest {
         assertNotNull(entries);
         int i=0;
         for (WordEntry each : entries) {
-            assertEquals(words[i++], each.getWord());
+            assertEquals(words[i++], each.getString());
         }
     }
 

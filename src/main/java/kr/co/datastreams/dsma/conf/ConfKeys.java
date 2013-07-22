@@ -12,4 +12,5 @@ public interface ConfKeys {
     public static final String DICTIONARY_FILE = "dictionary.base";
     public static final String EXTENSION_DIC = "dictionary.extension";
     public static final String COMPOUND_DIC = "dictionary.compound";
+    public static final String EMOTICON_PATTERNS = "dictionary.emoticons";
 }

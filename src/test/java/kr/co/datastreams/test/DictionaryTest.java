@@ -29,7 +29,7 @@ public class DictionaryTest {
     @Test
     public void testLoadDictionary() throws Exception {
         WordEntry word = Dictionary.get("괴물");
-        assertEquals("괴물", word.getWord());
+        assertEquals("괴물", word.getString());
         Dictionary.printDictionary(new PrintWriter(new FileWriter("d:/temp/ka.txt")));
     }
 
@@ -41,7 +41,7 @@ public class DictionaryTest {
         assertNotNull(iter);
         while (iter.hasNext()) {
             WordEntry entry = (WordEntry)iter.next();
-            candidates.add(entry.getWord());
+            candidates.add(entry.getString());
             System.out.println(entry);
         }
         System.out.println(candidates.size());
