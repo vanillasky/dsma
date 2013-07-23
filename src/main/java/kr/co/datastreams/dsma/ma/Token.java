@@ -62,6 +62,10 @@ public class Token implements Serializable, Comparable {
     }
 
 
+    public boolean is(CharType type) {
+        return charType == type;
+    }
+
     public String toString() {
         StringBuilder sb  = new StringBuilder();
         sb.append("(").append(index).append(",").append(string).append(",").append(getCharTypeName()).append(")");
