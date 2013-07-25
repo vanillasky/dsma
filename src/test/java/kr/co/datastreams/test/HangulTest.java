@@ -3,6 +3,7 @@ package kr.co.datastreams.test;
 import kr.co.datastreams.dsma.util.Hangul;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -51,5 +52,72 @@ public class HangulTest {
         c = '삵';
         h = Hangul.split(c);
         assertEquals(c, h.combine());
+
+        c = '모';
+        h = Hangul.split(c);
+        assertEquals(c, h.combine());
+    }
+
+    @Test
+    public void testRemoveFinalConsonant() throws Exception {
+        char result = Hangul.removeFinal('를');
+        char expected = '르';
+        assertEquals(expected, result);
+
+        result = Hangul.removeFinal('는');
+        expected = '느';
+        assertEquals(expected, result);
+
+        result = Hangul.removeFinal('달');
+        expected = '다';
+        assertEquals(expected, result);
+
+        result = Hangul.removeFinal('맞');
+        expected = '마';
+        assertEquals(expected, result);
+
+        result = Hangul.removeFinal('은');
+        expected = '으';
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testReplaceMedialConsonant() throws Exception {
+        char ch = '와';
+        char result = Hangul.replaceMedial(ch, 'ㅗ');
+        assertEquals('오', result);
+
+        ch = '워';
+        result = Hangul.replaceMedial(ch, 'ㅜ');
+        assertEquals('우', result);
+
+        ch = '왜';
+        result = Hangul.replaceMedial(ch, 'ㅚ');
+        assertEquals('외', result);
+
+
+        ch = '여';
+        result = Hangul.replaceMedial(ch, 'ㅣ');
+        assertEquals('이', result);
+    }
+
+    @Test
+    public void testReplaceFinal() throws Exception {
+        char ch = '와';
+        char result = Hangul.replaceFinal(ch, '아');
+        assertEquals('아', result);
+
+//        ch = '워';
+//        result = Hangul.replaceMedial(ch, 'ㅜ');
+//        assertEquals('우', result);
+//
+//        ch = '왜';
+//        result = Hangul.replaceMedial(ch, 'ㅚ');
+//        assertEquals('외', result);
+//
+//
+//        ch = '여';
+//        result = Hangul.replaceMedial(ch, 'ㅣ');
+//        assertEquals('이', result);
     }
 }

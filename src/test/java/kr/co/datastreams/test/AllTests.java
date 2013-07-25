@@ -15,6 +15,10 @@ import org.junit.runners.Suite;
     TrieTest.class
     , DictionaryTest.class
     , WordEntryComposerTest.class
+    , EndingProcessorTest.class
+    , HangulTest.class
+    , SyllableDicTest.class
+    , TokenizerTest.class
 })
 public class AllTests {
 }

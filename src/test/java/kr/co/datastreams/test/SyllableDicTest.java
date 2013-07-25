@@ -1,7 +1,7 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.SyllableDic;
-import kr.co.datastreams.dsma.ma.EomiProcessor;
+import kr.co.datastreams.dsma.ma.EndingProcessor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -29,6 +29,6 @@ public class SyllableDicTest {
     @Test
     public void testSplitEomi() throws Exception {
         String str = "간";
-        EomiProcessor.splitEomi(str, "");
+        EndingProcessor.splitEnding(str, "");
     }
 }

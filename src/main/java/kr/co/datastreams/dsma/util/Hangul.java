@@ -1,5 +1,6 @@
 package kr.co.datastreams.dsma.util;
 
+import javax.print.attribute.HashDocAttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import java.util.List;
  *
  */
 public class Hangul {
+
+    private static final char HANGUL_START = 0xAC00;
 
     private static final char[] CHOSEONG = {
             'ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ',
@@ -56,6 +59,68 @@ public class Hangul {
 
     public static Hangul create(char cho, char jung) {
         return new Hangul(cho, jung, '\0');
+    }
+
+    public static boolean isHangul(char ch) {
+        Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(ch); // 한글이면 HANGUL_SYLLABLES
+        return unicodeBlock == Character.UnicodeBlock.HANGUL_SYLLABLES;
+    }
+
+    /**
+     * 종성을 제거한 문자를 만들어서 반환한다.
+     * @param ch - 문자
+     * @return 종성이 제거된 문자(e.g. 를 -> 르, 는 -> 느)
+     *
+     */
+    public static char removeFinal(char ch) {
+        ch -=  HANGUL_START;
+
+        int first = ch / 588;
+        ch = (char)(ch % 588);
+        int medial = ch / 28;
+
+        return combine(first, medial, 0);
+    }
+
+
+    /**
+     * 문자의 중성을 replace 로 변경해서 새로운 문자를 반환한다.
+     *
+     * @param ch - 원본 문자
+     * @param replacePhoneme - 바뀔 중성
+     * @return
+     */
+    public static char replaceMedial(char ch, char replacePhoneme) {
+        ch -= HANGUL_START;
+        int first = ch / 588;
+        int medial = PhonemeIndexer.getJungIndex(replacePhoneme);
+        return combine(first, medial, 0);
+    }
+
+    /**
+     * 종성을 replace 로 바꾸어 반환한다.
+     * @param ch - 원본 문자
+     * @param replace - 바꿀 종성
+     * @return
+     */
+    public static char replaceFinal(char ch, char replace) {
+        char last = (char)(ch - HANGUL_START);
+        int lastIndex = last % 28;
+
+        replace -= HANGUL_START;
+        int first = replace / 588;
+        replace = (char)(replace % 588);
+        int medial = replace / 28;
+
+        return combine(first, medial, lastIndex);
+    }
+
+    /**
+     * 초성/중성/종성을 합쳐서 한 개의 문자로 만들어 반환한다.
+     * @return
+     */
+    public static char combine(int first, int medial, int last) {
+        return (char)(HANGUL_START + first * 588 + medial * 28 + last);
     }
 
 
@@ -111,6 +176,10 @@ public class Hangul {
         return cho != 0;
     }
 
+    /**
+     * 초성/중성/종성을 합쳐서 한 개의 문자로 만들어 반환한다.
+     * @return
+     */
     public char combine() {
         int indexCho = PhonemeIndexer.getChoIndex(cho);
         int indexJung = PhonemeIndexer.getJungIndex(jung);
@@ -118,12 +187,34 @@ public class Hangul {
         return (char)(indexCho * 588 + indexJung * 28 + indexJong + 0xAC00);
     }
 
-    public static boolean isHangul(char ch) {
-        Character.UnicodeBlock unicodeBlock = Character.UnicodeBlock.of(ch); // 한글이면 HANGUL_SYLLABLES
-        return unicodeBlock == Character.UnicodeBlock.HANGUL_SYLLABLES;
-    }
 
+    /**
+     * 종성이 ㄴ/ㄹ/ㅁ/ㅂ 이면 true를 아니면 false를 반환
+     *
+     * @return true if the ending is ㄴ/ㄹ/ㅁ/ㅂ
+     */
     public boolean endsWithNLMB() {
         return (jong == 'ㄴ' || jong == 'ㄹ' || jong == 'ㅁ' || jong == 'ㅂ');
     }
+
+
+    public boolean endsWith(char phoneme) {
+        return hasJong() ? jong == phoneme :
+               hasJung() ? jung == phoneme : false;
+    }
+
+
+    /**
+     * 중성이 phonemesArray 의 자소로 이루어져 있으면 true 를 반환한다.
+     * @param phonemesArray - 검사할 중성 자소
+     *
+     * @return 중성이 자소중 하나와 일치하면 true.
+     */
+    public boolean containsJungsung(char[] phonemesArray) {
+        for (char each : phonemesArray) {
+            if (jung == each) return true;
+        }
+        return false;
+    }
+
 }

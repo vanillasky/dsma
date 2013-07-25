@@ -70,6 +70,8 @@ public class SyllableDic implements ConfKeys {
         load(conf.get(SYLLABLE_DIC));
     }
 
+
+
     private void load(String fileName) {
         synchronized (syllables) {
             StopWatch watch = StopWatch.create();
@@ -112,5 +114,35 @@ public class SyllableDic implements ConfKeys {
             return null;
         }
         return syllables.get(index);
+    }
+
+    /**
+     * 다음 조건에 부합하면 true, 아니면 false 를 반환<br/>
+     * 음소가<br/>
+     *  'ㄴ' -> (용언+'-ㄴ')에 의하여 생성되는 음절 or 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절 <br/>
+     *  'ㄹ' -> (용언+'-ㄹ')에 의해 생성되는 음절<br/>
+     *  'ㅁ' -> (용언+'-ㅁ')에 의해 생성되는 음절<br/>
+     *  'ㅂ' -> (용언+'-ㅂ')에 의해 생성되는 음절<br/>
+     * @param ch - 한 개의 음절
+     * @param phoneme - 음소(ㄴ/ㄹ/ㅁ/ㅂ)
+     * @return
+     */
+    public static boolean isNLMBSyllable(char ch, char phoneme) {
+
+        char[] features = getFeature(ch);
+
+        switch(phoneme) {
+            case 'ㄴ' :
+                return (features[IDX_YNPNA]=='1'      //(용언+'-ㄴ')에 의하여 생성되는 음절
+                        || features[IDX_YNPLN]=='1'); // 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절
+            case 'ㄹ' :
+                return (features[IDX_YNPLA]=='1'); // (용언+'-ㄹ')에 의해 생성되는 음절
+            case 'ㅁ' :
+                return (features[IDX_YNPMA]=='1'); // (용언+'-ㅁ')에 의해 생성되는 음절
+            case 'ㅂ' :
+                return (features[IDX_YNPBA]=='1'); // (용언+'-ㅂ')에 의해 생성되는 음절
+        }
+
+        return false;
     }
 }

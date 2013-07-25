@@ -21,7 +21,6 @@ public class MorphemeAnalyzer {
 
     private final Tokenizer tokenizer = new Tokenizer();
 
-
     public List analyze(String inputString) {
         if (StringUtil.nvl(inputString).length() == 0) {
             return Collections.EMPTY_LIST;
@@ -52,10 +51,17 @@ public class MorphemeAnalyzer {
     private void analyzeByRule(List<AnalysisResult> candidates, Token token) {
         if (token.charType == CharType.HANGUL) {
             analyzeWithEomi(candidates, token, "");
+
+//            for (int i=token.getString().length()-1; i > 0; i--) {
+//
+//            }
         }
     }
 
     private void analyzeWithEomi(List<AnalysisResult> candidates, Token token, String end) {
-        String[] morphs = EomiProcessor.splitEomi(token.getString(), end);
+        Variant morpheme = EndingProcessor.splitEnding(token.getString(), end);
+        if (morpheme.isEmpty()) return;
+
+        //String[] pomis = EndingProcessor.splitPrefinalEnding(morphemes[0]);
     }
 }
