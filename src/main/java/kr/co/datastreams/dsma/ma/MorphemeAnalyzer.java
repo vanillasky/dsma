@@ -1,6 +1,7 @@
 package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.commons.util.StringUtil;
+import kr.co.datastreams.dsma.dic.SyllableDic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,18 +51,25 @@ public class MorphemeAnalyzer {
 
     private void analyzeByRule(List<AnalysisResult> candidates, Token token) {
         if (token.charType == CharType.HANGUL) {
-            analyzeWithEomi(candidates, token, "");
+            analyzeWithEomi(candidates, token.getString(), "");
 
-//            for (int i=token.getString().length()-1; i > 0; i--) {
-//
-//            }
+
+            for (int i=token.getString().length()-1; i > 0; i--) {
+                String stem = token.getString().substring(0, i);
+                String eomi = token.getString().substring(i);
+
+                char[] feature = SyllableDic.getFeature(eomi.charAt(0));
+
+                analyzeWithEomi(candidates, stem, eomi);
+            }
         }
     }
 
-    private void analyzeWithEomi(List<AnalysisResult> candidates, Token token, String end) {
-        Variant morpheme = EndingProcessor.splitEnding(token.getString(), end);
+    private void analyzeWithEomi(List<AnalysisResult> candidates, String stem, String ending) {
+        Variant morpheme = EndingProcessor.splitEnding(stem, ending);
         if (morpheme.isEmpty()) return;
 
-        //String[] pomis = EndingProcessor.splitPrefinalEnding(morphemes[0]);
+        Variant pomi = EndingProcessor.splitPrefinalEnding(morpheme.getStem());
+        System.out.println(pomi);
     }
 }

@@ -217,4 +217,8 @@ public class Hangul {
         return false;
     }
 
+    public static boolean containsPrefinalEnding(char ch) {
+        Hangul phonemes = split(ch);
+        return ch == '시' || ch == 'ㅆ' || phonemes.endsWith('ㅆ');
+    }
 }

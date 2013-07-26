@@ -3,7 +3,6 @@ package kr.co.datastreams.dsma.ma;
 import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.dic.SyllableDic;
 import kr.co.datastreams.dsma.ma.rule.*;
 import kr.co.datastreams.dsma.util.Hangul;
 
@@ -43,7 +42,7 @@ public class EndingProcessor {
 
         if (result == null || result.isEmpty()) {
             if (ending.length() > 0 && EomiDic.exists(ending)) {
-                result = Variant.create(stem, ending);
+                result = Variant.createEnding(stem, ending);
             }
         }
 
@@ -53,76 +52,81 @@ public class EndingProcessor {
 
 
     /**
-     * 선어말어미 분석
+     * 선어말어미 분석<br/>
+     * 결합관계:<br/>
+     * 으 -> 시 -> 었 -> 었 -> 겠
+     * 으 -> 시 -> 였 -> 었 -> 겠
+     * 으 -> 시 -> 았 -> 었 -> 겠
+     * 으 -> 시 -> ㅆ -> 었 -> 겠
+     * 으 -> 셨 -> 었 -> 겠
+     *
      * @param stem
      * @return
      */
-    public static String[] splitPrefinalEnding(String stem) {
-        String[] result = new String[2];
-        result[0] = stem;
-
-        if (StringUtil.nvl(stem).length() == 0 || "있".equals(stem)) return result;
-
+    public static Variant splitPrefinalEnding(String stem) {
+        Variant result = null;
         char[] chars = stem.toCharArray();
-        int len = chars.length;
+        int index = chars.length - 1;
         String pomi = "";
-        int index = len - 1;
+
+        if (StringUtil.nvl(stem).length() == 0 || "있".equals(stem)) return Variant.EMPTY;
 
         Hangul phonemes = Hangul.split(chars[index]);
-        if (chars[index] != '시' && chars[index] != 'ㅆ' && !phonemes.endsWith('ㅆ')) return result; // 선어말 어미 미발견
+        if (!Hangul.containsPrefinalEnding(chars[index])) return Variant.EMPTY; // 선어말 어미 미발견
 
 
         if (chars[index] == '겠') {
             pomi = "겠";
-            result[0] = stem;
-            result[1] = pomi;
-
-            if (--index <= 0 || (chars[index] != '시' && chars[index] != 'ㅆ' && !phonemes.endsWith('ㅆ'))) {
-                return result;
+            if (!hasMorePrefinalElements(chars, index-1)) {
+                return Variant.createPrefinal(stem.substring(0, index), pomi);
             }
+            index--;
             phonemes = Hangul.split(chars[index]);
         }
 
-        if (chars[index] == '었') { // 시었, ㅆ엇, 었
+        if (chars[index] == '었') {
             pomi = chars[index] + pomi;
-            result[0] = stem.substring(0, index);
-            result[1] = pomi;
-            if (--index <= 0 || (chars[index] != '시' && chars[index] != 'ㅆ' && !phonemes.endsWith('ㅆ'))) {
-                return result;
+            if (!hasMorePrefinalElements(chars, index-1)) {
+                return Variant.createPrefinal(stem.substring(0, index), pomi);
             }
+            index--;
             phonemes = Hangul.split(chars[index]);
         }
 
-        // [이/하]-였-었-겠
+        // [였] -> 었
         if (chars[index] == '였') {
+            //TODO 하였다 -> 하(V),었(f),다(e), 그냥 하였다로 하는게 나을 것 같은
             pomi = Hangul.replaceFinal(chars[index], '어') + pomi;
-            if (chars[index-1] == '하') {  // '-하였' 이면 '-하였'의 앞부분까지가 어간
+            if (chars[index-1] == '하') {  // 어간의 마지막이 '하' 이면 그대로 처리
                 stem = stem.substring(0, index);
-            } else {
-                stem = stem.substring(0, index) + "이"; // '-이였'으로 처리
+            } else { // 어간의 마지막이 '하'가 아니면 어간부에 '이'를 붙인다.
+                stem = stem.substring(0, index) + "이";
             }
-            result[0] = stem;
-            result[1] = pomi;
-        } // [셨]-었-겠
+            result = Variant.createPrefinal(stem, pomi);
+        } // [셨] -> 시었
         else if (chars[index] == '셨') {
-            pomi = Hangul.replaceFinal(chars[index], '어') + pomi;
+            pomi = "시" + Hangul.replaceFinal(chars[index], '어') + pomi;
             stem = stem.substring(0, index);
-            result[0] = stem;
-            result[1] = "시" + pomi;
-        } else if (chars[index] == '았' || chars[index] == '었') {
+            result = Variant.createPrefinal(stem, pomi);
+        } // [았/었] -> 그대로 처리
+        else if (chars[index] == '았' || chars[index] == '었') {
             pomi = chars[index] + pomi;
-            result[0] = stem.substring(0, index);
-            result[1] = pomi;
-            if (--index <= 0 || (chars[index] != '시' && chars[index] != '으'))  return result;
-        } else if (phonemes.hasJong() && phonemes.jong == 'ㅆ') {
+            result = Variant.createPrefinal(stem.substring(0, index), pomi);
+            index--;
+            if (index <= 0 || chars[index] != '시' && chars[index] != '으') {
+                return result;
+            }
+            phonemes = Hangul.split(chars[index]);
+        }
+        else if (phonemes.hasJong() && phonemes.jong == 'ㅆ') {
             if(phonemes.cho == 'ㅎ' && phonemes.jung == 'ㅐ') {
-                pomi = Hangul.replaceFinal(chars[index], '어')+pomi;
+                pomi = Hangul.replaceFinal(chars[index], '어') + pomi;
                 stem = stem.substring(0,index)+"하";
             }else if(phonemes.cho!='ㅇ'&&(phonemes.jung=='ㅏ'||phonemes.jung=='ㅓ'||phonemes.jung=='ㅔ'||phonemes.jung=='ㅐ')) {
-                pomi = "었"+pomi;
+                pomi = "었" + pomi;
                 stem = stem.substring(0,index) + Hangul.removeFinal(chars[index]);
             }else if(phonemes.cho!='ㅇ'&&(phonemes.jung=='ㅙ')) {
-                pomi = "었"+pomi;
+                pomi = "었" + pomi;
                 stem = stem.substring(0,index)+Hangul.replaceMedial(chars[index], 'ㅚ');
             } else if(phonemes.jung=='ㅘ') {
                 pomi = Hangul.replaceFinal(chars[index], '아')+pomi;
@@ -143,46 +147,39 @@ public class EndingProcessor {
                 pomi = "었"+pomi;
             }
 
-            result[0] = stem;
-            result[1] = pomi;
-
-            if(chars[index] != '시' && chars[index] != '으') return result; // 다음이거나 선어말어미가 없다면...
+            result = Variant.createPrefinal(stem, pomi);
+            if (chars[index] != '시' && chars[index] != '으') {
+                return result;
+            }
             phonemes = Hangul.split(chars[index]);
         }
 
-        Hangul nphonemes = null;
-        char[] nChrs = null;
-        if(index > 0) {
-            nphonemes = Hangul.split(chars[index-1]);
-            nChrs = new char[]{nphonemes.cho, nphonemes.jung, nphonemes.jong};
-        }
-        else nChrs = new char[2];
+        phonemes = Hangul.split(chars[index-1]);
+        if(chars[index] == '시' && (chars.length <= index+1 || (chars.length > index+1 && chars[index+1] != '셨'))) {
+            if(Dictionary.get(stem)!= null) {
+                return Variant.EMPTY;  //'시'가 포함된 단어가 있다. 성가시다/도시다/들쑤시다
+            }
 
-        if(nChrs.length==2&&chars[index]=='시'&&(chars.length<=index+1||
-                (chars.length>index+1&&chars[index+1]!='셨'))) {
-            if(Dictionary.get(result[0])!=null) return result;  //'시'가 포함된 단어가 있다. 성가시다/도시다/들쑤시다
             pomi = chars[index]+pomi;
+            result = Variant.createPrefinal(stem.substring(0, index), pomi);
+            index--;
 
-            result[0] = stem.substring(0, index);
-            result[1] = pomi;
-
-            if(--index==0||chars[index]!='으') return result; // 다음이거나 선어말어미가 없다면...
+            if(index == 0 || chars[index]!='으') {
+                return result;
+            }
             phonemes = Hangul.split(chars[index]);
         }
 
-        if(index > 0) {
-            nphonemes = Hangul.split(chars[index-1]);
-            nChrs = new char[]{nphonemes.cho, nphonemes.jung, nphonemes.jong};
-        }
-        else nChrs = new char[2];
-
-        if(chars.length>index+1&&nChrs.length==3&&(chars[index+1]=='셨'||chars[index+1]=='시')&&chars[index]=='으') {
+        phonemes = Hangul.split(chars[index-1]);
+        if(chars.length > index+1 && phonemes.hasJong() && (chars[index+1] == '셨' || chars[index+1]=='시') &&chars[index]=='으') {
             pomi = chars[index]+pomi;
-
-            result[0] = stem.substring(0, index);
-            result[1] = pomi;
+            result = Variant.createPrefinal(stem.substring(0, index), pomi);
         }
 
-        return result;
+        return result == null ? Variant.EMPTY : result;
+    }
+
+    private static boolean hasMorePrefinalElements(char[] chars, int index) {
+        return index > 0 && Hangul.containsPrefinalEnding(chars[index]);
     }
 }

@@ -43,7 +43,7 @@ public class Tokenizer {
                 if (prevCharType != currCharType) {
                     //System.out.println("["+i+"]prevCharType != currCharType =>"+ temp + "," + ch +"," + prevCharType + "," + currCharType);
                     if(prevCharType != CharType.EMOTICON) {
-//                        System.out.println("  create token:"+ temp + "," + prevCharType);
+//                        System.out.println("  created token:"+ temp + "," + prevCharType);
                         tokens.add(new Token(temp, prevCharType, tokenIndex));
                     }
                     tokenIndex = i;

@@ -124,9 +124,23 @@ public class EndingProcessorTest {
     }
 
     @Test
-    public void testSplitPomi() throws Exception {
-        String[] result = EndingProcessor.splitPrefinalEnding("피곤하셨겠");
-        System.out.println(result[0] + "," + result[1]);
+    public void testSplitPomi_셨겠() throws Exception {
+        Variant result = EndingProcessor.splitPrefinalEnding("피곤하셨겠");
+        assertEquals("피곤하", result.getStem());
+        assertEquals("시었겠", result.getPrefinalEnding());
+    }
+
+    @Test
+    public void testSplitPomi_이였() throws Exception {
+        Variant result = EndingProcessor.splitPrefinalEnding("가시였");
+        assertEquals("가시이", result.getStem());
+        assertEquals("었", result.getPrefinalEnding());
+    }
+
+    @Test
+    public void testSplitPomi_끝음절이_시_인용언() throws Exception {
+        Variant result = EndingProcessor.splitPrefinalEnding("성가시");
+        assertTrue(result.isEmpty());
     }
 
 }

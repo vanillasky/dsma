@@ -30,8 +30,12 @@ public class Variant {
     }
 
 
-    public static Variant create(String stem, String ending) {
+    public static Variant createEnding(String stem, String ending) {
         return new Variant(stem, ending, null, null);
+    }
+
+    public static Variant createPrefinal(String stem, String prefinalEnding) {
+        return new Variant(stem, null, prefinalEnding, null);
     }
 
     public String getStem() {
@@ -52,5 +56,10 @@ public class Variant {
 
     public boolean isEmpty() {
         return stem == null ? true : false;
+    }
+
+    @Override
+    public String toString() {
+        return "Variant {stem:" + stem + ", prefinal:" + prefinalEnding + ", ending:" + ending + "}";
     }
 }
