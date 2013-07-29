@@ -43,8 +43,4 @@ public class AnalysisResult implements Serializable, Cloneable {
         score =  SCORE_FAIL;
     }
 
-
-
-
-
 }

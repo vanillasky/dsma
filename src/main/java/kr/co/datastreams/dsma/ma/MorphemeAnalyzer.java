@@ -2,6 +2,7 @@ package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.dic.SyllableDic;
+import kr.co.datastreams.dsma.ma.api.EndingProcessor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,28 +22,28 @@ public class MorphemeAnalyzer {
     private static final int POS_END = 3;
 
     private final Tokenizer tokenizer = new Tokenizer();
+    private final List<AnalysisResult> analysisResults = new ArrayList<AnalysisResult>();
+    private final EndingProcessor endingProcessor = new RuleBaseEndingProcessor();
 
-    public List analyze(String inputString) {
+    public List<AnalysisResult> analyze(String inputString) {
         if (StringUtil.nvl(inputString).length() == 0) {
             return Collections.EMPTY_LIST;
         }
 
-        List results = new ArrayList();
-        inputString = inputString.trim();
-        List<Token> tokens = tokenizer.tokenize(inputString);
+        List<Token> tokens = tokenizer.tokenize(inputString.trim());
         for (Iterator<Token> iter=tokens.iterator(); iter.hasNext();) {
             Token token = iter.next();
-            if (!token.is(CharType.SPACE)) {
-                List result = analyze(token);
-                results.add(result);
+            if (token.is(CharType.HANGUL)) {
+                AnalysisResult result = analyze(token);
+                analysisResults.add(result);
             }
         }
 
-        return results;
+        return analysisResults;
     }
 
 
-    private List analyze(Token token) {
+    private AnalysisResult analyze(Token token) {
         List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
         analyzeByRule(candidates, token);
 
@@ -50,26 +51,23 @@ public class MorphemeAnalyzer {
     }
 
     private void analyzeByRule(List<AnalysisResult> candidates, Token token) {
-        if (token.charType == CharType.HANGUL) {
-            analyzeWithEomi(candidates, token.getString(), "");
+        analyzeWithEomi(candidates, token.getString(), "");
 
+        for (int i=token.getString().length()-1; i > 0; i--) {
+            String stem = token.getString().substring(0, i);
+            String eomi = token.getString().substring(i);
 
-            for (int i=token.getString().length()-1; i > 0; i--) {
-                String stem = token.getString().substring(0, i);
-                String eomi = token.getString().substring(i);
+            char[] feature = SyllableDic.getFeature(eomi.charAt(0));
 
-                char[] feature = SyllableDic.getFeature(eomi.charAt(0));
-
-                analyzeWithEomi(candidates, stem, eomi);
-            }
+            analyzeWithEomi(candidates, stem, eomi);
         }
     }
 
     private void analyzeWithEomi(List<AnalysisResult> candidates, String stem, String ending) {
-        Variant morpheme = EndingProcessor.splitEnding(stem, ending);
+        Variant morpheme = endingProcessor.splitEnding(stem, ending);
         if (morpheme.isEmpty()) return;
 
-        Variant pomi = EndingProcessor.splitPrefinalEnding(morpheme.getStem());
+        Variant pomi = endingProcessor.splitPrefinalEnding(morpheme.getStem());
         System.out.println(pomi);
     }
 }
