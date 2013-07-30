@@ -1,7 +1,7 @@
 package kr.co.datastreams.test;
 
 
-import kr.co.datastreams.dsma.ma.Token;
+import kr.co.datastreams.dsma.ma.model.Token;
 import kr.co.datastreams.dsma.ma.Tokenizer;
 import org.junit.Test;
 import static org.junit.Assert.*;

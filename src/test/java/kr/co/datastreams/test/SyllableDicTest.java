@@ -1,7 +1,6 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.SyllableDic;
-import kr.co.datastreams.dsma.ma.RuleBaseEndingProcessor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

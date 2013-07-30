@@ -2,7 +2,7 @@ package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.DefaultWordEntryComposer;
 import kr.co.datastreams.dsma.dic.WordEntryComposer;
-import kr.co.datastreams.dsma.ma.WordEntry;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.List;
@@ -40,6 +40,7 @@ public class WordEntryComposerTest {
         String[] failedLines = composer.parseFailedLines();
 
     }
+
 
 
 }

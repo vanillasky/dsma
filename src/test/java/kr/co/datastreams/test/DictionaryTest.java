@@ -1,8 +1,7 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.commons.util.FileUtil;
 import kr.co.datastreams.dsma.dic.Dictionary;
-import kr.co.datastreams.dsma.ma.WordEntry;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.junit.Before;
 import org.junit.Test;
 

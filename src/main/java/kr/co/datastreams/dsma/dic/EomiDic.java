@@ -56,22 +56,29 @@ public class EomiDic implements ConfKeys {
     }
 
     /**
-     * 음소와 어미후보가 결합하여 어미가 될 수 있는지 점검하여(어미사전에 등록 여부)
+     * 음소와 어미후보가 결합하여 어미가 될 수 있는지 점검하여(어미사전 등록 여부)
      * 가능하면 어미가 합쳐진 형태로 반환하고 아니면 null 을 반환한다.
      *
+     * 음소가 'ㄴ/ㄹ/ㅁ/ㅂ'인 경우에는 다음과 같이 은/을/음/습을 앞에 붙여서 어미를 찾는다.<br/>
+     * 그 외의 경우에는 음소+어미를 어미사전에서 찾는다.<br/>
+     * '은'+어미(e.g. -은가),<br/>
+     * '을'+어미(e.g. -을수록),<br/>
+     * '음'+어미(e.g. -음에도),<br/>
+     * '습'+어미(e.g. 습니다)
+     *
      * @param phoneme - 음소
-     * @param ending
+     * @param ending - 어미사전에 등록된 어미
      * @return
      */
-    public static String combineEomiWith(char phoneme, String ending) {
+    public static String findEndingWith(char phoneme, String ending) {
         ending = StringUtil.nvl(ending);
 
         // ㄴ,ㄹ,ㅁ,ㅂ과 어미후보 결합
         switch (phoneme) {
-            case 'ㄴ' : ending = "은" + ending; break;
-            case 'ㄹ' : ending = "을" + ending; break;
-            case 'ㅁ' : ending = "음" + ending; break;
-            case 'ㅂ' : ending = "습" + ending; break;
+            case 'ㄴ' : ending = "은" + ending; break; // e.g.)-은가, -은다는데 등
+            case 'ㄹ' : ending = "을" + ending; break; // e.g.)-을수록
+            case 'ㅁ' : ending = "음" + ending; break; // -음에도
+            case 'ㅂ' : ending = "습" + ending; break; // -습니다
             default : ending = phoneme + ending; break;
         }
 

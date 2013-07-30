@@ -1,4 +1,4 @@
-package kr.co.datastreams.dsma.ma;
+package kr.co.datastreams.dsma.ma.model;
 
 import java.io.Serializable;
 

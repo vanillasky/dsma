@@ -59,7 +59,9 @@ public class SyllableDic implements ConfKeys {
     public static int IDX_PEND = 36; // 선어말 어미 : 시 셨 았 었 였 겠
 
     public static int IDX_YNPEOMI = 37; // 용언이 어미와 결합할 때 생성되는 음절의 수 734개
-    public static int IDX_WDSURF = 38; //	 용언의 표층 형태로만 사용되는 음절
+
+    /**	용언의 표층 형태로만 사용되는 음절 */
+    public static int IDX_WDSURF = 38;
     public static int IDX_EOGAN = 39; // 어미 또는 어미의 변형으로 존재할 수 있는 음 (즉 IDX_EOMI 이거나 IDX_YNPNA 이후에 1이 있는 음절)
 
     private final List<char[]> syllables = Collections.synchronizedList(new ArrayList<char[]>());  // 음절특성 정보
@@ -83,8 +85,8 @@ public class SyllableDic implements ConfKeys {
                     continue;
                 }
 
-                syllables.add(line.toCharArray());
-//                syllables.add(line.split(" //")[0].toCharArray());
+//                syllables.add(line.toCharArray());
+                syllables.add(line.split(" //")[0].toCharArray());
             }
 
             watch.end();
@@ -101,6 +103,17 @@ public class SyllableDic implements ConfKeys {
     public static char[] getFeature(char syllable) {
         int index = syllable - 0xAC00;
         return instance.getFeature(index);
+    }
+
+
+    public static byte[] getFeatureInByte(char syllable) {
+        int index = syllable - 0xAC00;
+        char[] features =  instance.getFeature(index);
+        byte[] bytes = new byte[features.length];
+        for (int i=0;i < bytes.length; i++) {
+            bytes[i] = (byte)Integer.parseInt(features[i]+"");
+        }
+        return bytes;
     }
 
 
@@ -133,14 +146,14 @@ public class SyllableDic implements ConfKeys {
 
         switch(phoneme) {
             case 'ㄴ' :
-                return (features[IDX_YNPNA]=='1'      //(용언+'-ㄴ')에 의하여 생성되는 음절
-                        || features[IDX_YNPLN]=='1'); // 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절
+                return (features[IDX_YNPNA]=='1'      //(용언+'-ㄴ')에 의하여 생성되는 음절(e.g. 간)
+                        || features[IDX_YNPLN]=='1'); // 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절 (끌다 -> 끈)
             case 'ㄹ' :
-                return (features[IDX_YNPLA]=='1'); // (용언+'-ㄹ')에 의해 생성되는 음절
+                return (features[IDX_YNPLA]=='1'); // (용언+'-ㄹ')에 의해 생성되는 음절(갈,널 등)
             case 'ㅁ' :
-                return (features[IDX_YNPMA]=='1'); // (용언+'-ㅁ')에 의해 생성되는 음절
+                return (features[IDX_YNPMA]=='1'); // (용언+'-ㅁ')에 의해 생성되는 음절(감,댐 등)
             case 'ㅂ' :
-                return (features[IDX_YNPBA]=='1'); // (용언+'-ㅂ')에 의해 생성되는 음절
+                return (features[IDX_YNPBA]=='1'); // (용언+'-ㅂ')에 의해 생성되는 음절(갑,넙 등)
         }
 
         return false;

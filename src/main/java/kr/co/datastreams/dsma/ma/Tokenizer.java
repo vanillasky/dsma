@@ -1,6 +1,8 @@
 package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.dsma.dic.TokenPattern;
+import kr.co.datastreams.dsma.ma.model.CharType;
+import kr.co.datastreams.dsma.ma.model.Token;
 
 import java.util.*;
 import java.util.regex.Matcher;

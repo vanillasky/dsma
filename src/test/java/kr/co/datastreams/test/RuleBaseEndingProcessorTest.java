@@ -1,8 +1,8 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.RuleBaseEndingProcessor;
-import kr.co.datastreams.dsma.ma.Variant;
-import kr.co.datastreams.dsma.ma.api.EndingProcessor;
+import kr.co.datastreams.dsma.ma.RuleBaseEndingSplitter;
+import kr.co.datastreams.dsma.ma.model.Variant;
+import kr.co.datastreams.dsma.ma.api.EndingSplitter;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -16,11 +16,11 @@ import static org.junit.Assert.*;
  */
 public class RuleBaseEndingProcessorTest {
 
-    private EndingProcessor endingProcessor = null;
+    private EndingSplitter endingProcessor = null;
 
     @Before
     public void setUp() throws Exception {
-        endingProcessor =  new RuleBaseEndingProcessor();
+        endingProcessor =  new RuleBaseEndingSplitter();
     }
 
     @Test
@@ -131,34 +131,34 @@ public class RuleBaseEndingProcessorTest {
 
     @Test
     public void testSplitPomi_셨겠() throws Exception {
-        Variant result = endingProcessor.splitPrefinalEnding("피곤하셨겠");
+        Variant result = endingProcessor.splitPrefinal("피곤하셨겠");
         assertEquals("피곤하", result.getStem());
         assertEquals("시었겠", result.getPrefinalEnding());
     }
 
     @Test
     public void testSplitPomi_셨() throws Exception {
-        Variant result = endingProcessor.splitPrefinalEnding("편찮으셨");
+        Variant result = endingProcessor.splitPrefinal("편찮으셨");
         assertEquals("편찮으", result.getStem());
         assertEquals("시었", result.getPrefinalEnding());
     }
 
     @Test
     public void testSplitPomi_하였() throws Exception {
-        Variant result = endingProcessor.splitPrefinalEnding("하였");
+        Variant result = endingProcessor.splitPrefinal("하였");
         assertEquals("하", result.getStem());
         assertEquals("었", result.getPrefinalEnding());
     }
 
     @Test
     public void testSplitPomi_끝음절이_시_인용언() throws Exception {
-        Variant result = endingProcessor.splitPrefinalEnding("성가시"); //성가시다
+        Variant result = endingProcessor.splitPrefinal("성가시"); //성가시다
         assertTrue(result.isEmpty());
 
-        result = endingProcessor.splitPrefinalEnding("자시");  //자시다
+        result = endingProcessor.splitPrefinal("자시");  //자시다
         assertTrue(result.isEmpty());
 
-        result = endingProcessor.splitPrefinalEnding("모시");  //모시다
+        result = endingProcessor.splitPrefinal("모시");  //모시다
         assertTrue(result.isEmpty());
     }
 

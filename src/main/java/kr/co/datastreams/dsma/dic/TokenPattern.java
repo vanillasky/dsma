@@ -4,7 +4,7 @@ import kr.co.datastreams.commons.util.FileUtil;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.CharType;
+import kr.co.datastreams.dsma.ma.model.CharType;
 
 import java.util.ArrayList;
 import java.util.List;

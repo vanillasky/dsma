@@ -120,4 +120,14 @@ public class HangulTest {
 //        result = Hangul.replaceMedial(ch, 'ㅣ');
 //        assertEquals('이', result);
     }
+
+    @Test
+    // 용언의 표층형으로만 사용되는 음절이 있는지 확인
+    public void testHasOnlyVerbSyllable() throws Exception {
+        String[] words = {"줘봐", "갰", "냈", "괐", "뀐"};
+        for (String word : words) {
+            boolean result = Hangul.hasOnlyVerbSyllable(word);
+            assertTrue(result);
+        }
+    }
 }

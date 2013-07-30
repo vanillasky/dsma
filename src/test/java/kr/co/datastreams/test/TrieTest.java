@@ -1,18 +1,10 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.commons.util.FileUtil;
-import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.dic.trie.Trie;
 import kr.co.datastreams.dsma.dic.trie.ValueIterator;
-import kr.co.datastreams.dsma.ma.WordEntry;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.junit.Assert.*;
 /**

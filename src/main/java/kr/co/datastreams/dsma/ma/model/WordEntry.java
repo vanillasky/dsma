@@ -1,4 +1,4 @@
-package kr.co.datastreams.dsma.ma;
+package kr.co.datastreams.dsma.ma.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,17 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class WordEntry extends Token {
+
+    public static final int IDX_NOUN = 0;  // 명사
+    public static final int IDX_VERB = 1;  // 동사
+    public static final int IDX_BUSA = 2;  // 부사
+    public static final int IDX_DOV = 3;   //
+    public static final int IDX_BEV = 4;   //
+    public static final int IDX_NE = 5;    //
+    public static final int IDX_ADJ = 6;   // 형용사
+    public static final int IDX_NPR = 7;   // 명사의 분류 (M:Measure)
+    public static final int IDX_CNOUNX = 8; //
+    public static final int IDX_REGURA = 9; // 불규칙
 
     protected char[] features;
     protected List<CompoundWordEntry> compounds = new ArrayList<CompoundWordEntry>();
@@ -44,6 +55,10 @@ public class WordEntry extends Token {
 
     public char[] getFeatures() {
         return features;
+    }
+
+    public char getFeature(int index) {
+        return ( features != null && features.length < index ) ? features[index] : '0';
     }
 
     public List<CompoundWordEntry> getCompounds() {

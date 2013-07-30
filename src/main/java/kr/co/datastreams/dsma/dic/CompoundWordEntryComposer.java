@@ -1,8 +1,8 @@
 package kr.co.datastreams.dsma.dic;
 
 import kr.co.datastreams.commons.util.StringUtil;
-import kr.co.datastreams.dsma.ma.CompoundWordEntry;
-import kr.co.datastreams.dsma.ma.WordEntry;
+import kr.co.datastreams.dsma.ma.model.CompoundWordEntry;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;

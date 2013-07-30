@@ -1,5 +1,7 @@
 package kr.co.datastreams.dsma.util;
 
+import kr.co.datastreams.dsma.dic.SyllableDic;
+
 import javax.print.attribute.HashDocAttributeSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -217,8 +219,60 @@ public class Hangul {
         return false;
     }
 
+    /**
+     * 선어말 어미 후보를 포함하고 있는지 확인한다.
+     * @param ch - 문자
+     * @return true if ch == '시' or ch == 'ㅆ' or medial/final consonant is 'ㅆ'
+     */
     public static boolean containsPrefinalEnding(char ch) {
         Hangul phonemes = split(ch);
         return ch == '시' || ch == 'ㅆ' || phonemes.endsWith('ㅆ');
+    }
+
+    /**
+     * 용언의 표층형으로만 사용되는 음절을 가지고 있는지 확인한다.
+     *
+     * @param word - the word
+     * @return true if the word has syllable that used only verb in part of speech.
+     */
+    public static boolean hasOnlyVerbSyllable(String word) {
+        for (int i=word.length()-1; i >= 0; i--) {
+            byte[] features = SyllableDic.getFeatureInByte(word.charAt(i));
+            if (features[SyllableDic.IDX_WDSURF] == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 조사의 첫음절로 사용되는 음절 48개에 속하는지 확인한다.
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isFirstJosaSyllable(char ch) {
+        byte[] features = SyllableDic.getFeatureInByte(ch);
+        return features[SyllableDic.IDX_JOSA1] == 1;
+    }
+
+    /**
+     * 조사의 두 번째 이상의 음절로 사용되는 음절 58개에 속하는지 확인한다.
+     * @return
+     */
+    public static boolean isSecondJosaSyllable(char ch) {
+        byte[] features = SyllableDic.getFeatureInByte(ch);
+        return features[SyllableDic.IDX_JOSA2] == 1;
+    }
+
+    /**
+     * 어미의 두 번째 이상의 음절로 사용되는 음절 105개에 속하는지 확인한다.
+     *
+     * @param ch
+     * @return
+     */
+    public static boolean isSecondEndingSyllable(char ch) {
+        byte[] features = SyllableDic.getFeatureInByte(ch);
+        return features[SyllableDic.IDX_EOMI2] == 1;
     }
 }

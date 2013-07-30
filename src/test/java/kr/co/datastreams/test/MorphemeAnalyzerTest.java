@@ -1,6 +1,6 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.MorphemeAnalyzer;
+import kr.co.datastreams.dsma.ma.DefaultMorphemeAnalyzer;
 import org.junit.Test;
 
 /**
@@ -15,7 +15,7 @@ public class MorphemeAnalyzerTest {
     @Test
     public void test() throws Exception {
         String input = "부동산거래 활성화 효과 하나 없는데 찌라시들 엉터리 보도에 내놓은 코미디 정책을 보고 웃었다.";
-        MorphemeAnalyzer analyzer = new MorphemeAnalyzer();
+        DefaultMorphemeAnalyzer analyzer = new DefaultMorphemeAnalyzer();
         analyzer.analyze(input);
     }
 }

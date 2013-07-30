@@ -2,12 +2,11 @@ package kr.co.datastreams.dsma.dic;
 
 import kr.co.datastreams.commons.util.FileUtil;
 import kr.co.datastreams.commons.util.StopWatch;
-import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
 import kr.co.datastreams.dsma.dic.trie.Trie;
-import kr.co.datastreams.dsma.ma.WordEntry;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,4 +95,19 @@ public class Dictionary {
     }
 
 
+    /**
+     * 사전에 수록된 단어를 찾아서 동사로 활용할 수 있으면 반환하고
+     * 동사로 쓸 수 없으면 null을 반환한다.
+     *
+     * @param word - the word to find
+     * @return WordEntry that is possible to use as verb.
+     */
+    public static WordEntry getVerb(String word) {
+        WordEntry entry = get(word);
+        if (entry == null) return null;
+
+        if (entry.getFeature(WordEntry.IDX_VERB) == '1') return entry;
+
+        return null;
+    }
 }

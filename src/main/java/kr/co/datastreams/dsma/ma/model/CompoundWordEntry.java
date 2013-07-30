@@ -1,7 +1,6 @@
-package kr.co.datastreams.dsma.ma;
+package kr.co.datastreams.dsma.ma.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 
 /**
  * Created with IntelliJ IDEA.

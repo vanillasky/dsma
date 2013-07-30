@@ -1,11 +1,10 @@
 package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.commons.util.StringUtil;
-import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.ma.api.EndingProcessor;
+import kr.co.datastreams.dsma.ma.api.EndingSplitter;
+import kr.co.datastreams.dsma.ma.model.Variant;
 import kr.co.datastreams.dsma.ma.rule.*;
-import kr.co.datastreams.dsma.util.Hangul;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * Time: 오후 1:59
  *
  */
-public class RuleBaseEndingProcessor implements EndingProcessor {
+public class RuleBaseEndingSplitter implements EndingSplitter {
 
     /**
      * 어미를 분리한다.
@@ -69,7 +68,7 @@ public class RuleBaseEndingProcessor implements EndingProcessor {
      * @return
      */
     @Override
-    public Variant splitPrefinalEnding(String stem) {
+    public Variant splitPrefinal(String stem) {
         if (StringUtil.nvl(stem).length() == 0 || "있".equals(stem)) return Variant.EMPTY;
 
         EndingSplitRule rule = new PrefinalEndingRule(stem);

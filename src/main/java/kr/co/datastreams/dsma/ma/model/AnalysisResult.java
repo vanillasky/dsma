@@ -1,4 +1,4 @@
-package kr.co.datastreams.dsma.ma;
+package kr.co.datastreams.dsma.ma.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class AnalysisResult implements Serializable, Cloneable {
     private String vsfx; // index of verb suffix, 용언화 접미사에 대한 인덱스 값
     private String josa; // 조사 string, 조사가 분리되었을 경우 그 스트링을 저장, 조사가 분리되지 않으면 '\0'
     private List<String> josaList = new ArrayList<String>(); // unit-josa sequence, 복합조사인 경우 각 단위 조사들이 분리된 형태를 저장
-    private String emoi; // 어미 String, 어미가 분리되었을 경우 그 스트링을 저장,
+    private String eomi; // 어미 String, 어미가 분리되었을 경우 그 스트링을 저장,
     private List<String> eomiList = new ArrayList<String>(); // unit-eomi sequence, 복합어미인 경우 각 단위어미들이 분리된 형태를 저장
     private String pomi; // 선어말어미, 하위 4비트로 표현(0000xxxx)의 xxxx 부분을 순서대로 '시/었/었/겠'의 출현여부를 표시
     private String xverb; // xverb string, '먹어보다'와 같이 붙여쓴 보조용언의 분리되었을 때 그 스트링을 저장
@@ -43,4 +43,29 @@ public class AnalysisResult implements Serializable, Cloneable {
         score =  SCORE_FAIL;
     }
 
+    public static AnalysisResult verb(String stem, String ending, int pattern) {
+        return new AnalysisResult(stem, null, ending, pattern);
+    }
+
+    private AnalysisResult(String stem, String josa, String ending, int pattern) {
+        this.score = SCORE_ANALYSIS;
+        this.stem = stem;
+        this.josa = josa;
+        this.eomi = ending;
+        this.wordPattern = pattern;
+    }
+
+    public static AnalysisResult verbWithPrefinal(String stem, String prefinal, String ending, int pattern) {
+        AnalysisResult result = verb(stem, ending, pattern);
+        result.pomi = prefinal;
+        return result;
+    }
+
+    public static AnalysisResult verbWithPrefinal(Variant prefinal, String ending, int pattern) {
+        return verbWithPrefinal(prefinal.getStem(), prefinal.getPrefinalEnding(), ending, pattern);
+    }
+
+    public String getStem() {
+        return stem;
+    }
 }

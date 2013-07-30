@@ -40,21 +40,21 @@ public class Constants {
 
     //*          CLASSIFICATION OF PARTS OF SPEECH               */
     //	3(basic) + 2(special) types of stem for 'pos'
-    public static char POS_NPXM  =   'N';       //* noun, pnoun, xn, nume */
-    public static char POS_VJXV  =   'V';       //* verb, adj, xverb      */
-    public static char POS_AID   =   'Z';       //* adv, det, excl        */
+    public static char POS_NPXM  =   'N';       // 체언: 명사/대명사/수자/의존명사
+    public static char POS_VJXV  =   'V';       // 용언: 동사/형용사/보조용언
+    public static char POS_AID   =   'Z';       // 기타: 부사/관형사/감탄사
 
-    public static char POS_PUNC  =   'q';       //* punctuation mark:./,/( */
+    public static char POS_PUNC  =   'q';       // 문장부호
     public static char POS_SYMB  =   'Q';       //* special symbols       */
 
     //	normal types of stem for 'pos2'.
     //	Only some of following symbols are used.
-    public static char POS_NOUN  =   'N';       //* noun                  */
-    public static char POS_PNOUN  =  'P';       //* pronoun               */
-    public static char POS_XNOUN  =  'U';       //* dependent noun        */
-    public static char POS_NUMERAL = 'M';       //* numeral               */
+    public static char POS_NOUN  =   'N';       // 명사(noun)
+    public static char POS_PNOUN  =  'P';       // 대명사(pronoun)
+    public static char POS_XNOUN  =  'U';       // 의존명사(dependent noun)
+    public static char POS_NUMERAL = 'M';       // 수사(numeral)
 
-    public static char POS_PROPER  = 'O';       //* proper noun: NOT USED */
+    public static char POS_PROPER  = 'O';       // proper noun: NOT USED
 
     public static char POS_CNOUN  =  'C';       //* compound noun guessed */
     public static char POS_NOUNK  =  'u';       //* guessed as noun       */
