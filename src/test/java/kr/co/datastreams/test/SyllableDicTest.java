@@ -15,15 +15,11 @@ public class SyllableDicTest {
 
     @Test
     public void testGetFeature() throws Exception {
-        String str = "올해장마는유난히길고비가많이내린다";
-        char[] chars = str.toCharArray();
-        int i =0;
-        for (char each : chars) {
-            char[] result = SyllableDic.getFeature(each);
-            assertEquals(chars[i], result[result.length-1]);
-            i++;
-        }
-    }
+        String str = "가";
+        char[] feature = "1111111111110111100000000000000000000001".toCharArray();
 
+        char[] result = SyllableDic.getFeature(str.charAt(0));
+        assertArrayEquals(feature, result);
+    }
 
 }

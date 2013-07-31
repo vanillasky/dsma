@@ -161,6 +161,7 @@ public class Hangul {
         }
     }
 
+
     public String toString() {
         return "(" + this.cho + "," + this.jung + "," + this.jong + ")";
     }
@@ -238,6 +239,7 @@ public class Hangul {
     public static boolean hasOnlyVerbSyllable(String word) {
         for (int i=word.length()-1; i >= 0; i--) {
             byte[] features = SyllableDic.getFeatureInByte(word.charAt(i));
+
             if (features[SyllableDic.IDX_WDSURF] == 1) {
                 return true;
             }
@@ -274,5 +276,35 @@ public class Hangul {
     public static boolean isSecondEndingSyllable(char ch) {
         byte[] features = SyllableDic.getFeatureInByte(ch);
         return features[SyllableDic.IDX_EOMI2] == 1;
+    }
+
+    /**
+     * 다음 조건에 부합하면 true, 아니면 false 를 반환<br/>
+     * 음소가<br/>
+     *  'ㄴ' -> (용언+'-ㄴ')에 의하여 생성되는 음절 or 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절 <br/>
+     *  'ㄹ' -> (용언+'-ㄹ')에 의해 생성되는 음절<br/>
+     *  'ㅁ' -> (용언+'-ㅁ')에 의해 생성되는 음절<br/>
+     *  'ㅂ' -> (용언+'-ㅂ')에 의해 생성되는 음절<br/>
+     * @param ch - 한 개의 음절
+     * @param phoneme - 음소(ㄴ/ㄹ/ㅁ/ㅂ)
+     * @return
+     */
+    public static boolean isNLMBSyllable(char ch, char phoneme) {
+
+        char[] features = SyllableDic.getFeature(ch);
+
+        switch(phoneme) {
+            case 'ㄴ' :
+                return (features[SyllableDic.IDX_YNPNA]=='1'      //(용언+'-ㄴ')에 의하여 생성되는 음절(e.g. 간)
+                        || features[SyllableDic.IDX_YNPLN]=='1'); // 받침 'ㄹ'로 끝나는 용언이 어미 '-ㄴ'과 결합할 때 생성되는 음절 (끌다 -> 끈)
+            case 'ㄹ' :
+                return (features[SyllableDic.IDX_YNPLA]=='1'); // (용언+'-ㄹ')에 의해 생성되는 음절(갈,널 등)
+            case 'ㅁ' :
+                return (features[SyllableDic.IDX_YNPMA]=='1'); // (용언+'-ㅁ')에 의해 생성되는 음절(감,댐 등)
+            case 'ㅂ' :
+                return (features[SyllableDic.IDX_YNPBA]=='1'); // (용언+'-ㅂ')에 의해 생성되는 음절(갑,넙 등)
+        }
+
+        return false;
     }
 }

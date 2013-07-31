@@ -1,6 +1,7 @@
 package kr.co.datastreams.dsma.ma.api;
 
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
+import kr.co.datastreams.dsma.ma.model.Sentence;
 
 
 import java.util.List;
@@ -21,6 +22,6 @@ public interface MorphemeAnalyzer {
      * @param inputString - 입력 문자열
      * @return result of morpheme analysis or empty list
      */
-    List<AnalysisResult> analyze(String inputString);
+    Sentence analyze(String inputString);
 
 }

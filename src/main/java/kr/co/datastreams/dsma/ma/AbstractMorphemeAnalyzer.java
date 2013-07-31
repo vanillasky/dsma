@@ -1,10 +1,8 @@
 package kr.co.datastreams.dsma.ma;
 
+import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.ma.api.MorphemeAnalyzer;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Token;
-
-import java.util.List;
+import kr.co.datastreams.dsma.ma.model.Sentence;
 
 /**
  *
@@ -15,23 +13,25 @@ import java.util.List;
  */
 public abstract class AbstractMorphemeAnalyzer implements MorphemeAnalyzer {
 
-
     @Override
-    public abstract List<AnalysisResult> analyze(String inputString);
+    public Sentence analyze(String inputString) {
+        if (StringUtil.nvl(inputString).trim().length() == 0) {
+            return Sentence.emptySentence();
+        }
 
+        Sentence sentence = Sentence.create(inputString);
 
-    protected List<Token> tokenizeFrom(String inputString, Tokenizer tokenizer) {
-        List<Token> tokens = tokenizer.tokenize(inputString.trim());
-        return tokens;
+        preProcess(sentence);
+        guessTail(sentence);
+        confirmHead(sentence);
+        postProcess(sentence);
+
+        return sentence;
     }
 
-//    protected List<Token> tokenizeFrom(File file, Tokenizer tokenizer) {
-//        List<Token> tokens = new ArrayList<Token>();
-//        List<String> lines = FileUtil.readLines(file, "UTF-8");
-//        for (String line : lines) {
-//            tokens.addAll(tokenizer.tokenize(line.trim()));
-//        }
-//
-//        return tokens;
-//    }
+    protected abstract void preProcess(Sentence inputString);
+    protected abstract void guessTail(Sentence sentence);
+    protected abstract void confirmHead(Sentence sentence);
+    protected abstract void postProcess(Sentence sentence);
+
 }

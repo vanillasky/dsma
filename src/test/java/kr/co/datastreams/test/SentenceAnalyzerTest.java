@@ -1,6 +1,6 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.DefaultMorphemeAnalyzer;
+import kr.co.datastreams.dsma.ma.SentenceAnalyzer;
 import org.junit.Test;
 
 /**
@@ -10,12 +10,12 @@ import org.junit.Test;
  * Time: 오전 10:59
  * To change this template use File | Settings | File Templates.
  */
-public class MorphemeAnalyzerTest {
+public class SentenceAnalyzerTest {
 
     @Test
     public void test() throws Exception {
         String input = "부동산거래 활성화 효과 하나 없는데 찌라시들 엉터리 보도에 내놓은 코미디 정책을 보고 웃었다.";
-        DefaultMorphemeAnalyzer analyzer = new DefaultMorphemeAnalyzer();
+        SentenceAnalyzer analyzer = new SentenceAnalyzer();
         analyzer.analyze(input);
     }
 }

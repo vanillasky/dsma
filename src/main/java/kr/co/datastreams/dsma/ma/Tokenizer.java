@@ -2,7 +2,7 @@ package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.dsma.dic.TokenPattern;
 import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Token;
+import kr.co.datastreams.dsma.ma.model.Word;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -19,13 +19,13 @@ public class Tokenizer {
 
     private static final char PREDEFINED_TOKEN_REPLACEMENT = ' ';
 
-    private final Map<Integer, Token> filteredTokens = new HashMap<Integer, Token>(); // 전처리 과정에서 PREDEFINED_TOKEN_PATTERN 에 의해 걸러진 토큰들
-    private final List<Token> tokens = new ArrayList<Token>();
+    private final Map<Integer, Word> filteredTokens = new HashMap<Integer, Word>(); // 전처리 과정에서 PREDEFINED_TOKEN_PATTERN 에 의해 걸러진 토큰들
+    private final List<Word> tokens = new ArrayList<Word>();
 
     public Tokenizer() {
     }
 
-    public List<Token> tokenize(String text) {
+    public List<Word> tokenize(String text) {
         StringBuilder buf = new StringBuilder(text);
         filterPredefinedPatterns(buf);
 
@@ -46,7 +46,7 @@ public class Tokenizer {
                     //System.out.println("["+i+"]prevCharType != currCharType =>"+ temp + "," + ch +"," + prevCharType + "," + currCharType);
                     if(prevCharType != CharType.EMOTICON) {
 //                        System.out.println("  created token:"+ temp + "," + prevCharType);
-                        tokens.add(new Token(temp, prevCharType, tokenIndex));
+                        tokens.add(new Word(temp, prevCharType, tokenIndex));
                     }
                     tokenIndex = i;
                     temp = "";
@@ -60,7 +60,7 @@ public class Tokenizer {
         }
 
         if (temp.trim().length() > 0) {
-            Token t = new Token(temp, currCharType, tokenIndex);
+            Word t = new Word(temp, currCharType, tokenIndex);
             tokens.add(t);
         }
 
@@ -115,11 +115,11 @@ public class Tokenizer {
     }
 
     // 패턴에 매칭되는 토큰 리스트를 만든다.
-    private List<Token> match(StringBuilder text, TokenPattern tokenPattern) {
-        List<Token> tokenList = new ArrayList<Token>();
+    private List<Word> match(StringBuilder text, TokenPattern tokenPattern) {
+        List<Word> tokenList = new ArrayList<Word>();
 
         for (Matcher matcher = tokenPattern.getPattern().matcher(text); matcher.find(); ) {
-            Token token = new Token(text.substring(matcher.start(), matcher.end()),
+            Word token = new Word(text.substring(matcher.start(), matcher.end()),
                                     tokenPattern.getCharType(),
                                     matcher.start() );
             tokenList.add(token);
@@ -129,7 +129,7 @@ public class Tokenizer {
         return tokenList;
     }
 
-    private void markFiltered(StringBuilder text, int start, int end, Token filtered) {
+    private void markFiltered(StringBuilder text, int start, int end, Word filtered) {
         for (int i=start; i < end; i++) {
             filteredTokens.put(i, filtered);
             text.setCharAt(i, PREDEFINED_TOKEN_REPLACEMENT);

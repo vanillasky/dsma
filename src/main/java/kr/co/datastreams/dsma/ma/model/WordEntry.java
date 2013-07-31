@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 오전 10:10
  * To change this template use File | Settings | File Templates.
  */
-public class WordEntry extends Token {
+public class WordEntry  {
 
     public static final int IDX_NOUN = 0;  // 명사
     public static final int IDX_VERB = 1;  // 동사
@@ -23,6 +23,7 @@ public class WordEntry extends Token {
     public static final int IDX_CNOUNX = 8; //
     public static final int IDX_REGURA = 9; // 불규칙
 
+    protected String string;
     protected char[] features;
     protected List<CompoundWordEntry> compounds = new ArrayList<CompoundWordEntry>();
 
@@ -67,5 +68,31 @@ public class WordEntry extends Token {
 
     void setCompounds(List<CompoundWordEntry> compounds) {
         this.compounds = compounds;
+    }
+
+    /**
+     * 명사로 사용할 수 있는지를 반환한다.
+     *
+     * @return true if the word can be noun.
+     */
+    public boolean availableAsNoun() {
+        return availableAs(IDX_NOUN);
+    }
+
+    /**
+     * 동사로 사용할 수 있는 단어인지를 반환한다.
+     *
+     * @return true if the word can be verb.
+     */
+    public boolean availableAsVerb() {
+        return availableAs(IDX_VERB);
+    }
+
+    private boolean availableAs(int propertyIndex) {
+        return getFeature(propertyIndex) == '1';
+    }
+
+    public String getString() {
+        return string;
     }
 }

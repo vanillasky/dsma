@@ -1,7 +1,6 @@
 package kr.co.datastreams.dsma.ma.rule;
 
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.dic.SyllableDic;
 import kr.co.datastreams.dsma.ma.model.Variant;
 import kr.co.datastreams.dsma.util.Hangul;
 
@@ -27,7 +26,7 @@ public class StartsWithNLMBEomiRule extends BaseEndingRule {
      */
     public boolean canHandle() {
         return phonemes.endsWithNLMB() // ㄴ/ㄹ/ㅁ/ㅂ 으로 끝나고
-                && SyllableDic.isNLMBSyllable(endOfStemCandidate, phonemes.jong) // 음절 생성 규칙을 만족하고
+                && Hangul.isNLMBSyllable(endOfStemCandidate, phonemes.jong) // 음절 생성 규칙을 만족하고
                 && EomiDic.findEndingWith(phonemes.jong, endingCandidate) != null; // 종성 + 어미부가 사전에 있으면
     }
 

@@ -1,6 +1,8 @@
 package kr.co.datastreams.dsma.ma.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,34 +11,46 @@ import java.io.Serializable;
  * Time: 오후 1:33
  * To change this template use File | Settings | File Templates.
  */
-public class Token implements Serializable, Comparable {
+public class Word implements Serializable, Comparable {
 
-    protected String string;
+
+
+
+    public static enum ResultCode {SUCCESS, ASSUMPTION, FAILURE}; // 형태소 분석결과 반환값
+
+    protected final String string;
     protected CharType charType;
     protected int index;
 
+    private ResultCode resultCode; // 분석결과 코드
+    private List<AnalysisResult> analysisResults; // 분석 후보들
+    private Integer[] selectedCandidates; // 분석 후보 중에서 선택된 분석결과의 index
+
     @Override
     public int compareTo(Object other) {
-        if (other instanceof Token) {
-            return index - ((Token)other).index;
+        if (other instanceof Word) {
+            return index - ((Word)other).index;
         }
         return 0;
     }
 
-    public Token() {
+    public Word() {
         this.string = null;
         this.charType = CharType.ETC;
         this.index = 0;
+        this.resultCode = ResultCode.FAILURE;
     }
 
-    public Token(String string, CharType charType) {
+    public Word(String string, CharType charType) {
         this(string, charType, 0);
     }
 
-    public Token(String string, CharType charType, int index) {
+    public Word(String string, CharType charType, int index) {
         this.string = string;
         this.charType = charType;
         this.index = index;
+        resultCode = ResultCode.FAILURE;
+        analysisResults = new ArrayList<AnalysisResult>();
     }
 
 
@@ -44,12 +58,12 @@ public class Token implements Serializable, Comparable {
         return string != null && other != null && other.equals(string);
     }
 
-    public Token(Token token) {
+    public Word(Word token) {
         this(token.string, token.charType, token.index);
     }
 
-    public Token copy() {
-        Token copy = new Token(string, charType, index);
+    public Word copy() {
+        Word copy = new Word(string, charType, index);
         return copy;
     }
 
@@ -78,5 +92,13 @@ public class Token implements Serializable, Comparable {
 
     public int getIndex() {
         return index;
+    }
+
+    public void addResults(List<AnalysisResult> candidates) {
+        analysisResults.addAll(candidates);
+    }
+
+    public void addResult(AnalysisResult result) {
+        analysisResults.add(result);
     }
 }

@@ -15,7 +15,7 @@ import org.junit.runners.Suite;
     TrieTest.class
     , DictionaryTest.class
     , WordEntryComposerTest.class
-    , RuleBaseEndingProcessorTest.class
+    , RuleBaseVerbAnalyzerTest.class
     , HangulTest.class
     , SyllableDicTest.class
     , TokenizerTest.class

@@ -2,7 +2,8 @@ package kr.co.datastreams.dsma.ma;
 
 import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.ma.api.EndingSplitter;
+import kr.co.datastreams.dsma.ma.api.VerbAnalyzer;
+import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.Variant;
 import kr.co.datastreams.dsma.ma.rule.*;
 
@@ -15,7 +16,30 @@ import java.util.List;
  * Time: 오후 1:59
  *
  */
-public class RuleBaseEndingSplitter implements EndingSplitter {
+public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
+
+    @Override
+    public void analyze(List<AnalysisResult> candidates, String stem, String endingCandidate) {
+        if (StringUtil.nvl(stem).trim().length() == 0) {
+            return;
+        }
+
+        AnalysisResult candidate;
+
+        Variant ending = splitEnding(stem, endingCandidate);
+        if (ending.isEmpty()) return;
+
+        Variant prefinal = splitPrefinal(ending.getStem());
+        if (prefinal.isEmpty()) {
+            candidate = AnalysisResult.verb(ending.getStem(), ending.getEnding(), Constants.PTN_VM);
+        }
+        else {
+            candidate = AnalysisResult.verbWithPrefinal(prefinal, ending.getEnding(), Constants.PTN_VM);
+        }
+
+        candidates.add(candidate);
+
+    }
 
     /**
      * 어미를 분리한다.
@@ -30,7 +54,6 @@ public class RuleBaseEndingSplitter implements EndingSplitter {
      * @param ending - 어미후보
      * @return
      */
-    @Override
     public Variant splitEnding(String stem, String ending) {
         List<EndingSplitRule> rules = RuleFactory.buildEndingSplitRules(stem, ending);
         Variant result = null;
@@ -67,7 +90,6 @@ public class RuleBaseEndingSplitter implements EndingSplitter {
      * @param stem
      * @return
      */
-    @Override
     public Variant splitPrefinal(String stem) {
         if (StringUtil.nvl(stem).length() == 0 || "있".equals(stem)) return Variant.EMPTY;
 
@@ -78,6 +100,7 @@ public class RuleBaseEndingSplitter implements EndingSplitter {
 
         return Variant.EMPTY;
     }
+
 
 
 }

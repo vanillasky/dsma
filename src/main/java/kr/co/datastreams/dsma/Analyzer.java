@@ -1,10 +1,8 @@
 package kr.co.datastreams.dsma;
 
-import kr.co.datastreams.dsma.ma.DefaultMorphemeAnalyzer;
+import kr.co.datastreams.dsma.ma.SentenceAnalyzer;
 import kr.co.datastreams.dsma.ma.api.MorphemeAnalyzer;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-
-import java.util.List;
+import kr.co.datastreams.dsma.ma.model.Sentence;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,9 +13,9 @@ import java.util.List;
  */
 public class Analyzer {
 
-    private MorphemeAnalyzer morphemeAnalyzer = new DefaultMorphemeAnalyzer();
+    private MorphemeAnalyzer morphemeAnalyzer = new SentenceAnalyzer();
 
-    public List<AnalysisResult> start(String inputString) {
+    public Sentence analyze(String inputString) {
         return morphemeAnalyzer.analyze(inputString);
     }
 }

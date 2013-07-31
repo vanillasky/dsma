@@ -106,8 +106,10 @@ public class Dictionary {
         WordEntry entry = get(word);
         if (entry == null) return null;
 
-        if (entry.getFeature(WordEntry.IDX_VERB) == '1') return entry;
+        if (entry.availableAsVerb()) return entry;
 
         return null;
     }
+
+
 }

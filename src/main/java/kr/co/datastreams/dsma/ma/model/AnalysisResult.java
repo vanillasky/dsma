@@ -29,43 +29,84 @@ public class AnalysisResult implements Serializable, Cloneable {
     private char pos2; // stem의 중분류 수준의 품사정보, pos 만으로 품사정보가 부족할 때 내부적으로 사용
     private char dinf; // 어휘형태소 stem에 대한 품사정보. 분석 사전에 기술
 
-    private String nsfx; // index of noun suffix, 체언 접미사에 대한 인덱스 값
-    private String vsfx; // index of verb suffix, 용언화 접미사에 대한 인덱스 값
+    private String nounSuffixIndex; // index of noun suffix, 체언 접미사에 대한 인덱스 값
+    private String verbSuffixIndex; // index of verb suffix, 용언화 접미사에 대한 인덱스 값
     private String josa; // 조사 string, 조사가 분리되었을 경우 그 스트링을 저장, 조사가 분리되지 않으면 '\0'
     private List<String> josaList = new ArrayList<String>(); // unit-josa sequence, 복합조사인 경우 각 단위 조사들이 분리된 형태를 저장
-    private String eomi; // 어미 String, 어미가 분리되었을 경우 그 스트링을 저장,
-    private List<String> eomiList = new ArrayList<String>(); // unit-eomi sequence, 복합어미인 경우 각 단위어미들이 분리된 형태를 저장
-    private String pomi; // 선어말어미, 하위 4비트로 표현(0000xxxx)의 xxxx 부분을 순서대로 '시/었/었/겠'의 출현여부를 표시
-    private String xverb; // xverb string, '먹어보다'와 같이 붙여쓴 보조용언의 분리되었을 때 그 스트링을 저장
+    private String ending; // 어미 String, 어미가 분리되었을 경우 그 스트링을 저장,
+    private List<String> endingList = new ArrayList<String>(); // unit-ending sequence, 복합어미인 경우 각 단위어미들이 분리된 형태를 저장
+    private String prefinalEnding; // 선어말어미, 하위 4비트로 표현(0000xxxx)의 xxxx 부분을 순서대로 '시/었/었/겠'의 출현여부를 표시
+    private String auxiliaryVerb; // xverb string, '먹어보다'와 같이 붙여쓴 보조용언의 분리되었을 때 그 스트링을 저장
     private char irregularVerbType; // 불규칙 용언의 유형에 관한 정보
 
     public AnalysisResult() {
         score =  SCORE_FAIL;
     }
 
+    /**
+     * 용언 정보를 만든다.
+     *
+     * @param stem - 어간
+     * @param ending - 어미
+     * @param pattern - 단어 유형
+     *
+     * @return 분석결과
+     */
     public static AnalysisResult verb(String stem, String ending, int pattern) {
         return new AnalysisResult(stem, null, ending, pattern);
+    }
+
+    public static AnalysisResult empty(String word) {
+        return new AnalysisResult(word, null, null, -1);
     }
 
     private AnalysisResult(String stem, String josa, String ending, int pattern) {
         this.score = SCORE_ANALYSIS;
         this.stem = stem;
         this.josa = josa;
-        this.eomi = ending;
+        this.ending = ending;
         this.wordPattern = pattern;
     }
 
+    /**
+     * 선어말 어미가 포함된 용언을 만든다
+     *
+     * @param stem - 어간
+     * @param prefinal - 선어말 어미
+     * @param ending - 어미
+     * @param pattern - 단어 유형
+     * @return
+     */
     public static AnalysisResult verbWithPrefinal(String stem, String prefinal, String ending, int pattern) {
         AnalysisResult result = verb(stem, ending, pattern);
-        result.pomi = prefinal;
+        result.prefinalEnding = prefinal;
         return result;
     }
 
+    /**
+     * 선어말 어미가 포함된 용언을 만든다
+     *
+     * @param prefinal - 선어말 어미 정보
+     * @param ending - 어미
+     * @param pattern - 단어 유형
+     * @return
+     */
     public static AnalysisResult verbWithPrefinal(Variant prefinal, String ending, int pattern) {
         return verbWithPrefinal(prefinal.getStem(), prefinal.getPrefinalEnding(), ending, pattern);
     }
 
     public String getStem() {
         return stem;
+    }
+
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("AnalysisResult {")
+          .append("stem: ").append(stem).append(",")
+          .append("prefinal: ").append(prefinalEnding).append(",")
+          .append("endiing: ").append(ending)
+          .append("}");
+        return sb.toString();
     }
 }
