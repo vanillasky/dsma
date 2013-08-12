@@ -12,7 +12,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface WordEntryComposer {
-    List<WordEntry> compose(String[] lines);
+    WordEntry compose(String lines);
     String[] parseFailedLines();
-
 }

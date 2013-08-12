@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: shkim
  * Date: 13. 7. 23
  * Time: 오후 5:54
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class EomiDic implements ConfKeys {
 
@@ -48,10 +48,10 @@ public class EomiDic implements ConfKeys {
     }
 
     public static boolean exists(String eomi) {
-        return instance.existsEomi(eomi);
+        return instance.existsEnding(eomi);
     }
 
-    private boolean existsEomi(String eomi) {
+    private boolean existsEnding(String eomi) {
         return eomiMap.containsKey(eomi);
     }
 

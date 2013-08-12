@@ -13,15 +13,14 @@ import java.util.List;
 public class RuleFactory {
 
 
-    public static List<EndingSplitRule> buildEndingSplitRules(String stemCandidate, String endingCandidate) {
-        List<EndingSplitRule> rules = new ArrayList<EndingSplitRule>();
-        rules.add(new StartsWithNLMBEomiRule(stemCandidate, endingCandidate));
-        rules.add(new EndingSplitRuleVariantHayoeGeoraNeora(stemCandidate, endingCandidate));
-        rules.add(new EndingSplitRuleApocope(stemCandidate, endingCandidate));
+    public static List<EndingCombineRule> buildEndingSplitRules(String stemCandidate, String endingCandidate) {
+        List<EndingCombineRule> rules = new ArrayList<EndingCombineRule>();
+        rules.add(new EndingStartsWithNLMB(stemCandidate, endingCandidate));
+        rules.add(new EndingVariantHayoeGeoraNeora(stemCandidate, endingCandidate));
+        rules.add(new ApocopeRule(stemCandidate, endingCandidate));
         rules.add(new EndingSplitRuleVariantAEoi(stemCandidate, endingCandidate));
-        rules.add(new EndingSplitRuleVariant(stemCandidate, endingCandidate));
-        rules.add(new EndingSplitRuleEndsWithHae(stemCandidate, endingCandidate));
-        rules.add(new EndingSplitRuleEndsWithHi(stemCandidate, endingCandidate));
+        rules.add(new EndingCombineWithEoi(stemCandidate, endingCandidate));
+        rules.add(new EndingEndsWithHi(stemCandidate, endingCandidate));
 
         return rules;
     }

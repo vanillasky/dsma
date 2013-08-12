@@ -8,25 +8,6 @@ package kr.co.datastreams.dsma.ma;
  * To change this template use File | Settings | File Templates.
  */
 public class Constants {
-    /*
-     * Hangul word patterns for KMA
-     */
-    public static int PTN_N = 1;  //* 체언 : N/PN/NM/XN/CN/UN/AS/HJ/ET */
-    public static int PTN_NJ = 2;  //* 체언 + 조사 */
-    public static int PTN_NSM = 3;  //* 체언 + 용언화접미사 + 어미 */
-    public static int PTN_NSMJ = 4;  //* 체언 + 용언화접미사 + '음/기' + 조사 */
-    public static int PTN_NSMXM =5;  //* 체언 + 용언화접미사 + '아/어' + 보조용언 + 어미 */
-    public static int PTN_NJCM =  6; //* 체언 + '에서/부터/에서부터' + '이' + 어미 */
-    public static int PTN_NSMXMJ = 7;  //* 체언 + 용언화접미사 + '아/어' + 보조용언 + '음/기' + 조사 */
-    public static int PTN_VM  =  11;  //* 용언 + 어미 */
-    public static int PTN_VMJ =  12; //* 용언 + '음/기' + 조사 */
-    public static int PTN_VMCM = 13;  //* 용언 + '음/기' + '이' + 어미 */
-    public static int PTN_VMXM = 14;  //* 용언 + '아/어' + 보조용언 + 어미 */
-    public static int PTN_VMXMJ= 15;  //* 용언 + '아/어' + 보조용언 + '음/기' + 조사 */
-    public static int PTN_AID =  21;  //* 단일어 : 부사, 관형사, 감탄사 */
-    public static int PTN_ADVJ =  22;  //* 부사 + 조사 : '빨리도' */
-    public static int PTN_NVM =  31;  //* 체언 + 동사 + 어미 */
-    public static int PTN_ZZZ =  35;  //* 문장부호, KS 완성형 기호열, 단독조사/어미 */
 
     /**
      * Definition of sentence types and parts of speech
@@ -38,67 +19,7 @@ public class Constants {
     public static char SPTN_IMPR =  'I';       //* imperative sentence  */
     public static char SPTN_TITL =  'T';       //* title of a paragraph */
 
-    //*          CLASSIFICATION OF PARTS OF SPEECH               */
-    //	3(basic) + 2(special) types of stem for 'pos'
-    public static char POS_NPXM  =   'N';       // 체언: 명사/대명사/수자/의존명사
-    public static char POS_VJXV  =   'V';       // 용언: 동사/형용사/보조용언
-    public static char POS_AID   =   'Z';       // 기타: 부사/관형사/감탄사
 
-    public static char POS_PUNC  =   'q';       // 문장부호
-    public static char POS_SYMB  =   'Q';       //* special symbols       */
-
-    //	normal types of stem for 'pos2'.
-    //	Only some of following symbols are used.
-    public static char POS_NOUN  =   'N';       // 명사(noun)
-    public static char POS_PNOUN  =  'P';       // 대명사(pronoun)
-    public static char POS_XNOUN  =  'U';       // 의존명사(dependent noun)
-    public static char POS_NUMERAL = 'M';       // 수사(numeral)
-
-    public static char POS_PROPER  = 'O';       // proper noun: NOT USED
-
-    public static char POS_CNOUN  =  'C';       //* compound noun guessed */
-    public static char POS_NOUNK  =  'u';       //* guessed as noun       */
-
-    public static char POS_ASCall =  '@';       //* all alphanumeric chars*/
-    public static char POS_ASCend =  '$';       //* end with alphanumeric */
-    public static char POS_ASCmid =  '*';       //* ..+alphanumeric+Hangul*/
-
-    //* defined for numeral to digit conversion */
-    public static char POS_digits =  '1';       //* digit-string */
-    public static char POS_digitH  = '2';       //* digit-string + Hangul*/
-
-    public static char POS_VERB  =   'V';       //* verb                  */
-    public static char POS_ADJ   =   'J';       //* adjective             */
-    public static char POS_XVERB =   'W';       //* auxiliary verb        */
-    public static char POS_XADJ  =   'K';       //* NOT USED YET          */
-
-    public static char POS_ADV   =   'B';       //* adverb                */
-    public static char POS_DET   =   'D';       //* determiner            */
-    public static char POS_EXCL  =   'L';       //* exclamation           */
-
-    public static char POS_JOSA   =  'j';       //* Korean Josa           */
-    public static char POS_COPULA =  'c';       //* copula '-Wi-'         */
-    public static char POS_EOMI   =  'e';       //* final Ending          */
-    public static char POS_PEOMI  =  'f';       //* prefinal Ending       */
-    public static char POS_NEOMI  =  'n';       //* nominalizing Eomi     */
-
-    public static char POS_PREFIX =  'p';       //* prefixes              */
-    public static char POS_SFX_N  =  's';       //* noun suffixes: '들/적'*/
-    public static char POS_SFX_V  =  't';       //* verb suffixes: '하/되'*/
-
-    public static char POS_ETC   =   'Z';       //* not decided yet       */
-
-    /* ASCII stem may be classified as follows: NOT USED YET    */
-    public static char POS_ALPHA  =  'A';       //* English alphabet      */
-    public static char POS_NUMBER =  '#';       //* Arabic numbers        */
-    public static char POS_SMARK  =  'R';       //* sentence markers      */
-
-    public static char POS_NVERBK  = 'Y';       //* guessed as noun+verb  */
-
-    public static char POS_SQUOTE  = 's';       //* single quotation      */
-    public static char POS_DQUOTE  = 'd';       //* double quotation      */
-    public static char POS_LPAREN  = 'l';       //* left parenthesis      */
-    public static char POS_RPAREN  = 'r';       //* right parenthesis     */
 
     /**----------------------  불규칙 변형 유형  ------------------------ */
     public static char IRR_TYPE_DI = 'd';  //* ㄷ 불규칙

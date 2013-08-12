@@ -1,5 +1,7 @@
 package kr.co.datastreams.test;
 
+import kr.co.datastreams.test.rule.ApocopeRuleTest;
+import kr.co.datastreams.test.rule.StartsWithNLMBEndingTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,6 +21,8 @@ import org.junit.runners.Suite;
     , HangulTest.class
     , SyllableDicTest.class
     , TokenizerTest.class
+    , ApocopeRuleTest.class
+    , StartsWithNLMBEndingTest.class
 })
 public class AllTests {
 }

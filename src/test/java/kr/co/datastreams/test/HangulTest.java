@@ -1,5 +1,6 @@
 package kr.co.datastreams.test;
 
+import kr.co.datastreams.dsma.dic.SyllableDic;
 import kr.co.datastreams.dsma.util.Hangul;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -126,7 +127,7 @@ public class HangulTest {
     public void testHasOnlyVerbSyllable() throws Exception {
         String[] words = {"줘봐", "갰", "냈", "괐", "뀐"};
         for (String word : words) {
-            boolean result = Hangul.hasOnlyVerbSyllable(word);
+            boolean result = SyllableDic.hasOnlyVerbSyllable(word);
             assertTrue(result);
         }
     }

@@ -13,9 +13,6 @@ import java.util.List;
  */
 public class Word implements Serializable, Comparable {
 
-
-
-
     public static enum ResultCode {SUCCESS, ASSUMPTION, FAILURE}; // 형태소 분석결과 반환값
 
     protected final String string;
@@ -24,7 +21,7 @@ public class Word implements Serializable, Comparable {
 
     private ResultCode resultCode; // 분석결과 코드
     private List<AnalysisResult> analysisResults; // 분석 후보들
-    private Integer[] selectedCandidates; // 분석 후보 중에서 선택된 분석결과의 index
+    private Integer[] selectedResults; // 분석 후보 중에서 선택된 분석결과의 index
 
     @Override
     public int compareTo(Object other) {
@@ -100,5 +97,21 @@ public class Word implements Serializable, Comparable {
 
     public void addResult(AnalysisResult result) {
         analysisResults.add(result);
+    }
+
+    public int length() {
+        return string.length();
+    }
+
+    public String substring(int beginIndex) {
+        return string.substring(beginIndex);
+    }
+
+    public String substring(int beginIndex, int endIndex) {
+        return string.substring(beginIndex, endIndex);
+    }
+
+    public char charAt(int index) {
+        return string.charAt(index);
     }
 }

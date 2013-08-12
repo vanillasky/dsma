@@ -29,4 +29,10 @@ public class Snippets {
         System.out.println(bytes[3] == 0);
     }
 
+
+    @Test
+    public void testLong() throws Exception {
+        System.out.println(Long.bitCount(Long.MIN_VALUE));
+        System.out.println(Long.bitCount(Long.MAX_VALUE));
+    }
 }

@@ -1,5 +1,7 @@
 package kr.co.datastreams.dsma.ma.model;
 
+import kr.co.datastreams.dsma.ma.PosTag;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class WordEntry  {
     public static final int IDX_CNOUNX = 8; //
     public static final int IDX_REGURA = 9; // 불규칙
 
+    protected long posTag;
     protected String string;
     protected char[] features;
     protected List<CompoundWordEntry> compounds = new ArrayList<CompoundWordEntry>();
@@ -34,6 +37,11 @@ public class WordEntry  {
     public WordEntry(String word, char[] features) {
         this.string = word;
         this.features = features;
+    }
+
+    public WordEntry(String word, String tag) {
+        this.string = word;
+        this.posTag = PosTag.buildTags(tag.split(":"));
     }
 
     public WordEntry(String word, char[] features, List<CompoundWordEntry> compounds) {
@@ -59,7 +67,7 @@ public class WordEntry  {
     }
 
     public char getFeature(int index) {
-        return ( features != null && features.length < index ) ? features[index] : '0';
+        return ( features != null && features.length > index ) ? features[index] : '0';
     }
 
     public List<CompoundWordEntry> getCompounds() {
@@ -94,5 +102,13 @@ public class WordEntry  {
 
     public String getString() {
         return string;
+    }
+
+    public boolean isTagOf(long tagNum) {
+        return (this.posTag & Long.MAX_VALUE & tagNum) > 0L;
+    }
+
+    public long tag() {
+        return this.posTag;
     }
 }

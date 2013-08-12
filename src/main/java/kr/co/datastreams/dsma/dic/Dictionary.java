@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,11 +25,12 @@ import java.util.List;
  *
  */
 public class Dictionary {
-
+    private static final String COMMENT_IDENTIFIER = "//";
     private static final Logger logger = LoggerFactory.getLogger(Dictionary.class);
     private static final Dictionary dictionary = new Dictionary();
 
     private final Trie<String, WordEntry> trie = new Trie<String, WordEntry>();
+    private final HashSet<WordEntry> verbStemSet = new HashSet<WordEntry>();
 
     private Dictionary() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -59,8 +62,16 @@ public class Dictionary {
 
     private void loadWithComposer(WordEntryComposer composer, String fileName) {
         List<String> lines = FileUtil.readLines(fileName, "UTF-8");
-        List<WordEntry> entries = composer.compose(lines.toArray(new String[lines.size()]));
-        addToTrie(entries);
+//        List<WordEntry> entries = new ArrayList<WordEntry>();
+        WordEntry entry;
+        for (Iterator<String> iter = lines.iterator(); iter.hasNext(); ) {
+            entry = composer.compose(iter.next());
+            if (entry != null) {
+                trie.add(entry.getString(), entry);
+            }
+        }
+
+//        addToTrie(entries);
     }
 
     private void addToTrie(List<WordEntry> entries) {

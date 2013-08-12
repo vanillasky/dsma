@@ -28,33 +28,26 @@ public class DefaultWordEntryComposer implements WordEntryComposer {
     private final List<String> wrongFeaturedWords = new ArrayList<String>();
 
     @Override
-    public List<WordEntry> compose(String[] lines) {
-        List<WordEntry> entries = new ArrayList<WordEntry>();
-        String trimedLine;
-
-        for (String line : lines) {
-            trimedLine = line.trim();
-            if (trimedLine.startsWith(COMMENT_IDENTIFIER) || StringUtil.nvl(trimedLine).length() == 0) {
-                continue;
-            }
-
-            String[] wordData = line.split(SEPARATOR);
-            if (wordData.length < 2) {
-                wrongFeaturedWords.add(line);
-                continue;
-            }
-
-
-            wordData[1] = wordData[1].trim();
-            if (wordData[1].length() - FLAG_COUNT != 0) {
-                wrongFeaturedWords.add(line);
-            } else {
-                WordEntry entry = new WordEntry(wordData[0].trim(), wordData[1].toCharArray());
-                entries.add(entry);
-            }
+    public WordEntry compose(String line) {
+        if (line.trim().length() == 0 || line.trim().startsWith(COMMENT_IDENTIFIER)) {
+            return null;
         }
 
-        return entries;
+        String[] wordData = line.trim().split(SEPARATOR);
+
+        if (wordData.length < 2) {
+            wrongFeaturedWords.add(line);
+            return null;
+        }
+
+        wordData[1] = wordData[1].trim();
+        if (wordData[1].length() - FLAG_COUNT != 0) {
+            wrongFeaturedWords.add(line);
+        } else {
+            return new WordEntry(wordData[0].trim(), wordData[1].toCharArray());
+        }
+
+        return null;
     }
 
     @Override

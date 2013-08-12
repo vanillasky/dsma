@@ -17,7 +17,6 @@ import java.util.List;
  *
  */
 public class CompoundWordEntryComposer implements WordEntryComposer {
-
     private static final String COMMENT_IDENTIFIER = "//";
     private static final String WORD_SEPARATOR = ",";
     private static final String TOKEN_SEPARATOR = ":";
@@ -26,28 +25,18 @@ public class CompoundWordEntryComposer implements WordEntryComposer {
     private final List<String> wrongFeaturedWords = new ArrayList<String>();
 
     @Override
-    public List<WordEntry> compose(String[] lines) {
-        List<WordEntry> entries = new ArrayList<WordEntry>();
-        String trimedLine;
-
-        for (String line : lines) {
-            trimedLine = line.trim();
-            if (trimedLine.startsWith(COMMENT_IDENTIFIER) || StringUtil.nvl(trimedLine).length() == 0) {
-                continue;
-            }
-
-            String[] tokens = line.split(TOKEN_SEPARATOR);
-            if (tokens.length < 2) {
-                wrongFeaturedWords.add(line);
-                continue;
-            }
-
-            WordEntry entry = new WordEntry(tokens[0].trim(), FEATURES, asCompoundList(tokens[1]));
-            entries.add(entry);
-
+    public WordEntry compose(String line) {
+        if (line.trim().length() == 0 || line.trim().startsWith(COMMENT_IDENTIFIER)) {
+            return null;
         }
 
-        return entries;
+        String[] tokens = line.trim().split(TOKEN_SEPARATOR);
+        if (tokens.length < 2) {
+            wrongFeaturedWords.add(line);
+            return null;
+        }
+
+        return new WordEntry(tokens[0].trim(), FEATURES, asCompoundList(tokens[1]));
     }
 
 

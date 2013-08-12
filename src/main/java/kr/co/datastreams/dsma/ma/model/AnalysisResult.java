@@ -1,5 +1,7 @@
 package kr.co.datastreams.dsma.ma.model;
 
+import kr.co.datastreams.dsma.ma.WordPattern;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +23,14 @@ public class AnalysisResult implements Serializable, Cloneable {
     private List<CompoundWordEntry> compound = new ArrayList<CompoundWordEntry>(); // 복합명사
     private String source; // 분석하기 전 문자열
     private int score; // score of this result
-    private int wordPattern;  // 분석대상 어절의 유형
+    private WordPattern wordPattern;  // 분석대상 어절의 유형
     private char wordType;    // 어절의 유형을 개념적인 기준의 의해 분류한 정보를 저장
 
     private String stem; // 입력어절의 어휘형태소, 형태소 분석 사전 수록 어휘를 기준으로 한다.
     private char pos; // stem의 대분류 수준의 품사정보. 체언(N), 용언(V), 기타(Z:관형사, 부사, 감탄사)로 구분
     private char pos2; // stem의 중분류 수준의 품사정보, pos 만으로 품사정보가 부족할 때 내부적으로 사용
     private char dinf; // 어휘형태소 stem에 대한 품사정보. 분석 사전에 기술
+
 
     private String nounSuffixIndex; // index of noun suffix, 체언 접미사에 대한 인덱스 값
     private String verbSuffixIndex; // index of verb suffix, 용언화 접미사에 대한 인덱스 값
@@ -39,8 +42,14 @@ public class AnalysisResult implements Serializable, Cloneable {
     private String auxiliaryVerb; // xverb string, '먹어보다'와 같이 붙여쓴 보조용언의 분리되었을 때 그 스트링을 저장
     private char irregularVerbType; // 불규칙 용언의 유형에 관한 정보
 
+
     public AnalysisResult() {
         score =  SCORE_FAIL;
+    }
+
+
+    public String getStem() {
+        return stem;
     }
 
     /**
@@ -52,21 +61,18 @@ public class AnalysisResult implements Serializable, Cloneable {
      *
      * @return 분석결과
      */
-    public static AnalysisResult verb(String stem, String ending, int pattern) {
-        return new AnalysisResult(stem, null, ending, pattern);
+    public static AnalysisResult verb(String source, String stem, String ending, WordPattern pattern) {
+        return new AnalysisResult(source, stem, ending, null, pattern, SCORE_ANALYSIS);
     }
 
     public static AnalysisResult empty(String word) {
-        return new AnalysisResult(word, null, null, -1);
+        return new AnalysisResult(word, null, null, null, null, SCORE_FAIL);
     }
 
-    private AnalysisResult(String stem, String josa, String ending, int pattern) {
-        this.score = SCORE_ANALYSIS;
-        this.stem = stem;
-        this.josa = josa;
-        this.ending = ending;
-        this.wordPattern = pattern;
-    }
+//    private AnalysisResult(String stem, String josa, String ending, int pattern) {
+//        this(stem, josa, ending, pattern, SCORE_ANALYSIS);
+//
+//    }
 
     /**
      * 선어말 어미가 포함된 용언을 만든다
@@ -77,36 +83,92 @@ public class AnalysisResult implements Serializable, Cloneable {
      * @param pattern - 단어 유형
      * @return
      */
-    public static AnalysisResult verbWithPrefinal(String stem, String prefinal, String ending, int pattern) {
-        AnalysisResult result = verb(stem, ending, pattern);
+    public static AnalysisResult verbWithPrefinal(String source, String stem, String prefinal, String ending, WordPattern pattern) {
+        AnalysisResult result = verb(source, stem, ending, pattern);
         result.prefinalEnding = prefinal;
         return result;
     }
 
-    /**
-     * 선어말 어미가 포함된 용언을 만든다
-     *
-     * @param prefinal - 선어말 어미 정보
-     * @param ending - 어미
-     * @param pattern - 단어 유형
-     * @return
-     */
-    public static AnalysisResult verbWithPrefinal(Variant prefinal, String ending, int pattern) {
-        return verbWithPrefinal(prefinal.getStem(), prefinal.getPrefinalEnding(), ending, pattern);
-    }
 
-    public String getStem() {
-        return stem;
+    private AnalysisResult(String source, String stem, String ending, String josa, WordPattern pattern, int score) {
+        this.source=source;
+        this.score = score;
+        this.stem = stem;
+        this.josa = josa;
+        this.ending = ending;
+        this.wordPattern = pattern;
     }
 
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("AnalysisResult {")
-          .append("stem: ").append(stem).append(",")
-          .append("prefinal: ").append(prefinalEnding).append(",")
-          .append("endiing: ").append(ending)
+          .append("source:").append(source).append(", ")
+          .append("stem:").append(stem).append(", ")
+          .append("prefinal:").append(prefinalEnding).append(", ")
+          .append("endiing:").append(ending).append(", ")
+          .append("josa:").append(josa)
           .append("}");
         return sb.toString();
     }
+
+    //TODO clone 메소드 완성
+    public AnalysisResult clone() throws CloneNotSupportedException {
+        AnalysisResult result = (AnalysisResult)super.clone();
+
+        result.dinf = this.dinf;
+        result.ending = this.ending;
+        result.josa = this.josa;
+
+        return result;
+    }
+
+    public String getEnding() {
+        return ending;
+    }
+
+    public String getPrefinalEnding() {
+        return prefinalEnding;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setPos(char pos) {
+        this.pos = pos;
+    }
+
+    public void setWordPattern(WordPattern wordPattern) {
+        this.wordPattern = wordPattern;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setStem(String stem) {
+        this.stem = stem;
+    }
+
+    public void setJosa(String josa) {
+        this.josa = josa;
+    }
+
+    public void setEnding(String ending) {
+        this.ending = ending;
+    }
+
+    public void setPrefinalEnding(String prefinalEnding) {
+        this.prefinalEnding = prefinalEnding;
+    }
+
+    public void setAuxiliaryVerb(String auxiliaryVerb) {
+        this.auxiliaryVerb = auxiliaryVerb;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
 }

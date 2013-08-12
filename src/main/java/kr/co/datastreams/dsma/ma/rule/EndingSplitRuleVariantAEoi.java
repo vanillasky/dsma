@@ -14,7 +14,7 @@ import kr.co.datastreams.dsma.util.Hangul;
  * 어간부 끝음절의 중성이 'ㅘ/ㅝ/ㅕ/ㅐ/ㅔ/ㅒ/ㅙ' 이고
  * ('아/어'+어미부)가 사전에 어미로 등록되어 있으면 '아/어'의 변이체 어미로 추정한다.
  */
-public class EndingSplitRuleVariantAEoi extends BaseEndingRule {
+public class EndingSplitRuleVariantAEoi extends BaseEndingCombineRule {
 
     private char[] jungsungCheck = {'ㅘ','ㅝ', 'ㅕ', 'ㅐ', 'ㅔ', 'ㅒ', 'ㅙ'};
 
@@ -25,7 +25,7 @@ public class EndingSplitRuleVariantAEoi extends BaseEndingRule {
     @Override
     public boolean canHandle() {
         return phonemes.containsJungsung(jungsungCheck) ?
-               (EomiDic.findEndingWith('어', endingCandidate) != null) : false;
+               (EomiDic.findEndingWith('어', endingPart) != null) : false;
 
     }
 
@@ -36,34 +36,34 @@ public class EndingSplitRuleVariantAEoi extends BaseEndingRule {
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append(stemCandidate.substring(0, tailCutPos()));
+        buf.append(stemPart.substring(0, tailCutPos()));
 
         if (phonemes.jung == 'ㅘ') { // ㅘ 로 끝나면서 '어'와 결합이 가능하면 'ㅗ'+'아' 로 만든다. e.g.)봐 -> 보아
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅗ'))
-               .append(Hangul.replaceFinal(endOfStemCandidate, '아'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅗ'))
+               .append(Hangul.replaceFinal(lastCharInStemPart, '아'));
         }
         else if (phonemes.jung == 'ㅝ') {
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅜ'))
-                    .append(Hangul.replaceFinal(endOfStemCandidate, '어'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅜ'))
+                    .append(Hangul.replaceFinal(lastCharInStemPart, '어'));
         }
         else if (phonemes.jung == 'ㅙ') {
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅚ'))
-                    .append(Hangul.replaceFinal(endOfStemCandidate, '어'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅚ'))
+                    .append(Hangul.replaceFinal(lastCharInStemPart, '어'));
         }
         else if (phonemes.jung == 'ㅕ') {
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅣ'))
-                    .append(Hangul.replaceFinal(endOfStemCandidate, '어'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅣ'))
+                    .append(Hangul.replaceFinal(lastCharInStemPart, '어'));
         }
         else if (phonemes.jung == 'ㅐ') {
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅏ'))
-                    .append(Hangul.replaceFinal(endOfStemCandidate, '어'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅏ'))
+                    .append(Hangul.replaceFinal(lastCharInStemPart, '어'));
         }
         else if (phonemes.jung == 'ㅒ') {
-            buf.append(Hangul.replaceMedial(endOfStemCandidate, 'ㅣ'))
-               .append(Hangul.replaceFinal(endOfStemCandidate, '어'));
+            buf.append(Hangul.replaceMedial(lastCharInStemPart, 'ㅣ'))
+               .append(Hangul.replaceFinal(lastCharInStemPart, '어'));
         }
 
-        String ending = buf.substring(buf.length()-1) + endingCandidate;
+        String ending = buf.substring(buf.length()-1) + endingPart;
         return Variant.createEnding(buf.substring(0, buf.length() - 1), ending);
     }
 }

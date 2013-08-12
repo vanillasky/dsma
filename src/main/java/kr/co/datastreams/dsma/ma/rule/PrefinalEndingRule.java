@@ -11,7 +11,7 @@ import kr.co.datastreams.dsma.util.Hangul;
  * Time: 오후 5:12
  * To change this template use File | Settings | File Templates.
  */
-public class PrefinalEndingRule extends BaseEndingRule {
+public class PrefinalEndingRule extends BaseEndingCombineRule {
     public PrefinalEndingRule(String stemCandidate, String endingCandidate) {
         super(stemCandidate, endingCandidate);
     }
@@ -22,7 +22,7 @@ public class PrefinalEndingRule extends BaseEndingRule {
 
     @Override
     public boolean canHandle() {
-        char[] chars = stemCandidate.toCharArray();
+        char[] chars = stemPart.toCharArray();
         int last = chars.length - 1;
         char lastChar = chars[last];
         Hangul phonemes = Hangul.split(chars[last]);
@@ -35,9 +35,9 @@ public class PrefinalEndingRule extends BaseEndingRule {
             return Variant.EMPTY;
         }
 
-        String stem = stemCandidate;
+        String stem = stemPart;
         Variant result = null;
-        char[] chars = stemCandidate.toCharArray();
+        char[] chars = stemPart.toCharArray();
         int index = chars.length - 1;
         String pomi = "";
 

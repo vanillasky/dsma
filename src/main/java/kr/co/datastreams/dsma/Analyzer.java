@@ -1,7 +1,6 @@
 package kr.co.datastreams.dsma;
 
 import kr.co.datastreams.dsma.ma.SentenceAnalyzer;
-import kr.co.datastreams.dsma.ma.api.MorphemeAnalyzer;
 import kr.co.datastreams.dsma.ma.model.Sentence;
 
 /**
@@ -13,7 +12,7 @@ import kr.co.datastreams.dsma.ma.model.Sentence;
  */
 public class Analyzer {
 
-    private MorphemeAnalyzer morphemeAnalyzer = new SentenceAnalyzer();
+    private SentenceAnalyzer morphemeAnalyzer = new SentenceAnalyzer();
 
     public Sentence analyze(String inputString) {
         return morphemeAnalyzer.analyze(inputString);

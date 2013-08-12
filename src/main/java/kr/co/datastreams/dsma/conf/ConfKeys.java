@@ -15,4 +15,5 @@ public interface ConfKeys {
     public static final String SYLLABLE_DIC = "dictionary.syllable";
     public static final String EMOTICON_PATTERNS = "dictionary.emoticons";
     public static final String EOMI_DIC = "dictionary.eomi";
+    public static final String ANALYZED_DIC = "dictionary.analyzed";
 }

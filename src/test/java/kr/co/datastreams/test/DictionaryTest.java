@@ -47,15 +47,4 @@ public class DictionaryTest {
         assertArrayEquals(expected, candidates.toArray(new String[candidates.size()]));
     }
 
-//    @Test
-//    public void testSort() throws Exception {
-//        List<String> sourceLines = FileUtil.readLines("dic/total.dic");
-//        List<String> sortList = FileUtil.readLines("dic/total.dic");
-//        Collections.sort(sortList);
-//
-//        int i=0;
-//        for (String each : sourceLines) {
-//            System.out.println("source:" + each + ", =>" + sortList.get(i++));
-//        }
-//    }
 }
