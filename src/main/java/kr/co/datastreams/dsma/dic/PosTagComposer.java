@@ -38,7 +38,7 @@ public class PosTagComposer implements WordEntryComposer {
         if (wordData[2].length() ==  0) {
             wrongFeaturedWords.add(line);
         } else {
-            return new WordEntry(wordData[0].trim(), wordData[2].trim());
+            return WordEntry.createWithPosTags(wordData[0].trim(), wordData[2].trim().split(":"));
         }
 
         return null;

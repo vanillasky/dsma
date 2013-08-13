@@ -14,6 +14,7 @@ import java.util.List;
  *
  */
 public class AnalysisResult implements Serializable, Cloneable {
+    public static final int SCORE_ANALYZED_DIC = 90;
     public static final int SCORE_CORRECT = 100;
     public static final int SCORE_COMPOUNDS = 70;
     public static final int SCORE_ANALYSIS = 30;
@@ -27,8 +28,8 @@ public class AnalysisResult implements Serializable, Cloneable {
     private char wordType;    // 어절의 유형을 개념적인 기준의 의해 분류한 정보를 저장
 
     private String stem; // 입력어절의 어휘형태소, 형태소 분석 사전 수록 어휘를 기준으로 한다.
-    private char pos; // stem의 대분류 수준의 품사정보. 체언(N), 용언(V), 기타(Z:관형사, 부사, 감탄사)로 구분
-    private char pos2; // stem의 중분류 수준의 품사정보, pos 만으로 품사정보가 부족할 때 내부적으로 사용
+    private String pos;  // stem의 중분류 수준의 품사정보, pos 만으로 품사정보가 부족할 때 내부적으로 사용
+    private String simpleStemPos; // stem의 대분류 수준의 품사정보. 체언(N), 용언(V), 기타(Z:관형사, 부사, 감탄사)로 구분
     private char dinf; // 어휘형태소 stem에 대한 품사정보. 분석 사전에 기술
 
 
@@ -135,7 +136,7 @@ public class AnalysisResult implements Serializable, Cloneable {
         return score;
     }
 
-    public void setPos(char pos) {
+    public void setPos(String pos) {
         this.pos = pos;
     }
 
@@ -171,4 +172,7 @@ public class AnalysisResult implements Serializable, Cloneable {
         this.source = source;
     }
 
+    public void setSimpleStemPos(String tag) {
+        this.simpleStemPos = tag;
+    }
 }

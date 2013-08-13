@@ -1,7 +1,11 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
+import kr.co.datastreams.dsma.ma.model.AnalysisResult;
+import kr.co.datastreams.dsma.ma.model.Word;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,25 +17,10 @@ import org.junit.Test;
 public class AnalyzedDicTest {
 
     @Test
-    public void test() throws Exception {
-        String word = "무어라";
-        AnalyzedDic.find(word);
-
-
-        String[] TAG_ARR = new String[]{"NNG", "NNP"}; //, "NNB", "NNM", "NR", "NP", "VV", "VA", "VXV", "VXA", "VCP", "VCN", "MDN", "MDT", "MAG", "MAC", "IC", "JKS", "JKC", "JKG", "JKO", "JKM", "JKI", "JKQ", "JX", "JC", "EPH", "EPT", "EPP", "EFN", "EFQ", "EFO", "EFA", "EFI", "EFR", "ECE", "ECD", "ECS", "ETN", "ETD", "XPN", "XPV", "XSN", "XSV", "XSA", "XSM", "XSO", "XR", "SY", "SF", "SP", "SS", "SE", "SO", "SW", "UN", "UV", "UE", "OL", "OH", "ON", "BOS", "EMO"};
-        long hgFuncNum = 0L;
-        int i = 0;
-
-        for(int stop = TAG_ARR.length; i < stop; ++i) {
-            hgFuncNum = 1L << i;
-            System.out.println(TAG_ARR[i] + "," + hgFuncNum);
-
-            //TAG_HASH.put(TAG_ARR[i], new Long(hgFuncNum));
-            //TAG_NUM_HASH.put(new Long(hgFuncNum), TAG_ARR[i]);
-        }
-
-        System.out.println(1L & Long.MAX_VALUE);
-//        System.out.println(Long.bitCount(8L & 256L));
-
+    public void test_find() throws Exception {
+        String text = "같았다";  // <같, VV>  + <었, EP> + <다, EM>
+        Word word = AnalyzedDic.find(text);
+//        List<AnalysisResult> results = word.getAnalysisResults();
+//        System.out.println(results.get(0));
     }
 }

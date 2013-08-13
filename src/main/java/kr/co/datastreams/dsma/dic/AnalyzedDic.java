@@ -5,6 +5,7 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
+import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.CharType;
 import kr.co.datastreams.dsma.ma.model.Word;
@@ -23,8 +24,11 @@ import java.util.regex.Pattern;
  */
 public class AnalyzedDic implements ConfKeys {
 
+    private final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣]++)\\s*,\\s*(\\w++)"); // <같, VV>
+
     private static final AnalyzedDic instance = new AnalyzedDic();
     private final HashMap<String, Word> analyzedWords = new HashMap<String, Word>();
+
 
     private AnalyzedDic() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -42,7 +46,7 @@ public class AnalyzedDic implements ConfKeys {
                     continue;
                 }
 
-                analyzedWords.put(line.split("\\s")[0], makeWord(line));
+                analyzedWords.put(line.split("\\s")[0], createAnalyzedWord(line));
             }
 
             watch.end();
@@ -50,41 +54,64 @@ public class AnalyzedDic implements ConfKeys {
         }
     }
 
-    private Word makeWord(String line) {
-        int wordIndex = line.indexOf("<");
-        String str = line.split("\\s")[0].trim();
-        String wordInfo = line.substring(wordIndex, line.length());
-        String[] tokens =  wordInfo.split("\\+");
-        Pattern pattern = Pattern.compile("\\s*<([가-힣]++)\\s*,\\s*(\\w++)");
+    private Word createAnalyzedWord(String line) {
+        Word word = createWordFrom(line);
+        String[] morphemes = parseMorphemes(line);
 
-        Word word = new Word(str, CharType.HANGUL);
-        AnalysisResult analysisResult = new AnalysisResult();
-        analysisResult.setSource(str);
-        analysisResult.setScore(AnalysisResult.SCORE_CORRECT);
-        for (String each : tokens) {
-            Matcher matcher = pattern.matcher(each);
-            String posTag = null;
+        AnalysisResult result = new AnalysisResult();
+        result.setScore(AnalysisResult.SCORE_ANALYZED_DIC);
 
-            if (matcher.find()) {
-                posTag = matcher.group(2);
-                if (posTag.equals("j")) {
-                    analysisResult.setJosa(matcher.group(1));
-                } else if (posTag.equals("e")) {
-                    analysisResult.setEnding(matcher.group(1));
-                } else if (posTag.equals("f")) {
-                    analysisResult.setPrefinalEnding(matcher.group(1));
-                } else if (posTag.equals("c")) {
+        for (String each : morphemes) {
+            Matcher matcher = ANAL_RESULT_PATTERN.matcher(each);
+            String pos, morpheme;
+            while (matcher.find()) {
+                morpheme = matcher.group(1);
+                pos = matcher.group(2);
 
-                } else {
-                    analysisResult.setStem(matcher.group(1));
+                long tagNum = PosTag.getTagNum(pos);
+                if (tagNum == 0) {
+                    throw new IllegalArgumentException("Tag not defined:" + pos);
                 }
+
+                if (tagNum == PosTag.JO) {
+                    result.setJosa(morpheme);
+                } else if (tagNum == PosTag.EM) {
+                    result.setEnding(morpheme);
+                } else if (tagNum == PosTag.EP) {
+                    result.setPrefinalEnding(morpheme);
+                } else if (PosTag.isKindOf(tagNum, PosTag.N)) {
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(PosTag.N));
+                } else if (PosTag.isKindOf(tagNum, PosTag.V)) {
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(PosTag.V));
+                } else if (tagNum == PosTag.AD) {
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(PosTag.AD));
+                }
+
             }
         }
-        System.out.println(analysisResult);
+        System.out.println(result);
 
 
         return word;
     }
+
+    // 같았다  <같, VV>  + <었, EP> + <다, EM> -> [0]=<같, VV>, [1]=<었, EP>, [2]=<다, EM>
+    private String[] parseMorphemes(String line) {
+        String analyzedInfoPart = line.substring(line.indexOf("<"), line.length());
+        return analyzedInfoPart.split("\\+");
+    }
+
+    private Word createWordFrom(String line) {
+        String analyzedWord = line.split("\\s")[0].trim();
+        return new Word(analyzedWord, CharType.HANGUL);
+    }
+
 
     private Word get(String word) {
         return analyzedWords.get(word);

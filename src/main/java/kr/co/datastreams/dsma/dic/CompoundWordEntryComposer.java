@@ -36,7 +36,7 @@ public class CompoundWordEntryComposer implements WordEntryComposer {
             return null;
         }
 
-        return new WordEntry(tokens[0].trim(), FEATURES, asCompoundList(tokens[1]));
+        return null; //new WordEntry(tokens[0].trim(), FEATURES, asCompoundList(tokens[1]));
     }
 
 

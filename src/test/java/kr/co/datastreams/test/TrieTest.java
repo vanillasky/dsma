@@ -25,13 +25,13 @@ public class TrieTest {
 
     @Test
     public void testGet() throws Exception {
-        WordEntry m3 = new WordEntry("가게방");
-        WordEntry m2 = new WordEntry("가게집");
-        WordEntry m4 = new WordEntry("가게집은");
-        WordEntry m5 = new WordEntry("나비");
-        WordEntry m6 = new WordEntry("나비효");
-        WordEntry m8 = new WordEntry("나비효과");
-        WordEntry m7 = new WordEntry("나비효리");
+        WordEntry m3 = WordEntry.create("가게방");
+        WordEntry m2 = WordEntry.create("가게집");
+        WordEntry m4 = WordEntry.create("가게집은");
+        WordEntry m5 = WordEntry.create("나비");
+        WordEntry m6 = WordEntry.create("나비효");
+        WordEntry m8 = WordEntry.create("나비효과");
+        WordEntry m7 = WordEntry.create("나비효리");
 
         dic.add(m3.getString(), m3);
         dic.add(m2.getString(), m2);
@@ -46,18 +46,18 @@ public class TrieTest {
 
     @Test
     public void testGetPrefixedBy() throws  Exception {
-        WordEntry m1 = new WordEntry("가게");
-        WordEntry m3 = new WordEntry("가게방");
-        WordEntry m2 = new WordEntry("가게집");
-        WordEntry m4 = new WordEntry("가게집은");
-        WordEntry m5 = new WordEntry("나비");
-        WordEntry m6 = new WordEntry("나비효");
-        WordEntry m8 = new WordEntry("나비효과");
-        WordEntry m7 = new WordEntry("나비효는");
-        WordEntry m9 = new WordEntry("나비효다");
-        WordEntry m10 = new WordEntry("나비효리다");
-        WordEntry m11 = new WordEntry("나비효리다가");
-        WordEntry m12 = new WordEntry("나비효리다가나");
+        WordEntry m1 = WordEntry.create("가게");
+        WordEntry m3 = WordEntry.create("가게방");
+        WordEntry m2 = WordEntry.create("가게집");
+        WordEntry m4 = WordEntry.create("가게집은");
+        WordEntry m5 = WordEntry.create("나비");
+        WordEntry m6 = WordEntry.create("나비효");
+        WordEntry m8 = WordEntry.create("나비효과");
+        WordEntry m7 = WordEntry.create("나비효는");
+        WordEntry m9 = WordEntry.create("나비효다");
+        WordEntry m10 = WordEntry.create("나비효리다");
+        WordEntry m11 = WordEntry.create("나비효리다가");
+        WordEntry m12 = WordEntry.create("나비효리다가나");
 
         dic.add(m1.getString(), m1);
         dic.add(m3.getString(), m3);

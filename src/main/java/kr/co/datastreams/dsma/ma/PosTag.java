@@ -1,5 +1,6 @@
 package kr.co.datastreams.dsma.ma;
 
+import javax.management.ObjectName;
 import java.util.Hashtable;
 
 /**
@@ -10,7 +11,13 @@ import java.util.Hashtable;
  *
  */
 public class PosTag {
-    private static final String[] TAGS = new String[] {"NN", "NX", "NU", "NP", "VV", "VJ", "VX", "VCP", "AD", "J", "EM", "EP", "PF", "SF", "SN"};
+    private static final String[] TAGS = new String[] {"NN", "NX", "NU", "NP",
+                                                       "VV", "VJ", "VX", "CP",
+                                                       "AD", "DT", "EX", "JO",
+                                                       "EM", "EP", "PF", "SN",
+                                                       "SV", "SJ", "SA", "SF",
+                                                       "XR", "SY", "NR", "OL",
+                                                       "OH", "ON"};
     private static final Hashtable<String, Long> TAG_HASH = new Hashtable<String, Long>();
     private static final Hashtable<Long, String> TAG_NUM_HASH = new Hashtable<Long, String>();
     static final String[] ZIP_TAG_ARR;
@@ -19,24 +26,34 @@ public class PosTag {
     public static final long NX;  // 의존명사
     public static final long NU;  // 수사
     public static final long NP;  // 대명사
-    public static final long N;
 
     public static final long VV;  // 동사
     public static final long VJ;  // 형용사
     public static final long VX;  // 보조용언
-    public static final long VCP;  // 서술격조사 '이다'
-    public static final long V;
+    public static final long CP;  // 서술격조사 '이다'
 
     public static final long AD;  // 부사
-
-    public static final long J;  // 조사
-
+    public static final long DT;  // 관형사
+    public static final long EX;  // 감탄사
+    public static final long JO;  // 조사
     public static final long EM;  // 어미
     public static final long EP;  // 선어말 어미
-
     public static final long PF;  // 접두사
-    public static final long SF;  // 접미사
-    public static final long SN;  // 명사화 접미사
+    public static final long SN;  // 명사화접미사     //s
+    public static final long SV;  // 동사화접미사     //t
+    public static final long SJ;  // 형용사화접미사   //t
+    public static final long SA;  // 부사화화접미사
+    public static final long SF;  // 기타접미사
+    public static final long XR;  // 어근
+    public static final long SY;  // 문장부호
+    public static final long NR;  // 미등록어
+
+    public static final long OL;  // 외국어
+    public static final long OH;  // 한자
+    public static final long ON;  // 숫자
+
+    public static final long N;
+    public static final long V;
 
     static {
         long tagNum = 0L;
@@ -53,14 +70,26 @@ public class PosTag {
         VV = getTagNum("VV");
         VJ = getTagNum("VJ");
         VX = getTagNum("VX");
-        VCP = getTagNum("VCP");
+        CP = getTagNum("CP");
         AD = getTagNum("AD");
-        J = getTagNum("J");
+        DT = getTagNum("DT");
+        EX = getTagNum("EX");
+        JO = getTagNum("JO");
         EM = getTagNum("EM");
         EP = getTagNum("EP");
         PF = getTagNum("PF");
-        SF = getTagNum("SF");
         SN = getTagNum("SN");
+        SV = getTagNum("SV");
+        SJ = getTagNum("SJ");
+        SA = getTagNum("SA");
+        SF = getTagNum("SF");
+        XR = getTagNum("XR");
+        SY = getTagNum("SY");
+        NR = getTagNum("NR");
+        OL = getTagNum("OL");
+        OH = getTagNum("OH");
+        ON = getTagNum("ON");
+
         N = NN | NP;
         V = VV | VJ;
 
@@ -75,7 +104,7 @@ public class PosTag {
 
     public static long getTagNum(String tag) {
         if (tag == null) return 0L;
-
+        System.out.println("tag:"+ tag);
         return TAG_HASH.get(tag).longValue();
     }
 
@@ -135,25 +164,25 @@ public class PosTag {
 //    public static char LPAREN  = 'l';       //* left parenthesis      */
 //    public static char RPAREN  = 'r';       //* right parenthesis     */
 
-    public static PosTag valueOf(String tag) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
-    }
 
     public static long buildTags(String[] tags) {
-        long tagNum = 0L;
-        Long t = 0L;
+        long result = 0L;
+        Long tagNum = 0L;
         for (String each : tags) {
-            t = getTagNum(each.trim());
-            System.out.println("Tag:"+ each + ", tagNum:"+ t);
-            if (t != null) {
-                tagNum = tagNum | t;
+            tagNum = getTagNum(each.trim());
+            if (tagNum != null) {
+                result = result | tagNum;
             }
         }
-        return tagNum;
+        return result;
+    }
+
+    public static boolean isKindOf(long tagNum, long compareTag) {
+        return Long.bitCount(tagNum & compareTag) > 0;
     }
 
     public static String getTag(long tagNum) {
-        System.out.println("==>" + tagNum);
+        //System.out.println("==>" + tagNum);
         return TAG_NUM_HASH.get(tagNum);
     }
 }

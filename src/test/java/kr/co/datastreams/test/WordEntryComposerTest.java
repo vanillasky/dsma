@@ -23,7 +23,7 @@ public class WordEntryComposerTest {
     String[] words = {"가", "가가호호", "가각"};
     String[] basicWordEntries = {"//WORD,NVZDBIPSCC:N(명사)", "  //starts with space then...", "가,110000000X", "가가호호, 101000000X", "가각,   100000000X"};
     String[] wrongNumberOfCiphers = {"가,1100000X", "가가호호, 0101000000X", "가각,   1000000000X"}; // 자릿수 불일치 항목
-    String[] posTagWordEntries = {"가가호호,101000000X, N:AD", "걸, , N:V:VJ"};
+    String[] posTagWordEntries = {"가가호호,101000000X, N:AD", "걸, , N:V:AD"};
 
     @Test
     public void testDefaultWordEntryComposer() throws Exception {
@@ -63,7 +63,6 @@ public class WordEntryComposerTest {
 
     @Test
     public void testPosTagWordEntryComposer_isTagOf() throws Exception {
-        String[] str = {"가가호호,101000000X, N:AD", "걸, , N:V:VJ"};
 
         WordEntryComposer composer = new PosTagComposer();
         List<WordEntry> entries = new ArrayList<WordEntry>();
@@ -79,8 +78,6 @@ public class WordEntryComposerTest {
         assertTrue(entries.get(0).isTagOf(PosTag.N));
         assertTrue(entries.get(0).isTagOf(PosTag.NN));
         assertTrue(entries.get(0).isTagOf(PosTag.AD));
-        assertTrue(!entries.get(0).isTagOf(PosTag.V));
-        assertTrue(!entries.get(0).isTagOf(PosTag.VJ));
 
         assertTrue(entries.get(1).isTagOf(PosTag.VJ));
         assertTrue(entries.get(1).isTagOf(PosTag.V));

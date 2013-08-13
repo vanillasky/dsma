@@ -9,12 +9,14 @@ import kr.co.datastreams.dsma.ma.model.WordEntry;
  * Time: 오전 10:36
  * To change this template use File | Settings | File Templates.
  */
-public class CompoundWordEntry extends WordEntry {
+public class CompoundWordEntry {
 
     private final int offset;
+    private final String string;
+
 
     public CompoundWordEntry(String word, char[] features, int offset) {
-        super(word, features);
+        this.string = word;
         this.offset = offset;
     }
 

@@ -114,4 +114,8 @@ public class Word implements Serializable, Comparable {
     public char charAt(int index) {
         return string.charAt(index);
     }
+
+    public List<AnalysisResult> getAnalysisResults() {
+        return analysisResults;
+    }
 }

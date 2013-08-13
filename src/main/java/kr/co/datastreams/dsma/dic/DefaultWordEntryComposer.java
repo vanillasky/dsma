@@ -44,7 +44,7 @@ public class DefaultWordEntryComposer implements WordEntryComposer {
         if (wordData[1].length() - FLAG_COUNT != 0) {
             wrongFeaturedWords.add(line);
         } else {
-            return new WordEntry(wordData[0].trim(), wordData[1].toCharArray());
+            return WordEntry.createWithFeature(wordData[0].trim(), wordData[1].toCharArray());
         }
 
         return null;

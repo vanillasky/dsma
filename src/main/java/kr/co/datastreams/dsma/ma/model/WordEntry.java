@@ -30,25 +30,40 @@ public class WordEntry  {
     protected char[] features;
     protected List<CompoundWordEntry> compounds = new ArrayList<CompoundWordEntry>();
 
-    public WordEntry(String word) {
+
+    public static WordEntry createWithPosTags(String word, String[] tags) {
+        return new WordEntry(word, tags);
+    }
+
+    public static WordEntry create(String word) {
+        return new WordEntry(word);
+    }
+
+    public static WordEntry createWithFeature(String word, char[] chars) {
+        return new WordEntry(word, chars);
+    }
+
+    private WordEntry(String word) {
         this.string = word;
     }
 
-    public WordEntry(String word, char[] features) {
+    private WordEntry(String word, String[] tags) {
+        this.string = word;
+        this.posTag = PosTag.buildTags(tags);
+    }
+
+    private WordEntry(String word, char[] features) {
         this.string = word;
         this.features = features;
     }
 
-    public WordEntry(String word, String tag) {
-        this.string = word;
-        this.posTag = PosTag.buildTags(tag.split(":"));
-    }
-
-    public WordEntry(String word, char[] features, List<CompoundWordEntry> compounds) {
+    private WordEntry(String word, char[] features, List<CompoundWordEntry> compounds) {
         this.string = word;
         this.features = features;
         this.compounds = compounds;
     }
+
+
 
     public String toString() {
        StringBuilder buf = new StringBuilder();
@@ -111,4 +126,7 @@ public class WordEntry  {
     public long tag() {
         return this.posTag;
     }
+
+
+
 }
