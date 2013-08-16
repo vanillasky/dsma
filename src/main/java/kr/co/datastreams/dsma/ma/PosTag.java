@@ -52,8 +52,10 @@ public class PosTag {
     public static final long OH;  // 한자
     public static final long ON;  // 숫자
 
-    public static final long N;
-    public static final long V;
+    public static final long N; // 명사
+    public static final long V; // 동사
+    public static final long S; // 접미사
+
 
     static {
         long tagNum = 0L;
@@ -90,8 +92,9 @@ public class PosTag {
         OH = getTagNum("OH");
         ON = getTagNum("ON");
 
-        N = NN | NP;
+        N = NN | NP | NU | NX;
         V = VV | VJ;
+        S = SN | SV | SJ | SA | SF;
 
         TAG_HASH.put("N", Long.valueOf(N));
         TAG_NUM_HASH.put(Long.valueOf(N), "N");
@@ -99,12 +102,15 @@ public class PosTag {
         TAG_HASH.put("V", Long.valueOf(V));
         TAG_NUM_HASH.put(Long.valueOf(V), "V");
 
-        ZIP_TAG_ARR = new String[]{"N", "V"};
+        TAG_HASH.put("S", Long.valueOf(S));
+        TAG_NUM_HASH.put(Long.valueOf(S), "S");
+
+        ZIP_TAG_ARR = new String[]{"N", "V", "S"};
     }
 
     public static long getTagNum(String tag) {
         if (tag == null) return 0L;
-        System.out.println("tag:"+ tag);
+//        System.out.println("tag:"+ tag);
         return TAG_HASH.get(tag).longValue();
     }
 

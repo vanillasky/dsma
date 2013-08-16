@@ -58,7 +58,7 @@ public class AnalyzedDic implements ConfKeys {
         Word word = createWordFrom(line);
         String[] morphemes = parseMorphemes(line);
 
-        AnalysisResult result = new AnalysisResult();
+        AnalysisResult result = new AnalysisResult(word.getString());
         result.setScore(AnalysisResult.SCORE_ANALYZED_DIC);
 
         for (String each : morphemes) {
@@ -79,7 +79,16 @@ public class AnalyzedDic implements ConfKeys {
                     result.setEnding(morpheme);
                 } else if (tagNum == PosTag.EP) {
                     result.setPrefinalEnding(morpheme);
-                } else if (PosTag.isKindOf(tagNum, PosTag.N)) {
+                } else if (tagNum == PosTag.CP) {
+                    result.setVerbSuffix(morpheme);
+                } else if (PosTag.isKindOf(tagNum, PosTag.S)) {
+                    if (tagNum == PosTag.SN) {
+                        result.setNounSuffix(morpheme);
+                    } else if (tagNum == PosTag.SV || tagNum == PosTag.SJ || tagNum == PosTag.SA) {
+                        result.setVerbSuffix(morpheme);
+                    }
+                }
+                else if (PosTag.isKindOf(tagNum, PosTag.N)) {
                     result.setStem(morpheme);
                     result.setPos(PosTag.getTag(tagNum));
                     result.setSimpleStemPos(PosTag.getTag(PosTag.N));
@@ -87,16 +96,17 @@ public class AnalyzedDic implements ConfKeys {
                     result.setStem(morpheme);
                     result.setPos(PosTag.getTag(tagNum));
                     result.setSimpleStemPos(PosTag.getTag(PosTag.V));
-                } else if (tagNum == PosTag.AD) {
+                } else if (tagNum == PosTag.AD || tagNum == PosTag.DT || tagNum == PosTag.EX) { // 단일어: 부사, 관형사, 감탄사
                     result.setStem(morpheme);
                     result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(PosTag.AD));
+                    result.setSimpleStemPos(PosTag.getTag(tagNum));
                 }
 
             }
         }
-        System.out.println(result);
 
+        result.resolvePattern();
+        word.addResult(result);
 
         return word;
     }
