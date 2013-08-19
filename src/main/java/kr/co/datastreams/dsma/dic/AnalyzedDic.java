@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  */
 public class AnalyzedDic implements ConfKeys {
 
-    private final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣]++)\\s*,\\s*(\\w++)"); // <같, VV>
+    private final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣ㄱ-ㅎㅏ-ㅣ]++)\\s*,\\s*(\\w++)"); // <같, VV>
 
     private static final AnalyzedDic instance = new AnalyzedDic();
     private final HashMap<String, Word> analyzedWords = new HashMap<String, Word>();
@@ -106,6 +106,7 @@ public class AnalyzedDic implements ConfKeys {
         }
 
         result.resolvePattern();
+        result.setScore(AnalysisResult.SCORE_ANALYZED_DIC);
         word.addResult(result);
 
         return word;

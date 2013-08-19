@@ -23,6 +23,8 @@ import org.junit.runners.Suite;
     , TokenizerTest.class
     , ApocopeRuleTest.class
     , StartsWithNLMBEndingTest.class
+    , AnalyzedDicTest.class
+
 })
 public class AllTests {
 }

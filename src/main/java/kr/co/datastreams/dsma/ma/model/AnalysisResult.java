@@ -17,12 +17,12 @@ import java.util.List;
  *
  */
 public class AnalysisResult implements Serializable, Cloneable {
-    public static final int SCORE_ANALYZED_DIC = 90;
-    public static final int SCORE_CORRECT = 100;
-    public static final int SCORE_COMPOUNDS = 70;
-    public static final int SCORE_ANALYSIS = 30;
-    public static final int SCORE_CANDIDATE = 10;
-    public static final int SCORE_FAIL = 0;
+    public static final int SCORE_CORRECT       = 0;
+    public static final int SCORE_ANALYZED_DIC  = 20;
+    public static final int SCORE_COMPOUNDS     = 40;
+    public static final int SCORE_ANALYSIS      = 60;
+    public static final int SCORE_CANDIDATE     = 80;
+    public static final int SCORE_FAIL          = 100;
 
     private List<CompoundWordEntry> compound = new ArrayList<CompoundWordEntry>(); // 복합명사
     private String source; // 분석하기 전 문자열
@@ -31,21 +31,20 @@ public class AnalysisResult implements Serializable, Cloneable {
     private char wordType;    // 어절의 유형을 개념적인 기준의 의해 분류한 정보를 저장
 
     private String stem; // 입력어절의 어휘형태소, 형태소 분석 사전 수록 어휘를 기준으로 한다.
-    private String pos;  // stem의 중분류 수준의 품사정보, pos 만으로 품사정보가 부족할 때 내부적으로 사용
+    private String pos;  // stem의 중분류 수준의 품사정보
     private String simpleStemPos; // stem의 대분류 수준의 품사정보. 체언(N), 용언(V), 기타(Z:관형사, 부사, 감탄사)로 구분
     //private char dinf; // 어휘형태소 stem에 대한 품사정보. 분석 사전에 기술
-
 
     private String nounSuffix; // 체언 접미사
     private String verbSuffix; // 용언화 접미사
 
-    private String josa; // 조사 string, 조사가 분리되었을 경우 그 스트링을 저장, 조사가 분리되지 않으면 '\0'
+    private String josa; // 조사 string, 조사가 분리되었을 경우 그 스트링을 저장
     private List<String> josaList = new ArrayList<String>(); // unit-josa sequence, 복합조사인 경우 각 단위 조사들이 분리된 형태를 저장
     private String ending; // 어미 String, 어미가 분리되었을 경우 그 스트링을 저장,
     private List<String> endingList = new ArrayList<String>(); // unit-ending sequence, 복합어미인 경우 각 단위어미들이 분리된 형태를 저장
-    private String prefinalEnding; // 선어말어미, 하위 4비트로 표현(0000xxxx)의 xxxx 부분을 순서대로 '시/었/었/겠'의 출현여부를 표시
+    private String prefinalEnding; // 선어말어미
     private String auxiliaryVerb; // xverb string, '먹어보다'와 같이 붙여쓴 보조용언의 분리되었을 때 그 스트링을 저장
-    private char irregularVerbType; // 불규칙 용언의 유형에 관한 정보
+    private char irregularVerbType = '\0'; // 불규칙 용언의 유형에 관한 정보
 
 
     public AnalysisResult() {
@@ -57,9 +56,6 @@ public class AnalysisResult implements Serializable, Cloneable {
         source = text;
     }
 
-    public String getStem() {
-        return stem;
-    }
 
     /**
      * 용언 정보를 만든다.
@@ -71,24 +67,9 @@ public class AnalysisResult implements Serializable, Cloneable {
      * @return 분석결과
      */
     public static AnalysisResult verb(String source, String stem, String ending, WordPattern pattern) {
-        return new AnalysisResult(source, stem, ending, null, pattern, SCORE_ANALYSIS);
-    }
-
-    public static AnalysisResult empty(String word) {
-        return new AnalysisResult(word, null, null, null, null, SCORE_FAIL);
-    }
-
-//    private AnalysisResult(String stem, String josa, String ending, int pattern) {
-//        this(stem, josa, ending, pattern, SCORE_ANALYSIS);
-//
-//    }
-
-    public void setNounSuffix(String nounSuffix) {
-        this.nounSuffix = nounSuffix;
-    }
-
-    public void setVerbSuffix(String verbSuffix) {
-        this.verbSuffix = verbSuffix;
+        AnalysisResult result = new AnalysisResult(source, stem, ending, null, pattern, SCORE_ANALYSIS);
+        result.resolvePattern();
+        return result;
     }
 
     /**
@@ -107,6 +88,10 @@ public class AnalysisResult implements Serializable, Cloneable {
         return result;
     }
 
+    public static AnalysisResult empty(String word) {
+        return new AnalysisResult(word, null, null, null, null, SCORE_FAIL);
+    }
+
 
     private AnalysisResult(String source, String stem, String ending, String josa, WordPattern pattern, int score) {
         this.source=source;
@@ -123,11 +108,35 @@ public class AnalysisResult implements Serializable, Cloneable {
         sb.append("AnalysisResult {")
           .append("source:").append(source).append(", ")
           .append("pattern:").append(wordPattern).append(", ")
+          .append("score:").append(score).append(", ")
           .append("stem:").append(stem).append(", ")
-          .append("prefinal:").append(prefinalEnding).append(", ")
-          .append("endiing:").append(ending).append(", ")
-          .append("josa:").append(josa)
-          .append("}");
+          .append("josa:").append(josa).append(", ");
+
+        if (josaList.size() > 0) {
+            sb.append("josaList:[");
+            for (String each  : josaList) {
+                sb.append(each).append(",");
+            }
+            sb.append("],");
+        }
+
+        sb.append("verbSuffix:").append(verbSuffix).append(", ");
+        sb.append("nounSuffix:").append(nounSuffix).append(", ");
+        sb.append("auxiliaryVerb:").append(auxiliaryVerb).append(", ");
+        sb.append("irregularVerbType:").append(irregularVerbType).append(", ");
+
+        sb.append("prefinal:").append(prefinalEnding).append(", ")
+          .append("endiing:").append(ending).append(", ");
+
+        if (endingList.size() > 0) {
+            sb.append("endingList:[");
+            for (String each  : endingList) {
+                sb.append(each).append(",");
+            }
+            sb.append("]");
+        }
+
+        sb.append("}");
         return sb.toString();
     }
 
@@ -197,59 +206,145 @@ public class AnalysisResult implements Serializable, Cloneable {
         josaList.add(morpheme);
     }
 
-    //TODO 미완성
+    public void setNounSuffix(String nounSuffix) {
+        this.nounSuffix = nounSuffix;
+    }
+
+    public void setVerbSuffix(String verbSuffix) {
+        this.verbSuffix = verbSuffix;
+    }
+
+    public String getStem() {
+        return stem;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    //  N(1)  /* 체언 : N/PN/NM/XN/CN/UN/AS/HJ/ET */
+    //, NJ(2)     /* 체언 + 조사 */
+    //, NSM(3)    /* 체언 + 용언화접미사 + 어미 */
+    //, NSMJ(4)   /* 체언 + 용언화접미사 + '음/기' + 조사 */
+    //, NSMXM(5)  /* 체언 + 용언화접미사 + '아/어' + 보조용언 + 어미 */
+    //, NJCM(6)   /* 체언 + '에서/부터/에서부터' + '이' + 어미 */
+    //
+    //, VM(11)    /* 용언 + 어미 */
+    //, VMJ(12)   /* 용언 + '음/기' + 조사 */
+    //, VMCM(13)  /* 용언 + '음/기' + '이' + 어미 */
+    //, VMXM(14)  /* 용언 + '아/어' + 보조용언 + 어미 */
+    //, VMXMJ(15) /* 용언 + '아/어' + 보조용언 + '음/기' + 조사 */
+    //, AID(21)   /* 단일어 : 부사, 관형사, 감탄사 */
+    //, ADVJ(22)  /* 부사 + 조사 : '빨리도' */
+    //
+    //, NVM(31)   /* 체언 + 동사 + 어미 */
+    //, ZZZ(35)   /* 문장부호, KS 완성형 기호열, 단독조사/어미 */
     public void resolvePattern() {
-
-        //N(1)        /* 체언 : N/PN/NM/XN/CN/UN/AS/HJ/ET */
-        //, NJ(2)     /* 체언 + 조사 */
-        //, NSM(3)    /* 체언 + 용언화접미사 + 어미 */
-        //, NSMJ(4)   /* 체언 + 용언화접미사 + '음/기' + 조사 */
-        //, NSMXM(5)  /* 체언 + 용언화접미사 + '아/어' + 보조용언 + 어미 */
-        //, NJCM(6)   /* 체언 + '에서/부터/에서부터' + '이' + 어미 */
-        //
-        //, VM(11)    /* 용언 + 어미 */
-        //, VMJ(12)   /* 용언 + '음/기' + 조사 */
-        //, VMCM(13)  /* 용언 + '음/기' + '이' + 어미 */
-        //, VMXM(14)  /* 용언 + '아/어' + 보조용언 + 어미 */
-        //, VMXMJ(15) /* 용언 + '아/어' + 보조용언 + '음/기' + 조사 */
-        //, AID(21)   /* 단일어 : 부사, 관형사, 감탄사 */
-        //, ADVJ(22)  /* 부사 + 조사 : '빨리도' */
-        //
-        //, NVM(31)   /* 체언 + 동사 + 어미 */
-        //, ZZZ(35)   /* 문장부호, KS 완성형 기호열, 단독조사/어미 */
-
         if (StringUtil.nvl(stem).length() > 0) {
             long tagNum = PosTag.getTagNum(pos);
 
             if (PosTag.isKindOf(tagNum, PosTag.N)) {
-                wordPattern = WordPattern.N;
-
-                if (StringUtil.nvl(josa).length() > 0) {
-                    wordPattern = WordPattern.NJ;
-                }
-
-                if (StringUtil.nvl(verbSuffix).length() > 0) {
-                    wordPattern = WordPattern.NSM; // 체언 + 용언화접미사 + 어미
-                }
-
+                wordPattern = resolveNounPattern();
             }
             else if (PosTag.isKindOf(tagNum, PosTag.V)) {
-                wordPattern = WordPattern.VM;
+                wordPattern = resolveVerbPattern();
             }
-            else {
-                wordPattern = WordPattern.AID;
+            else if (tagNum == PosTag.AD || tagNum == PosTag.EX || tagNum == PosTag.DT) {
+                if (tagNum == PosTag.AD && hasJosa()) {
+                    wordPattern = WordPattern.ADVJ;
+                } else {
+                    wordPattern = WordPattern.AID;
+                }
+            }
+        }
+    }
+
+    private WordPattern resolveVerbPattern() {
+        WordPattern pattern = WordPattern.VM;
+
+        if (hasJosa()) {
+            pattern = WordPattern.VMJ;
+            if (hasAuxiliaryVerb()) {
+                pattern = WordPattern.VMXMJ;
+            }
+        } else if (hasEnding())  {
+            if ("이".equals(verbSuffix)) {
+                pattern = WordPattern.VMCM;
+            }
+
+            if (hasAuxiliaryVerb()) {
+                pattern = WordPattern.VMXM;
             }
         }
 
+        return pattern;
     }
 
-    public String asResult() {
-        System.out.println(wordPattern);
+    private WordPattern resolveNounPattern() {
+        WordPattern pattern = WordPattern.N;
+
+        if (hasJosa()) {
+            pattern = WordPattern.NJ;
+        }
+
+
+        if (hasVerbSuffix()) { // 용언화 접미사가 있는 경우
+            if (hasEnding()) {
+                pattern = WordPattern.NSM; // 체언 + 용언화접미사 + 어미
+
+                // 보조동사 있는 경우
+                if (hasAuxiliaryVerb()) {
+                    char charBeforeXverb = source.charAt(source.lastIndexOf(auxiliaryVerb)-1); // 보조용언 앞 글자
+                    if (charBeforeXverb == '아' || charBeforeXverb == '어') {
+                        pattern = WordPattern.NSMXM; // 체언 + 용언화접미사 + '아/어' + 보조용언 + 어미
+                    }
+                }
+            } else if (hasJosa()) {
+                char charBeforeJosa = source.charAt(source.lastIndexOf(josa)-1);
+                Hangul morpheme = Hangul.split(charBeforeJosa);
+                if (charBeforeJosa == '기' || morpheme.endsWith('ㅁ')) {
+                    pattern = WordPattern.NSMJ;  // 체언 + 용언화접미사 + 'ㅁ/기' + 조사
+                }
+            }
+        }
+
+        if (source.indexOf("에서") > 0 || source.indexOf("부터") > 0) {
+            if ("이".equals(verbSuffix) && hasEnding()) {
+                pattern = WordPattern.NJCM;  // 체언 + '에서/부터/에서부터' + '이' + 어미
+            }
+        }
+
+        return pattern;
+    }
+
+    private boolean hasAuxiliaryVerb() {
+        return StringUtil.nvl(auxiliaryVerb).length() > 0 ? true : false;
+    }
+
+    private boolean hasEnding() {
+        return StringUtil.nvl(ending).length() > 0 ? true : false;
+    }
+
+    private boolean hasVerbSuffix() {
+        return StringUtil.nvl(verbSuffix).length() > 0 ? true : false;
+    }
+
+
+    public boolean hasJosa() {
+        return StringUtil.nvl(josa).length() > 0 ? true : false;
+    }
+
+
+    public String asMorphemes() {
         StringBuilder sb = new StringBuilder(source).append("/");
         sb.append("<").append(stem).append(", ").append(pos).append(">");
 
         if (wordPattern == WordPattern.VM) {
             appendEndingPart(sb);
+        }
+        else if (wordPattern == WordPattern.VMJ) {
+            appendEndingPart(sb);
+            appendJosaPart(sb);
         }
         else if (wordPattern == WordPattern.NJ) {
             appendJosaPart(sb);
@@ -286,7 +381,5 @@ public class AnalysisResult implements Serializable, Cloneable {
         sb.append(" + ").append("<").append(morpheme).append(", ").append(PosTag.getTag(tagNum)).append(">");
     }
 
-    public String getSource() {
-        return source;
-    }
+
 }

@@ -6,15 +6,16 @@ import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.CharType;
 import kr.co.datastreams.dsma.ma.model.Word;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: shkim
  * Date: 13. 8. 5
  * Time: 오전 10:42
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DefaultWordAnalyzerTest {
 
@@ -77,5 +78,14 @@ public class DefaultWordAnalyzerTest {
         for (AnalysisResult each : result) {
             System.out.println(each);
         }
+    }
+
+    @Test
+    public void test_AnalyedWords() throws Exception {
+        String word = "텐데";
+        WordAnalyzer wa = new DefaultWordAnalyzer();
+        List<AnalysisResult> results = wa.analyzeWord(new Word(word, CharType.HANGUL, 0));
+        assertEquals("텐데/<터, NX> + <이, CP> + <ㄴ데, EM>", results.get(0).asMorphemes());
+        assertEquals(AnalysisResult.SCORE_ANALYZED_DIC, results.get(0).getScore());
     }
 }

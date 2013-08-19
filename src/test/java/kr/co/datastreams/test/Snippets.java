@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,5 +36,19 @@ public class Snippets {
     public void testLong() throws Exception {
         System.out.println(Long.bitCount(Long.MIN_VALUE));
         System.out.println(Long.bitCount(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testRegEx() throws Exception {
+        String str = "<ㄴ가, EM>";
+//        String str = "ㄴ가";
+        String pattern = "\\s*<([가-힣ㄱ-ㅎㅏ-ㅣ]++)\\s*,\\s*(\\w++)";
+        Matcher matcher = Pattern.compile(pattern).matcher(str);
+        matcher.find();
+        System.out.println(matcher.group(1));
+
+
+        String s = "그것하어보니";
+        System.out.println(s.charAt(s.lastIndexOf("보")-1));
     }
 }

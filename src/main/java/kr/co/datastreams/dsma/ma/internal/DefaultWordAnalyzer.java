@@ -1,5 +1,6 @@
 package kr.co.datastreams.dsma.ma.internal;
 
+import kr.co.datastreams.dsma.dic.AnalyzedDic;
 import kr.co.datastreams.dsma.dic.SyllableDic;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.Word;
@@ -28,6 +29,12 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
     public List<AnalysisResult> analyzeWord(Word word) {
         List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
         String inputString = word.getString();
+
+        Word analyzedWord = AnalyzedDic.find(inputString.trim());
+        if (analyzedWord != null) {
+            candidates.add(analyzedWord.getAnalysisResults().get(0));
+            return candidates;
+        }
 
         boolean josaFlag = true;
         boolean eomiFlag = true;

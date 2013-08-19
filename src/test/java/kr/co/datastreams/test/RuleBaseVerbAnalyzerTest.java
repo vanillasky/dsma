@@ -179,4 +179,13 @@ public class RuleBaseVerbAnalyzerTest {
         System.out.println(candidates.get(0));
     }
 
+    @Test
+    public void testHeuristic() throws Exception {
+        VerbAnalyzer v = new RuleBaseVerbAnalyzer();
+        List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
+        Word w = new Word("가다듬어", CharType.HANGUL);
+        v.analyze(candidates, w, w.length());
+        System.out.println(candidates.get(0).asMorphemes());
+    }
+
 }
