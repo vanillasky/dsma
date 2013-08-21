@@ -17,7 +17,9 @@ public class PosTag {
                                                        "EM", "EP", "PF", "SN",
                                                        "SV", "SJ", "SA", "SF",
                                                        "XR", "SY", "NR", "OL",
-                                                       "OH", "ON"};
+                                                       "OH", "ON", "DOVI", "DOVT",
+                                                       "IRB", "IRH", "IRL", "IRS"};
+
     private static final Hashtable<String, Long> TAG_HASH = new Hashtable<String, Long>();
     private static final Hashtable<Long, String> TAG_NUM_HASH = new Hashtable<Long, String>();
     static final String[] ZIP_TAG_ARR;
@@ -47,14 +49,23 @@ public class PosTag {
     public static final long XR;  // 어근
     public static final long SY;  // 문장부호
     public static final long NR;  // 미등록어
+    public static final long DOVI; // 명사뒤에 -하다 결합할 때 자동사로 쓰임
+    public static final long DOVT; // 명사뒤에 하다가 결합하여 타동사로 쓰임
 
     public static final long OL;  // 외국어
     public static final long OH;  // 한자
     public static final long ON;  // 숫자
 
+    public static final long IRB;  // ㅂ불규칙
+    public static final long IRH;  // ㅎ불규칙
+    public static final long IRL;  // 르불규칙
+    public static final long IRS;  // ㅅ불규칙
+
+
     public static final long N; // 명사
     public static final long V; // 동사
     public static final long S; // 접미사
+    public static final long DO; // 명사에 -하다가 붙는 경우
 
 
     static {
@@ -91,10 +102,17 @@ public class PosTag {
         OL = getTagNum("OL");
         OH = getTagNum("OH");
         ON = getTagNum("ON");
+        DOVI = getTagNum("DOVI");
+        DOVT = getTagNum("DOVT");
+        IRB = getTagNum("IRB");
+        IRH = getTagNum("IRH");
+        IRL = getTagNum("IRL");
+        IRS = getTagNum("IRS");
 
         N = NN | NP | NU | NX;
         V = VV | VJ;
         S = SN | SV | SJ | SA | SF;
+        DO = DOVI | DOVT;
 
         TAG_HASH.put("N", Long.valueOf(N));
         TAG_NUM_HASH.put(Long.valueOf(N), "N");
@@ -105,12 +123,15 @@ public class PosTag {
         TAG_HASH.put("S", Long.valueOf(S));
         TAG_NUM_HASH.put(Long.valueOf(S), "S");
 
+        TAG_HASH.put("DO", Long.valueOf(DO));
+        TAG_NUM_HASH.put(Long.valueOf(DO), "DO");
+
         ZIP_TAG_ARR = new String[]{"N", "V", "S"};
     }
 
     public static long getTagNum(String tag) {
         if (tag == null) return 0L;
-//        System.out.println("tag:"+ tag);
+        //System.out.println("tag:"+ tag);
         return TAG_HASH.get(tag).longValue();
     }
 
@@ -171,24 +192,39 @@ public class PosTag {
 //    public static char RPAREN  = 'r';       //* right parenthesis     */
 
 
-    public static long buildTags(String[] tags) {
-        long result = 0L;
-        Long tagNum = 0L;
-        for (String each : tags) {
-            tagNum = getTagNum(each.trim());
-            if (tagNum != null) {
-                result = result | tagNum;
-            }
-        }
-        return result;
-    }
-
     public static boolean isKindOf(long tagNum, long compareTag) {
         return Long.bitCount(tagNum & compareTag) > 0;
+    }
+
+    public static boolean isTagOf(long tagNum, long compareTag) {
+        return (compareTag & Long.MAX_VALUE & tagNum) > 0L;
     }
 
     public static String getTag(long tagNum) {
         //System.out.println("==>" + tagNum);
         return TAG_NUM_HASH.get(tagNum);
+    }
+
+    public static String decodeVerb(long verbTag) {
+        if (isTagOf(VJ, verbTag)) {
+            return getTag(VJ);
+        } else if (isTagOf(VV, verbTag)) {
+            return getTag(VV);
+        }
+
+        return getTag(V);
+    }
+
+    public static String decodeNoun(long tag) {
+        if (isTagOf(NN, tag)) {
+            return getTag(NN);
+        } else if (isTagOf(NP, tag)) {
+            return getTag(NP);
+        } else if (isTagOf(NU, tag)) {
+            return getTag(NU);
+        } else if (isTagOf(NX, tag)) {
+            return getTag(NX);
+        }
+        return getTag(N);
     }
 }

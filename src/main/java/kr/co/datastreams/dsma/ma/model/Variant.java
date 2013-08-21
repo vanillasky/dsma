@@ -30,7 +30,7 @@ public class Variant {
     }
 
 
-    public static Variant createEnding(String stem, String ending) {
+    public static Variant createWithEnding(String stem, String ending) {
         return new Variant(stem, ending, null, null);
     }
 

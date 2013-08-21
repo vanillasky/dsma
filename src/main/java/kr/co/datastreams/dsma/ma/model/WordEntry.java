@@ -49,8 +49,9 @@ public class WordEntry  {
 
     private WordEntry(String word, String[] tags) {
         this.string = word;
-        this.posTag = PosTag.buildTags(tags);
+        this.posTag = buildTags(tags);
     }
+
 
     private WordEntry(String word, char[] features) {
         this.string = word;
@@ -125,6 +126,25 @@ public class WordEntry  {
 
     public long tag() {
         return this.posTag;
+    }
+
+
+    public static long buildTags(String[] tags) {
+        long result = 0L;
+        Long tagNum = 0L;
+        for (String each : tags) {
+            if (each.equalsIgnoreCase("N")) {
+                each = "NN";
+            } else if (each.equalsIgnoreCase("V")) {
+                each = "VV";
+            }
+
+            tagNum = PosTag.getTagNum(each.trim());
+            if (tagNum != null) {
+                result = result | tagNum;
+            }
+        }
+        return result;
     }
 
 

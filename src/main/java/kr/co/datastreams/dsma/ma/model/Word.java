@@ -31,11 +31,16 @@ public class Word implements Serializable, Comparable {
         return 0;
     }
 
+    public static Word createAnalyzedHangul(String string) {
+        return new Word(string, CharType.HANGUL, 0, ResultCode.SUCCESS);
+    }
+
+    public static Word createHangul(String string) {
+        return new Word(string, CharType.HANGUL, 0);
+    }
+
     public Word() {
-        this.string = null;
-        this.charType = CharType.ETC;
-        this.index = 0;
-        this.resultCode = ResultCode.FAILURE;
+        this(null, CharType.ETC, 0, ResultCode.FAILURE);
     }
 
     public Word(String string, CharType charType) {
@@ -43,16 +48,22 @@ public class Word implements Serializable, Comparable {
     }
 
     public Word(String string, CharType charType, int index) {
+        this(string, charType, index, ResultCode.FAILURE);
+    }
+
+    public Word(String string, CharType charType, int index, ResultCode resultCode) {
         this.string = string;
         this.charType = charType;
         this.index = index;
-        resultCode = ResultCode.FAILURE;
-        analysisResults = new ArrayList<AnalysisResult>();
+        this.resultCode = resultCode;
+        this.analysisResults = new ArrayList<AnalysisResult>();
     }
 
-
-    public boolean equals(String other) {
-        return string != null && other != null && other.equals(string);
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Word)) return false;
+        String o = (String)other;
+        return string != null && o != null && o.equals(string);
     }
 
     public Word(Word token) {
@@ -117,5 +128,13 @@ public class Word implements Serializable, Comparable {
 
     public List<AnalysisResult> getAnalysisResults() {
         return analysisResults;
+    }
+
+    public ResultCode getResultCode() {
+        return resultCode;
+    }
+
+    public void setResultCode(ResultCode resultCode) {
+        this.resultCode = resultCode;
     }
 }

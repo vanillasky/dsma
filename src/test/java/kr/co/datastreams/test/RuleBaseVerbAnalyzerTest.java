@@ -160,6 +160,7 @@ public class RuleBaseVerbAnalyzerTest {
     @Test
     public void testSplitPomi_끝음절이_시_인용언() throws Exception {
         Variant result = verbAnalyzer.splitPrefinal("성가시"); //성가시다
+        System.out.println(result);
         assertTrue(result.isEmpty());
 
         result = verbAnalyzer.splitPrefinal("자시");  //자시다
@@ -179,13 +180,7 @@ public class RuleBaseVerbAnalyzerTest {
         System.out.println(candidates.get(0));
     }
 
-    @Test
-    public void testHeuristic() throws Exception {
-        VerbAnalyzer v = new RuleBaseVerbAnalyzer();
-        List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
-        Word w = new Word("가다듬어", CharType.HANGUL);
-        v.analyze(candidates, w, w.length());
-        System.out.println(candidates.get(0).asMorphemes());
-    }
+
+
 
 }

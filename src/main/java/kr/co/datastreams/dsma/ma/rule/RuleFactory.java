@@ -17,7 +17,7 @@ public class RuleFactory {
         List<EndingCombineRule> rules = new ArrayList<EndingCombineRule>();
         rules.add(new EndingStartsWithNLMB(stemCandidate, endingCandidate));
         rules.add(new EndingVariantHayoeGeoraNeora(stemCandidate, endingCandidate));
-        rules.add(new ApocopeRule(stemCandidate, endingCandidate));
+        rules.add(new ApocopeAEoRule(stemCandidate, endingCandidate));
         rules.add(new EndingSplitRuleVariantAEoi(stemCandidate, endingCandidate));
         rules.add(new EndingCombineWithEoi(stemCandidate, endingCandidate));
         rules.add(new EndingEndsWithHi(stemCandidate, endingCandidate));

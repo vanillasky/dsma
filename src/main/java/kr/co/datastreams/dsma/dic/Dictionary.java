@@ -6,6 +6,7 @@ import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
 import kr.co.datastreams.dsma.dic.trie.Trie;
+import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class Dictionary {
 
     private final Trie<String, WordEntry> trie = new Trie<String, WordEntry>();
     private final HashSet<WordEntry> verbStemSet = new HashSet<WordEntry>();
+    private final WordEntryComposer wordEntryComposer = new PosTagComposer();
 
     private Dictionary() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -43,7 +45,7 @@ public class Dictionary {
         StopWatch watch = StopWatch.create();
         watch.start();
 
-        loadWithComposer(new DefaultWordEntryComposer(), fileName);
+        loadWithComposer(wordEntryComposer, fileName);
 
         watch.end();
         watch.println("dictionary "+ fileName + "loaded, ");
@@ -107,20 +109,33 @@ public class Dictionary {
 
 
     /**
-     * 사전에 수록된 단어를 찾아서 동사로 활용할 수 있으면 반환하고
+     * 사전에 수록된 단어를 찾아서 용언으 활용할 수 있으면 반환하고
      * 동사로 쓸 수 없으면 null을 반환한다.
      *
      * @param word - the word to find
      * @return WordEntry that is possible to use as verb.
      */
     public static WordEntry getVerb(String word) {
+       return findWithPosTag(word, PosTag.V);
+    }
+
+    /**
+     * 사전에 수록된 단어를 찾아서 체언 활용할 수 있으면 반환하고
+     * 동사로 쓸 수 없으면 null을 반환한다.
+     *
+     * @param word - the word to find
+     * @return WordEntry that is possible to use as verb.
+     */
+    public static WordEntry getNoun(String word) {
+        return findWithPosTag(word, PosTag.N);
+    }
+
+    public static WordEntry findWithPosTag(String word, long tagNum) {
         WordEntry entry = get(word);
         if (entry == null) return null;
 
-        if (entry.availableAsVerb()) return entry;
+        if (entry.isTagOf(tagNum)) return entry;
 
         return null;
     }
-
-
 }

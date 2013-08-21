@@ -12,6 +12,7 @@ import kr.co.datastreams.dsma.util.Hangul;
  * To change this template use File | Settings | File Templates.
  */
 public class PrefinalEndingRule extends BaseEndingCombineRule {
+
     public PrefinalEndingRule(String stemCandidate, String endingCandidate) {
         super(stemCandidate, endingCandidate);
     }

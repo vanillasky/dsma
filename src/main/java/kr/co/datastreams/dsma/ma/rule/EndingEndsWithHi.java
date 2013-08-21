@@ -30,6 +30,6 @@ public class EndingEndsWithHi extends BaseEndingCombineRule {
 
         String initial = new StringBuilder(cutStemTail()).append('하').toString();
         String end = "이" + endingPart;
-        return Variant.createEnding(initial, end);
+        return Variant.createWithEnding(initial, end);
     }
 }

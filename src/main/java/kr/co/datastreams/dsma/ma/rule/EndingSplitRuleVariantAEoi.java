@@ -64,6 +64,6 @@ public class EndingSplitRuleVariantAEoi extends BaseEndingCombineRule {
         }
 
         String ending = buf.substring(buf.length()-1) + endingPart;
-        return Variant.createEnding(buf.substring(0, buf.length() - 1), ending);
+        return Variant.createWithEnding(buf.substring(0, buf.length() - 1), ending);
     }
 }

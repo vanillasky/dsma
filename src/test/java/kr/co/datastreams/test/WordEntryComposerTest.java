@@ -79,7 +79,7 @@ public class WordEntryComposerTest {
         assertTrue(entries.get(0).isTagOf(PosTag.NN));
         assertTrue(entries.get(0).isTagOf(PosTag.AD));
 
-        assertTrue(entries.get(1).isTagOf(PosTag.VJ));
+        assertTrue(entries.get(1).isTagOf(PosTag.AD));
         assertTrue(entries.get(1).isTagOf(PosTag.V));
         assertTrue(entries.get(1).isTagOf(PosTag.N));
     }

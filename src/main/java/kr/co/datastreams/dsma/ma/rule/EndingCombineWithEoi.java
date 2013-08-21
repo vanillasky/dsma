@@ -44,9 +44,9 @@ public class EndingCombineWithEoi extends BaseEndingCombineRule {
             return Variant.EMPTY;
 
         if (phonemes.hasJong()) {
-            return Variant.createEnding(stemPart, endingPart);
+            return Variant.createWithEnding(stemPart, endingPart);
         } else {
-            return Variant.createEnding(stemPart, "어" + endingPart);
+            return Variant.createWithEnding(stemPart, "어" + endingPart);
         }
     }
 }

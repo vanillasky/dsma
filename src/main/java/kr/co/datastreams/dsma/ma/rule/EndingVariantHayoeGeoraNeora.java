@@ -39,13 +39,13 @@ public class EndingVariantHayoeGeoraNeora extends BaseEndingCombineRule {
             return Variant.EMPTY;
 
         if (stemPart.endsWith("하") && "여".equals(endingPart)) {
-            return Variant.createEnding(stemPart, "어");
+            return Variant.createWithEnding(stemPart, "어");
         }
         else if (stemPart.endsWith("오") && "너라".equals(endingPart)) {
-            return Variant.createEnding(stemPart, "너라");
+            return Variant.createWithEnding(stemPart, "너라");
         }
         else if (stemPart.endsWith("가") && "거라".equals(endingPart)) {
-            return Variant.createEnding(stemPart, "거라");
+            return Variant.createWithEnding(stemPart, "거라");
         }
 
         return Variant.EMPTY;

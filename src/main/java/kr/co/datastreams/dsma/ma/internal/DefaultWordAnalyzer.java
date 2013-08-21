@@ -18,6 +18,7 @@ import java.util.List;
 public class DefaultWordAnalyzer implements WordAnalyzer {
 
     private VerbAnalyzer verbAnalyzer = new RuleBaseVerbAnalyzer();
+    private HeuristicAnalyzer heuristicAnalyzer = new HeuristicAnalyzer();
 
     /**
      * 단어 수준의 형태소 분석<br/>
@@ -30,9 +31,11 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
         List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
         String inputString = word.getString();
 
-        Word analyzedWord = AnalyzedDic.find(inputString.trim());
-        if (analyzedWord != null) {
-            candidates.add(analyzedWord.getAnalysisResults().get(0));
+        if (searchAnalyzedDictionary(candidates, word)) {
+            return candidates;
+        }
+
+        if (heuristicAnalyze(candidates, word)) {
             return candidates;
         }
 
@@ -71,5 +74,26 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
         }
 
         return candidates;
+    }
+
+
+    private boolean heuristicAnalyze(List<AnalysisResult> candidates, Word word) {
+        // Heuristic analyze
+        AnalysisResult result = heuristicAnalyzer.analyze(word);
+        if (result != null) {
+            candidates.add(result);
+            return true;
+        }
+        return false;
+    }
+
+    // 기분석 사전 조회
+    private boolean searchAnalyzedDictionary(List<AnalysisResult> candidates, Word word) {
+        Word analyzedWord = AnalyzedDic.find(word.getString().trim());
+        if (analyzedWord != null) {
+            candidates.addAll(analyzedWord.getAnalysisResults());
+            return true;
+        }
+        return false;
     }
 }

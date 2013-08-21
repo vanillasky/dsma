@@ -24,6 +24,7 @@ import org.junit.runners.Suite;
     , ApocopeRuleTest.class
     , StartsWithNLMBEndingTest.class
     , AnalyzedDicTest.class
+    , HeuristicAnalyzerTest.class
 
 })
 public class AllTests {

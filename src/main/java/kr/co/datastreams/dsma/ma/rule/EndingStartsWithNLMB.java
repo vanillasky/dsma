@@ -52,7 +52,7 @@ public class EndingStartsWithNLMB extends BaseEndingCombineRule {
         // 어간 + (종성이 제거된 어미 후보)
         initial = new StringBuilder(cutStemTail()).append(Hangul.removeFinal(lastCharInStemPart)).toString();
 
-        return Variant.createEnding(initial, end);
+        return Variant.createWithEnding(initial, end);
     }
 
 }

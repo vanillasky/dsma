@@ -1,6 +1,7 @@
 package kr.co.datastreams.dsma.ma.model;
 
 import kr.co.datastreams.commons.util.StringUtil;
+import kr.co.datastreams.dsma.dic.AnalyzedDic;
 import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.WordPattern;
 import kr.co.datastreams.dsma.util.Hangul;
@@ -8,6 +9,7 @@ import kr.co.datastreams.dsma.util.Hangul;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  *
@@ -66,8 +68,10 @@ public class AnalysisResult implements Serializable, Cloneable {
      *
      * @return 분석결과
      */
-    public static AnalysisResult verb(String source, String stem, String ending, WordPattern pattern) {
+    public static AnalysisResult verb(long postag, String source, String stem, String ending, WordPattern pattern) {
         AnalysisResult result = new AnalysisResult(source, stem, ending, null, pattern, SCORE_ANALYSIS);
+        result.setSimpleStemPos("V");
+        result.setPos(PosTag.decodeVerb(postag));
         result.resolvePattern();
         return result;
     }
@@ -83,7 +87,7 @@ public class AnalysisResult implements Serializable, Cloneable {
 
      */
     public static AnalysisResult verbWithPrefinal(String source, String stem, String prefinal, String ending, WordPattern pattern) {
-        AnalysisResult result = verb(source, stem, ending, pattern);
+        AnalysisResult result = verb(PosTag.V, source, stem, ending, pattern);
         result.prefinalEnding = prefinal;
         return result;
     }
@@ -100,6 +104,15 @@ public class AnalysisResult implements Serializable, Cloneable {
         this.josa = josa;
         this.ending = ending;
         this.wordPattern = pattern;
+    }
+
+
+    public static AnalysisResult noun(long tag, String source, String stem, String josa, WordPattern pattern) {
+        AnalysisResult result = new AnalysisResult(source, stem, null, josa, pattern, SCORE_ANALYSIS);
+        result.setSimpleStemPos("N");
+        result.setPos(PosTag.decodeNoun(tag));
+        result.resolvePattern();
+        return result;
     }
 
 
@@ -164,6 +177,10 @@ public class AnalysisResult implements Serializable, Cloneable {
 
     public void setPos(String pos) {
         this.pos = pos;
+    }
+
+    public String getJosa() {
+        return josa;
     }
 
     public void setWordPattern(WordPattern wordPattern) {
@@ -335,7 +352,7 @@ public class AnalysisResult implements Serializable, Cloneable {
     }
 
 
-    public String asMorphemes() {
+    public String asString() {
         StringBuilder sb = new StringBuilder(source).append("/");
         sb.append("<").append(stem).append(", ").append(pos).append(">");
 
@@ -379,6 +396,67 @@ public class AnalysisResult implements Serializable, Cloneable {
 
     public void appendMorphemeTag(StringBuilder sb, String morpheme, long tagNum) {
         sb.append(" + ").append("<").append(morpheme).append(", ").append(PosTag.getTag(tagNum)).append(">");
+    }
+
+
+    /**
+     * 기분석 사전에 수록된 형태소 정보를 이용하여 분석결과를 만든다.
+     *
+     * @param word - 입력어절
+     * @param taggedMorphemes - <같, VV> 형식의 형태소 정보를 담고있는 배열
+     * @return
+     */
+    public static AnalysisResult buildResult(String word, String[] taggedMorphemes) {
+        AnalysisResult result = new AnalysisResult(word);
+        result.setScore(SCORE_ANALYZED_DIC);
+
+        for (String each : taggedMorphemes) {
+            Matcher matcher = AnalyzedDic.ANAL_RESULT_PATTERN.matcher(each);
+            String pos, morpheme;
+
+            while (matcher.find()) {
+                morpheme = matcher.group(1);
+                pos = matcher.group(2);
+
+                long tagNum = PosTag.getTagNum(pos);
+                if (tagNum == 0) {
+                    throw new IllegalArgumentException("Tag not defined:" + pos);
+                }
+
+                if (tagNum == PosTag.JO) {
+                    result.setJosa(morpheme);
+                } else if (tagNum == PosTag.EM) {
+                    result.setEnding(morpheme);
+                } else if (tagNum == PosTag.EP) {
+                    result.setPrefinalEnding(morpheme);
+                } else if (tagNum == PosTag.CP) {
+                    result.setVerbSuffix(morpheme);
+                } else if (PosTag.isKindOf(tagNum, PosTag.S)) {
+                    if (tagNum == PosTag.SN) {
+                        result.setNounSuffix(morpheme);
+                    } else if (tagNum == PosTag.SV || tagNum == PosTag.SJ || tagNum == PosTag.SA) {
+                        result.setVerbSuffix(morpheme);
+                    }
+                }
+                else if (PosTag.isKindOf(tagNum, PosTag.N)) {
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(PosTag.N));
+                } else if (PosTag.isKindOf(tagNum, PosTag.V)) {
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(PosTag.V));
+                } else if (tagNum == PosTag.AD || tagNum == PosTag.DT || tagNum == PosTag.EX) { // 단일어: 부사, 관형사, 감탄사
+                    result.setStem(morpheme);
+                    result.setPos(PosTag.getTag(tagNum));
+                    result.setSimpleStemPos(PosTag.getTag(tagNum));
+                }
+
+            }
+        }
+
+        result.resolvePattern();
+        return result;
     }
 
 

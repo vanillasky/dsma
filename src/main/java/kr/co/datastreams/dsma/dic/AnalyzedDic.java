@@ -5,30 +5,27 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.CharType;
 import kr.co.datastreams.dsma.ma.model.Word;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created with IntelliJ IDEA.
+ * 기분석 사전
+ *
  * User: shkim
  * Date: 13. 8. 8
  * Time: 오후 3:56
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class AnalyzedDic implements ConfKeys {
 
-    private final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣ㄱ-ㅎㅏ-ㅣ]++)\\s*,\\s*(\\w++)"); // <같, VV>
+    public final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣ㄱ-ㅎㅏ-ㅣ]++)\\s*,\\s*(\\w++)"); // <같, VV>
 
     private static final AnalyzedDic instance = new AnalyzedDic();
     private final HashMap<String, Word> analyzedWords = new HashMap<String, Word>();
-
 
     private AnalyzedDic() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -46,7 +43,9 @@ public class AnalyzedDic implements ConfKeys {
                     continue;
                 }
 
-                analyzedWords.put(line.split("\\s")[0], createAnalyzedWord(line));
+                Word word = Word.createAnalyzedHangul(line.split("\\s")[0].trim());
+                word.addResult(AnalysisResult.buildResult(word.getString(), parseMorphemes(line)));
+                analyzedWords.put(line.split("\\s")[0], word);
             }
 
             watch.end();
@@ -54,75 +53,13 @@ public class AnalyzedDic implements ConfKeys {
         }
     }
 
-    private Word createAnalyzedWord(String line) {
-        Word word = createWordFrom(line);
-        String[] morphemes = parseMorphemes(line);
 
-        AnalysisResult result = new AnalysisResult(word.getString());
-        result.setScore(AnalysisResult.SCORE_ANALYZED_DIC);
-
-        for (String each : morphemes) {
-            Matcher matcher = ANAL_RESULT_PATTERN.matcher(each);
-            String pos, morpheme;
-            while (matcher.find()) {
-                morpheme = matcher.group(1);
-                pos = matcher.group(2);
-
-                long tagNum = PosTag.getTagNum(pos);
-                if (tagNum == 0) {
-                    throw new IllegalArgumentException("Tag not defined:" + pos);
-                }
-
-                if (tagNum == PosTag.JO) {
-                    result.setJosa(morpheme);
-                } else if (tagNum == PosTag.EM) {
-                    result.setEnding(morpheme);
-                } else if (tagNum == PosTag.EP) {
-                    result.setPrefinalEnding(morpheme);
-                } else if (tagNum == PosTag.CP) {
-                    result.setVerbSuffix(morpheme);
-                } else if (PosTag.isKindOf(tagNum, PosTag.S)) {
-                    if (tagNum == PosTag.SN) {
-                        result.setNounSuffix(morpheme);
-                    } else if (tagNum == PosTag.SV || tagNum == PosTag.SJ || tagNum == PosTag.SA) {
-                        result.setVerbSuffix(morpheme);
-                    }
-                }
-                else if (PosTag.isKindOf(tagNum, PosTag.N)) {
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(PosTag.N));
-                } else if (PosTag.isKindOf(tagNum, PosTag.V)) {
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(PosTag.V));
-                } else if (tagNum == PosTag.AD || tagNum == PosTag.DT || tagNum == PosTag.EX) { // 단일어: 부사, 관형사, 감탄사
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(tagNum));
-                }
-
-            }
-        }
-
-        result.resolvePattern();
-        result.setScore(AnalysisResult.SCORE_ANALYZED_DIC);
-        word.addResult(result);
-
-        return word;
-    }
 
     // 같았다  <같, VV>  + <었, EP> + <다, EM> -> [0]=<같, VV>, [1]=<었, EP>, [2]=<다, EM>
     private String[] parseMorphemes(String line) {
         String analyzedInfoPart = line.substring(line.indexOf("<"), line.length());
         return analyzedInfoPart.split("\\+");
     }
-
-    private Word createWordFrom(String line) {
-        String analyzedWord = line.split("\\s")[0].trim();
-        return new Word(analyzedWord, CharType.HANGUL);
-    }
-
 
     private Word get(String word) {
         return analyzedWords.get(word);
@@ -131,6 +68,4 @@ public class AnalyzedDic implements ConfKeys {
     public static Word find(String word) {
         return instance.get(word);
     }
-
-
 }

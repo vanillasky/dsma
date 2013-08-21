@@ -21,17 +21,17 @@ public class AnalyzedDicTest {
         String text = "같았다";  // <같, VV>  + <었, EP> + <다, EM>
         Word word = AnalyzedDic.find(text);
         AnalysisResult result = word.getAnalysisResults().get(0);
-        assertEquals("같았다/<같, VV> + <었, EP> + <다, EM>", result.asMorphemes());
+        assertEquals("같았다/<같, VV> + <었, EP> + <다, EM>", result.asString());
 
         text = "있었다";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("있었다/<있, VV> + <었, EP> + <다, EM>", result.asMorphemes());
+        assertEquals("있었다/<있, VV> + <었, EP> + <다, EM>", result.asString());
 
         text = "했지만";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("했지만/<하, VV> + <었, EP> + <지만, EM>", result.asMorphemes());
+        assertEquals("했지만/<하, VV> + <었, EP> + <지만, EM>", result.asString());
 
     }
 
@@ -41,7 +41,7 @@ public class AnalyzedDicTest {
         Word word = AnalyzedDic.find(text);
         AnalysisResult result = word.getAnalysisResults().get(0);
         System.out.println(result);
-        assertEquals("했음은/<하, VV> + <었, EP> + <음, EM> + <은, JO>", result.asMorphemes());
+        assertEquals("했음은/<하, VV> + <었, EP> + <음, EM> + <은, JO>", result.asString());
     }
 
 
@@ -51,17 +51,17 @@ public class AnalyzedDicTest {
         String text = "거기에";
         Word word = AnalyzedDic.find(text);
         AnalysisResult result = word.getAnalysisResults().get(0);
-        assertEquals("거기에/<거기, NN> + <에, JO>", result.asMorphemes());
+        assertEquals("거기에/<거기, NN> + <에, JO>", result.asString());
 
         text = "그걸로";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("그걸로/<그것, NP> + <으로, JO>", result.asMorphemes());
+        assertEquals("그걸로/<그것, NP> + <으로, JO>", result.asString());
 
         text = "걸";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("걸/<것, NX> + <을, JO>", result.asMorphemes());
+        assertEquals("걸/<것, NX> + <을, JO>", result.asString());
 
     }
 
@@ -71,34 +71,34 @@ public class AnalyzedDicTest {
         String text = "것이었다";
         Word word = AnalyzedDic.find(text);
         AnalysisResult result = word.getAnalysisResults().get(0);
-        assertEquals("것이었다/<것, NX> + <이, CP> + <었, EP> + <다, EM>", result.asMorphemes());
+        assertEquals("것이었다/<것, NX> + <이, CP> + <었, EP> + <다, EM>", result.asString());
 
         text = "거니";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("거니/<것, NX> + <이, CP> + <니, EM>", result.asMorphemes());
+        assertEquals("거니/<것, NX> + <이, CP> + <니, EM>", result.asString());
 
         text = "거다";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("거다/<것, NX> + <이, CP> + <다, EM>", result.asMorphemes());
+        assertEquals("거다/<것, NX> + <이, CP> + <다, EM>", result.asString());
 
         text = "거란";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("거란/<것, NX> + <이, CP> + <란, EM>", result.asMorphemes());
+        assertEquals("거란/<것, NX> + <이, CP> + <란, EM>", result.asString());
 
         text = "누군가";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
         System.out.println(result);
-        assertEquals("누군가/<누구, NP> + <이, CP> + <ㄴ가, EM>", result.asMorphemes());
+        assertEquals("누군가/<누구, NP> + <이, CP> + <ㄴ가, EM>", result.asString());
 
         text = "뭔지를";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
         System.out.println(result);
-        assertEquals("뭔지를/<무엇, NP> + <이, CP> + <ㄴ지를, EM>", result.asMorphemes());
+        assertEquals("뭔지를/<무엇, NP> + <이, CP> + <ㄴ지를, EM>", result.asString());
     }
 
 
@@ -108,11 +108,11 @@ public class AnalyzedDicTest {
         String text = "그래서";
         Word word = AnalyzedDic.find(text);
         AnalysisResult result = word.getAnalysisResults().get(0);
-        assertEquals("그래서/<그래서, AD>", result.asMorphemes());
+        assertEquals("그래서/<그래서, AD>", result.asString());
 
         text = "그러한";
         word = AnalyzedDic.find(text);
         result = word.getAnalysisResults().get(0);
-        assertEquals("그러한/<그러한, VJ>", result.asMorphemes());
+        assertEquals("그러한/<그러한, VJ>", result.asString());
     }
 }

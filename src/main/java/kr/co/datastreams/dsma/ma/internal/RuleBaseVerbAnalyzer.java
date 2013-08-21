@@ -5,6 +5,7 @@ import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
 import kr.co.datastreams.dsma.ma.IrregularVerb;
 import kr.co.datastreams.dsma.ma.MorphemeBuilder;
+import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.WordPattern;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.Variant;
@@ -33,14 +34,6 @@ public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
         }
 
         AnalysisResult candidate;
-
-        if (location == word.length()) {
-            if ((candidate = heuristicAnalysis(word)) != null) {
-                System.out.println("Analyzed with heuristic method:"+ candidate);
-                candidates.add(candidate);
-                return;
-            }
-        }
 
         Variant ending = splitEnding(stemPart, endingPart);
         if (ending.isEmpty()) return;
@@ -76,36 +69,8 @@ public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
     }
 
 
-    private AnalysisResult heuristicAnalysis(Word word) {
-        int[] checkLocations = {3,4,2};
-        AnalysisResult candidate = null;
-
-        if (word.length() > 3) {
-            for (int i=0; i < checkLocations.length; i++) {
-                candidate = checkWith(word, checkLocations[i]);
-                if (candidate != null) {
-                    break;
-                }
-            }
-        }
-        return candidate;
-    }
-
-    private AnalysisResult checkWith(Word word, int start) {
-        AnalysisResult candidate = null;
-        String stemPart = word.substring(0, start);
-        String endingPart = word.substring(start);
-
-        WordEntry entry = Dictionary.getVerb(stemPart);
-        if (entry != null && EomiDic.exists(endingPart)) {
-            candidate = AnalysisResult.verb(word.getString(), stemPart, endingPart, WordPattern.VM);
-        }
-
-        return candidate;
-    }
-
     private AnalysisResult createVerb(String source, Variant ending, WordPattern wordPattern) {
-        return AnalysisResult.verb(source, ending.getStem(), ending.getEnding(), wordPattern);
+        return AnalysisResult.verb(PosTag.V, source, ending.getStem(), ending.getEnding(), wordPattern);
     }
 
     private AnalysisResult createVerbWithPrefinal(String source, Variant prefinal, WordPattern wordPattern) {
@@ -138,7 +103,7 @@ public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
 
         if (result == null || result.isEmpty()) {
             if (ending.length() > 0 && EomiDic.exists(ending)) {
-                result = Variant.createEnding(stem, ending);
+                result = Variant.createWithEnding(stem, ending);
             }
         }
 

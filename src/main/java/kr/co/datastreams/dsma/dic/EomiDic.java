@@ -86,4 +86,7 @@ public class EomiDic implements ConfKeys {
         return exists ? ending : null;
     }
 
+    public static String search(String str) {
+        return instance.eomiMap.get(str);
+    }
 }

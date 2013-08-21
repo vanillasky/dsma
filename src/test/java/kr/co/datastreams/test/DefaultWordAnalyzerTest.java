@@ -81,11 +81,11 @@ public class DefaultWordAnalyzerTest {
     }
 
     @Test
-    public void test_AnalyedWords() throws Exception {
+    public void test_AnalyzedWords() throws Exception {
         String word = "텐데";
         WordAnalyzer wa = new DefaultWordAnalyzer();
         List<AnalysisResult> results = wa.analyzeWord(new Word(word, CharType.HANGUL, 0));
-        assertEquals("텐데/<터, NX> + <이, CP> + <ㄴ데, EM>", results.get(0).asMorphemes());
+        assertEquals("텐데/<터, NX> + <이, CP> + <ㄴ데, EM>", results.get(0).asString());
         assertEquals(AnalysisResult.SCORE_ANALYZED_DIC, results.get(0).getScore());
     }
 }
