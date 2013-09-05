@@ -7,11 +7,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: shkim
  * Date: 13. 7. 15
  * Time: 오후 4:39
- * To change this template use File | Settings | File Templates.
+ *
  */
 public final class TrieNode<V> {
 
@@ -98,27 +98,6 @@ public final class TrieNode<V> {
             throw new NoSuchElementException();
         }
     }
-
-//    private class LabelForwardIterator extends UnmodifiableIterator {
-//
-//        int index = 0;
-//        @Override
-//        public boolean hasNext() {
-//            return index < children.size();
-//        }
-//
-//        @Override
-//        public Object next() {
-//            if (index < children.size()) {
-//                return getChildAt(index++).getLabel();
-//            }
-//            throw new NoSuchElementException();
-//        }
-//    }
-
-//    public Iterator labelsForward() {
-//        return new LabelForwardIterator();
-//    }
 
     @Override
     public String toString() {

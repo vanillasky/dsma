@@ -47,22 +47,22 @@ public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
 
 
         WordEntry entry = Dictionary.getVerb(candidate.getStem());
-        if (entry != null) {
-            if (!"을".equals(endingPart) && !"은".equals(endingPart) && !"음".equals(endingPart)) {
-                if (entry.getFeature(WordEntry.IDX_REGURA) != IrregularVerb.IRR_TYPE_LIUL
-                    && entry.getFeature(WordEntry.IDX_REGURA) != IrregularVerb.IRR_TYPE_BIUP) {
-
-                    try {
-                        AnalysisResult output = candidate.clone();
-                        MorphemeBuilder.buildPattern(WordPattern.VM, output, candidates);
-
-
-                    } catch (CloneNotSupportedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+//        if (entry != null) {
+//            if (!"을".equals(endingPart) && !"은".equals(endingPart) && !"음".equals(endingPart)) {
+//                if (entry.getFeature(WordEntry.IDX_REGURA) != IrregularVerb.IRR_TYPE_LIUL
+//                    && entry.getFeature(WordEntry.IDX_REGURA) != IrregularVerb.IRR_TYPE_BIUP) {
+//
+//                    try {
+//                        AnalysisResult output = candidate.clone();
+//                        MorphemeBuilder.buildPattern(WordPattern.VM, output, candidates);
+//
+//
+//                    } catch (CloneNotSupportedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
 
         candidates.add(candidate);
 
@@ -70,7 +70,8 @@ public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
 
 
     private AnalysisResult createVerb(String source, Variant ending, WordPattern wordPattern) {
-        return AnalysisResult.verb(PosTag.V, source, ending.getStem(), ending.getEnding(), wordPattern);
+//        return AnalysisResult.verb(PosTag.V, source, ending.getStem(), ending.getEnding(), wordPattern);
+        return null;
     }
 
     private AnalysisResult createVerbWithPrefinal(String source, Variant prefinal, WordPattern wordPattern) {

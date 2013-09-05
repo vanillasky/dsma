@@ -1,0 +1,90 @@
+// 체언(N)
+TAG: NNG //일반명사
+TAG: NNP //고유명사
+TAG: NNB //의존명사
+TAG: NR  //수사
+TAG: NP  //대명사
+
+// 용언(V)
+TAG: VV  //동사
+TAG: VA  //형용사
+TAG: VX  //보조용언
+TAG: VCP //긍정 지정사(서술격 조사 "이다")
+TAG: VCN //부정 지정사(형용사 "아니다")
+
+//관형사(M)
+TAG: MM  //관형사
+
+//부사(AD)
+TAG:MAG //일반부사
+TAG:MAJ //접속부사
+
+//감탄사(I)
+TAG:IC  //감탄사
+
+//조사(J)
+TAG:JKS //주격조사
+TAG:JKC //보격조사
+TAG:JKG //관형격조사
+TAG:JKO //목적격조사
+TAG:JKB //부사격조사
+TAG:JKV //호격조사
+TAG:JKQ //인용격조사
+TAG:JX  //보조사
+TAG:JC  //접속조사
+
+//선어말어미(EP)
+TAG:EP  //선어말어미
+
+//어말어미(E)
+TAG:EF  //종결어미
+TAG:EC  //연결어미
+TAG:ETN //명사형 전성 어미
+TAG:ETM //관형형 전성 어미
+
+//접두사(XP)
+TAG:XPN //체언 접두사
+
+//접미사(XS)
+TAG:XSN //명사 파생 접미사
+TAG:XSV //동사 파생 접미사
+TAG:XSA //형용사 파생 접미사
+
+//어근(XR)
+TAG:XR //어근
+
+//부호(SY)
+TAG:SF  //마침표, 물음표, 느낌표
+TAG:SP  //쉼표, 가운뎃점,콜론,빗금
+TAG:SS  //따옴표,괄호표,줄표
+TAG:SE  //줄표
+TAG:SO  //붙임표(물결,숨김,빠짐)
+TAG:SW  //기타기호
+
+//분석불능(U)
+TAG:NF  //명사추정범주
+
+//한글이외(O)
+TAG:SL  //외국어
+TAG:SH  //한자
+TAG:SN  //숫자
+
+TSET:    N   NNG,NNP,NNB,NR,NP
+TSET:    V   VV,VA,VX,VCP,VCN
+TSET:    AD  MAG,MAJ
+TSET:    J   JKS,JKC,JKG,JKO,JKB,JKV,JKQ,JX,JC
+TSET:    E   EF,EC,ETN,ETM
+TSET:    XS  XSN,XSV,XSA
+TSET:    SY  SF,SP,SS,SE,SO,SW
+TSET:    O   SL,SH,SN
+
+IRR: IRRB    //ㅂ 불규칙
+IRR: IRRS    //ㅅ 불규칙
+IRR: IRRD    //ㄷ 불규칙
+IRR: IRRL    //ㄹ 불규칙
+IRR: IRRH    //ㅎ 불규칙
+IRR: IRRLU   //르 불규칙
+IRR: IRRLE   //러 불규칙
+
+DO: DOVI    //명사뒤에 -하다 결합할 때 자동사로 쓰임
+DO: DOVT    //명사뒤에 -하다 결합하여 타동사로 쓰임

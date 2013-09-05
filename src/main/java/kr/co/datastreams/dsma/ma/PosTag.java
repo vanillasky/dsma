@@ -1,7 +1,7 @@
 package kr.co.datastreams.dsma.ma;
 
 import javax.management.ObjectName;
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  *
@@ -11,220 +11,251 @@ import java.util.Hashtable;
  *
  */
 public class PosTag {
-    private static final String[] TAGS = new String[] {"NN", "NX", "NU", "NP",
-                                                       "VV", "VJ", "VX", "CP",
-                                                       "AD", "DT", "EX", "JO",
-                                                       "EM", "EP", "PF", "SN",
-                                                       "SV", "SJ", "SA", "SF",
-                                                       "XR", "SY", "NR", "OL",
-                                                       "OH", "ON", "DOVI", "DOVT",
-                                                       "IRB", "IRH", "IRL", "IRS"};
 
-    private static final Hashtable<String, Long> TAG_HASH = new Hashtable<String, Long>();
-    private static final Hashtable<Long, String> TAG_NUM_HASH = new Hashtable<Long, String>();
-    static final String[] ZIP_TAG_ARR;
+    private static final String[] TAGS = {
+         "NNG", "NNP", "NNB", "NR", "NP"
+        ,"VV", "VA", "VX", "VCP", "VCN"
+        ,"MM", "MAG", "MAJ", "IC"
+        ,"JKS", "JKC", "JKG", "JKO", "JKB", "JKV", "JKQ", "JX", "JC"
+        ,"EP", "EF", "EC", "ETN", "ETM"
+        ,"XPN", "XSN", "XSV", "XSA", "XR"
+        ,"SF", "SP", "SS", "SE", "SO", "SW"
+        ,"NF", "SL", "SH", "SN"
+        ,"DOVI", "DOVT"
+    };
 
-    public static final long NN;  // 일반명사
-    public static final long NX;  // 의존명사
-    public static final long NU;  // 수사
-    public static final long NP;  // 대명사
+    private static final String[] IRRS = {
+        "IRRB"    //ㅂ 불규칙
+        ,"IRRS"   //ㅅ 불규칙
+        ,"IRRD"   //ㄷ 불규칙
+        ,"IRRL"    //ㄹ 불규칙
+        ,"IRRH"    //ㅎ 불규칙
+        ,"IRRLU"   //르 불규칙
+        ,"IRRLE"   //러 불규칙
+    };
 
-    public static final long VV;  // 동사
-    public static final long VJ;  // 형용사
-    public static final long VX;  // 보조용언
-    public static final long CP;  // 서술격조사 '이다'
+    private static final  Map<String, Long> TAG_NAME_HASH = Collections.synchronizedMap(new HashMap<String, Long>());
+    private static final Map<Long, String> TAG_NUM_HASH = Collections.synchronizedMap(new HashMap<Long, String>());
+    private static final List<String> IRR_LIST = Collections.synchronizedList(new ArrayList<String>());
 
-    public static final long AD;  // 부사
-    public static final long DT;  // 관형사
-    public static final long EX;  // 감탄사
-    public static final long JO;  // 조사
-    public static final long EM;  // 어미
-    public static final long EP;  // 선어말 어미
-    public static final long PF;  // 접두사
-    public static final long SN;  // 명사화접미사     //s
-    public static final long SV;  // 동사화접미사     //t
-    public static final long SJ;  // 형용사화접미사   //t
-    public static final long SA;  // 부사화화접미사
-    public static final long SF;  // 기타접미사
-    public static final long XR;  // 어근
-    public static final long SY;  // 문장부호
-    public static final long NR;  // 미등록어
-    public static final long DOVI; // 명사뒤에 -하다 결합할 때 자동사로 쓰임
-    public static final long DOVT; // 명사뒤에 하다가 결합하여 타동사로 쓰임
+    // 체언(N)
+    public static final long NNG; //일반명사
+    public static final long NNP; //고유명사
+    public static final long NNB; //의존명사
+    public static final long NR;  //수사
+    public static final long NP;  //대명사
 
-    public static final long OL;  // 외국어
-    public static final long OH;  // 한자
-    public static final long ON;  // 숫자
+    // 용언(V)
+    public static final long VV;  //동사
+    public static final long VA;  //형용사
+    public static final long VX;  //보조용언
+    public static final long VCP; //긍정 지정사(서술격 조사 "이다")
+    public static final long VCN; //부정 지정사(형용사 "아니다")
 
-    public static final long IRB;  // ㅂ불규칙
-    public static final long IRH;  // ㅎ불규칙
-    public static final long IRL;  // 르불규칙
-    public static final long IRS;  // ㅅ불규칙
+    //관형사(M)
+    public static final long MM;  //관형사
+
+    //부사(AD)
+    public static final long MAG; //일반부사
+    public static final long MAJ; //접속부사
+
+    //감탄사(I)
+    public static final long IC;  //감탄사
+
+    //조사(J)
+    public static final long JKS; //주격조사
+    public static final long JKC;//보격조사
+    public static final long JKG; //관형격조사
+    public static final long JKO; //목적격조사
+    public static final long JKB; //부사격조사
+    public static final long JKV; //호격조사
+    public static final long JKQ; //인용격조사
+    public static final long JX;  //보조사
+    public static final long JC;  //접속조사
+
+    //선어말어미(EP)
+    public static final long EP;  //선어말어미
+
+    //어말어미(E)
+    public static final long EF;  //종결어미
+    public static final long EC;  //연결어미
+    public static final long ETN; //명사형 전성 어미
+    public static final long ETM; //관형형 전성 어미
+
+    //접두사(XP)
+    public static final long XPN; //체언 접두사
+
+    //접미사(XS)
+    public static final long XSN; //명사 파생 접미사
+    public static final long XSV; //동사 파생 접미사
+    public static final long XSA; //형용사 파생 접미사
+
+    //어근(XR)
+    public static final long XR; //어근
+
+    //부호(SY)
+    public static final long SF;  //마침표, 물음표, 느낌표
+    public static final long SP;  //쉼표, 가운뎃점,콜론,빗금
+    public static final long SS;  //따옴표,괄호표,줄표
+    public static final long SE;  //줄표
+    public static final long SO;  //붙임표(물결,숨김,빠짐)
+    public static final long SW;  //기타기호
+
+    //분석불능(U)
+    public static final long NF;  //명사추정범주
+
+    //한글이외(O)
+    public static final long SL;  //외국어
+    public static final long SH;  //한자
+    public static final long SN;  //숫자
+
+    public static final long DOVI;    //명사뒤에 -하다 결합할 때 자동사로 쓰임
+    public static final long DOVT;    //명사뒤에 -하다 결합하여 타동사로 쓰임
+
+    public static final long N;    //NNG,NNP,NNB,NR,NP
+    public static final long V;    //VV,VA,VX,VCP,VCN
+    public static final long AD;   //MAG,MAJ
+    public static final long J;     //JKS,JKC,JKG,JKO,JKB,JKV,JKQ,JX,JC
+    public static final long E;     //EF,EC,ETN,ETM
+    public static final long XS;    //XSN,XSV,XSA
+    public static final long SY;    //SF,SP,SS,SE,SO,SW
+    public static final long O;     //SL,SH,SN
+    public static final long DO;
 
 
-    public static final long N; // 명사
-    public static final long V; // 동사
-    public static final long S; // 접미사
-    public static final long DO; // 명사에 -하다가 붙는 경우
 
 
     static {
         long tagNum = 0L;
         for (int i=0; i < TAGS.length; i++) {
-            tagNum = 1L << i;  // 1,2,4,8, ...
-            TAG_HASH.put(TAGS[i], new Long(tagNum));
+            tagNum = 1L << i;  // 1,2,4,8,16,...
+            TAG_NAME_HASH.put(TAGS[i], new Long(tagNum));
             TAG_NUM_HASH.put(new Long(tagNum), TAGS[i]);
         }
 
-        NN = getTagNum("NN");
-        NX = getTagNum("NX");
-        NU = getTagNum("NU");
+        NNG = getTagNum("NNG");
+        NNP = getTagNum("NNP");
+        NNB = getTagNum("NNB");
+        NR = getTagNum("NR");
         NP = getTagNum("NP");
         VV = getTagNum("VV");
-        VJ = getTagNum("VJ");
+        VA = getTagNum("VA");
         VX = getTagNum("VX");
-        CP = getTagNum("CP");
-        AD = getTagNum("AD");
-        DT = getTagNum("DT");
-        EX = getTagNum("EX");
-        JO = getTagNum("JO");
-        EM = getTagNum("EM");
+        VCP = getTagNum("VCP");
+        VCN = getTagNum("VCN");
+        MM = getTagNum("MM");
+        MAG = getTagNum("MAG");
+        MAJ = getTagNum("MAJ");
+        IC = getTagNum("IC");
+        JKS = getTagNum("JKS");
+        JKC = getTagNum("JKC");
+        JKG = getTagNum("JKG");
+        JKO = getTagNum("JKO");
+        JKB = getTagNum("JKB");
+        JKV = getTagNum("JKV");
+        JKQ = getTagNum("JKQ");
+        JX = getTagNum("JX");
+        JC = getTagNum("JC");
         EP = getTagNum("EP");
-        PF = getTagNum("PF");
-        SN = getTagNum("SN");
-        SV = getTagNum("SV");
-        SJ = getTagNum("SJ");
-        SA = getTagNum("SA");
-        SF = getTagNum("SF");
+        EF = getTagNum("EF");
+        EC = getTagNum("EC");
+        ETN = getTagNum("ETN");
+        ETM = getTagNum("ETM");
+        XPN = getTagNum("XPN");
+        XSN = getTagNum("XSN");
+        XSV = getTagNum("XSV");
+        XSA = getTagNum("XSA");
         XR = getTagNum("XR");
-        SY = getTagNum("SY");
-        NR = getTagNum("NR");
-        OL = getTagNum("OL");
-        OH = getTagNum("OH");
-        ON = getTagNum("ON");
+        SF = getTagNum("SF");
+        SP = getTagNum("SP");
+        SS = getTagNum("SS");
+        SE = getTagNum("SE");
+        SO = getTagNum("SO");
+        SW = getTagNum("SW");
+        NF = getTagNum("NF");
+        SL = getTagNum("SL");
+        SH = getTagNum("SH");
+        SN = getTagNum("SN");
         DOVI = getTagNum("DOVI");
         DOVT = getTagNum("DOVT");
-        IRB = getTagNum("IRB");
-        IRH = getTagNum("IRH");
-        IRL = getTagNum("IRL");
-        IRS = getTagNum("IRS");
 
-        N = NN | NP | NU | NX;
-        V = VV | VJ;
-        S = SN | SV | SJ | SA | SF;
+
+        N = NNG | NNP | NNB | NR |NP;
+        V = VV | VA | VX | VCP | VCN;
+        AD = MAG | MAJ;
+        J = JKS | JKC | JKG | JKO | JKB | JKV | JKQ | JX | JC;
+        E = EF | EC | ETN | ETM;
+        XS = XSN | XSV | XSA;
+        SY = SF | SP | SS | SE | SO | SW;
+        O  =  SL | SH | SN;
         DO = DOVI | DOVT;
 
-        TAG_HASH.put("N", Long.valueOf(N));
+
+        TAG_NAME_HASH.put("N", Long.valueOf(N));
         TAG_NUM_HASH.put(Long.valueOf(N), "N");
 
-        TAG_HASH.put("V", Long.valueOf(V));
+        TAG_NAME_HASH.put("V", Long.valueOf(V));
         TAG_NUM_HASH.put(Long.valueOf(V), "V");
 
-        TAG_HASH.put("S", Long.valueOf(S));
-        TAG_NUM_HASH.put(Long.valueOf(S), "S");
+        TAG_NAME_HASH.put("AD", Long.valueOf(AD));
+        TAG_NUM_HASH.put(Long.valueOf(AD), "AD");
 
-        TAG_HASH.put("DO", Long.valueOf(DO));
+        TAG_NAME_HASH.put("J", Long.valueOf(J));
+        TAG_NUM_HASH.put(Long.valueOf(J), "J");
+
+        TAG_NAME_HASH.put("E", Long.valueOf(E));
+        TAG_NUM_HASH.put(Long.valueOf(E), "E");
+
+        TAG_NAME_HASH.put("XS", Long.valueOf(XS));
+        TAG_NUM_HASH.put(Long.valueOf(XS), "XS");
+
+        TAG_NAME_HASH.put("SY", Long.valueOf(SY));
+        TAG_NUM_HASH.put(Long.valueOf(SY), "SY");
+
+        TAG_NAME_HASH.put("O", Long.valueOf(O));
+        TAG_NUM_HASH.put(Long.valueOf(O), "O");
+
+        TAG_NAME_HASH.put("DO", Long.valueOf(DO));
         TAG_NUM_HASH.put(Long.valueOf(DO), "DO");
 
-        ZIP_TAG_ARR = new String[]{"N", "V", "S"};
+        IRR_LIST.addAll(Arrays.asList(IRRS));
+
+    }
+
+    private PosTag() {
+
     }
 
     public static long getTagNum(String tag) {
         if (tag == null) return 0L;
-        //System.out.println("tag:"+ tag);
-        return TAG_HASH.get(tag).longValue();
-    }
-
-//    public static char NOUN  =   'N';       // 명사(noun)
-//    public static char PNOUN  =  'P';       // 대명사(pronoun)
-//    public static char XNOUN  =  'U';       // 의존명사(dependent noun)
-//    public static char NUMERAL = 'M';       // 수사(numeral)
-//    public static char PROPER  = 'O';       // proper noun: NOT USED
-//
-//    public static char VJXV  =   'V';       // 용언: 동사/형용사/보조용언
-//    public static char AID   =   'Z';       // 기타: 부사/관형사/감탄사
-//
-//    public static char PUNC  =   'q';       // 문장부호
-//    public static char SYMB  =   'Q';       //* special symbols       */
-//
-//    public static char CNOUN  =  'C';       //* compound noun guessed */
-//    public static char NOUNK  =  'u';       //* guessed as noun       */
-//
-//    public static char ASCall =  '@';       //* all alphanumeric chars*/
-//    public static char ASCend =  '$';       //* end with alphanumeric */
-//    public static char ASCmid =  '*';       //* ..+alphanumeric+Hangul*/
-//
-//    //* defined for numeral to digit conversion */
-//    public static char digits =  '1';       //* digit-string */
-//    public static char digitH  = '2';       //* digit-string + Hangul*/
-//
-//    public static char VERB  =   'V';       //* verb                  */
-//    public static char ADJ   =   'J';       //* adjective             */
-//    public static char XVERB =   'W';       //* auxiliary verb        */
-//    public static char XADJ  =   'K';       //* NOT USED YET          */
-//
-//    public static char ADV   =   'B';       //* adverb                */
-//    public static char DET   =   'D';       //* determiner            */
-//    public static char EXCL  =   'L';       //* exclamation           */
-//
-//    public static char JOSA   =  'j';       //* Korean Josa           */
-//    public static char COPULA =  'c';       //* copula '-Wi-'         */
-//    public static char EOMI   =  'e';       //* final Ending          */
-//    public static char PEOMI  =  'f';       //* prefinal Ending       */
-//    public static char NEOMI  =  'n';       //* nominalizing Eomi     */
-//
-//    public static char PREFIX =  'p';       //* prefixes              */
-//    public static char SFX_N  =  's';       //* noun suffixes: '들/적'*/
-//    public static char SFX_V  =  't';       //* 접미사*/
-//
-//    public static char ETC   =   'Z';       //* not decided yet       */
-//
-//    /* ASCII stem may be classified as follows: NOT USED YET    */
-//    public static char ALPHA  =  'A';       //* English alphabet      */
-//    public static char NUMBER =  '#';       //* Arabic numbers        */
-//    public static char SMARK  =  'R';       //* sentence markers      */
-//
-//    public static char NVERBK  = 'Y';       //* guessed as noun+verb  */
-//
-//    public static char SQUOTE  = 's';       //* single quotation      */
-//    public static char DQUOTE  = 'd';       //* double quotation      */
-//    public static char LPAREN  = 'l';       //* left parenthesis      */
-//    public static char RPAREN  = 'r';       //* right parenthesis     */
-
-
-    public static boolean isKindOf(long tagNum, long compareTag) {
-        return Long.bitCount(tagNum & compareTag) > 0;
-    }
-
-    public static boolean isTagOf(long tagNum, long compareTag) {
-        return (compareTag & Long.MAX_VALUE & tagNum) > 0L;
+        return TAG_NAME_HASH.get(tag).longValue();
     }
 
     public static String getTag(long tagNum) {
-        //System.out.println("==>" + tagNum);
         return TAG_NUM_HASH.get(tagNum);
     }
 
-    public static String decodeVerb(long verbTag) {
-        if (isTagOf(VJ, verbTag)) {
-            return getTag(VJ);
-        } else if (isTagOf(VV, verbTag)) {
-            return getTag(VV);
-        }
+//    public static String decodeVerb(long verbTag) {
+//        if (isTagOf(VJ, verbTag)) {
+//            return getTag(VJ);
+//        } else if (isTagOf(VV, verbTag)) {
+//            return getTag(VV);
+//        }
+//
+//        return getTag(V);
+//    }
+//
+//    public static String decodeNoun(long tag) {
+//        if (isTagOf(NN, tag)) {
+//            return getTag(NN);
+//        } else if (isTagOf(NP, tag)) {
+//            return getTag(NP);
+//        } else if (isTagOf(NU, tag)) {
+//            return getTag(NU);
+//        } else if (isTagOf(NX, tag)) {
+//            return getTag(NX);
+//        }
+//        return getTag(N);
+//    }
 
-        return getTag(V);
-    }
-
-    public static String decodeNoun(long tag) {
-        if (isTagOf(NN, tag)) {
-            return getTag(NN);
-        } else if (isTagOf(NP, tag)) {
-            return getTag(NP);
-        } else if (isTagOf(NU, tag)) {
-            return getTag(NU);
-        } else if (isTagOf(NX, tag)) {
-            return getTag(NX);
-        }
-        return getTag(N);
-    }
 }

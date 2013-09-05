@@ -71,7 +71,7 @@ public class AnalysisResult implements Serializable, Cloneable {
     public static AnalysisResult verb(long postag, String source, String stem, String ending, WordPattern pattern) {
         AnalysisResult result = new AnalysisResult(source, stem, ending, null, pattern, SCORE_ANALYSIS);
         result.setSimpleStemPos("V");
-        result.setPos(PosTag.decodeVerb(postag));
+//        result.setPos(PosTag.decodeVerb(postag));
         result.resolvePattern();
         return result;
     }
@@ -87,9 +87,10 @@ public class AnalysisResult implements Serializable, Cloneable {
 
      */
     public static AnalysisResult verbWithPrefinal(String source, String stem, String prefinal, String ending, WordPattern pattern) {
-        AnalysisResult result = verb(PosTag.V, source, stem, ending, pattern);
-        result.prefinalEnding = prefinal;
-        return result;
+//        AnalysisResult result = verb(PosTag.V, source, stem, ending, pattern);
+//        result.prefinalEnding = prefinal;
+//        return result;
+        return null;
     }
 
     public static AnalysisResult empty(String word) {
@@ -110,7 +111,7 @@ public class AnalysisResult implements Serializable, Cloneable {
     public static AnalysisResult noun(long tag, String source, String stem, String josa, WordPattern pattern) {
         AnalysisResult result = new AnalysisResult(source, stem, null, josa, pattern, SCORE_ANALYSIS);
         result.setSimpleStemPos("N");
-        result.setPos(PosTag.decodeNoun(tag));
+//        result.setPos(PosTag.decodeNoun(tag));
         result.resolvePattern();
         return result;
     }
@@ -260,19 +261,19 @@ public class AnalysisResult implements Serializable, Cloneable {
         if (StringUtil.nvl(stem).length() > 0) {
             long tagNum = PosTag.getTagNum(pos);
 
-            if (PosTag.isKindOf(tagNum, PosTag.N)) {
-                wordPattern = resolveNounPattern();
-            }
-            else if (PosTag.isKindOf(tagNum, PosTag.V)) {
-                wordPattern = resolveVerbPattern();
-            }
-            else if (tagNum == PosTag.AD || tagNum == PosTag.EX || tagNum == PosTag.DT) {
-                if (tagNum == PosTag.AD && hasJosa()) {
-                    wordPattern = WordPattern.ADVJ;
-                } else {
-                    wordPattern = WordPattern.AID;
-                }
-            }
+//            if (PosTag.isKindOf(tagNum, PosTag.N)) {
+//                wordPattern = resolveNounPattern();
+//            }
+//            else if (PosTag.isKindOf(tagNum, PosTag.V)) {
+//                wordPattern = resolveVerbPattern();
+//            }
+//            else if (tagNum == PosTag.AD || tagNum == PosTag.EX || tagNum == PosTag.DT) {
+//                if (tagNum == PosTag.AD && hasJosa()) {
+//                    wordPattern = WordPattern.ADVJ;
+//                } else {
+//                    wordPattern = WordPattern.AID;
+//                }
+//            }
         }
     }
 
@@ -367,7 +368,7 @@ public class AnalysisResult implements Serializable, Cloneable {
             appendJosaPart(sb);
         }
         else if (wordPattern == WordPattern.NSM) {
-           appendMorphemeTag(sb, verbSuffix, verbSuffix.equals("이") ? PosTag.CP : PosTag.SV);
+//           appendMorphemeTag(sb, verbSuffix, verbSuffix.equals("이") ? PosTag.CP : PosTag.SV);
            appendEndingPart(sb);
         }
 
@@ -376,11 +377,11 @@ public class AnalysisResult implements Serializable, Cloneable {
 
     private void appendJosaPart(StringBuilder sb) {
         if (josa != null) {
-            appendMorphemeTag(sb, josa, PosTag.JO);
+//            appendMorphemeTag(sb, josa, PosTag.JO);
         }
         if (josaList != null) {
             for (String each : josaList) {
-                appendMorphemeTag(sb, each, PosTag.JO);
+//                appendMorphemeTag(sb, each, PosTag.JO);
             }
         }
     }
@@ -388,9 +389,9 @@ public class AnalysisResult implements Serializable, Cloneable {
     private void appendEndingPart(StringBuilder sb) {
         if (ending != null) {
             if (prefinalEnding != null) {
-                appendMorphemeTag(sb, prefinalEnding, PosTag.EP);
+//                appendMorphemeTag(sb, prefinalEnding, PosTag.EP);
             }
-            appendMorphemeTag(sb, ending, PosTag.EM);
+//            appendMorphemeTag(sb, ending, PosTag.EM);
         }
     }
 
@@ -423,34 +424,34 @@ public class AnalysisResult implements Serializable, Cloneable {
                     throw new IllegalArgumentException("Tag not defined:" + pos);
                 }
 
-                if (tagNum == PosTag.JO) {
-                    result.setJosa(morpheme);
-                } else if (tagNum == PosTag.EM) {
-                    result.setEnding(morpheme);
-                } else if (tagNum == PosTag.EP) {
-                    result.setPrefinalEnding(morpheme);
-                } else if (tagNum == PosTag.CP) {
-                    result.setVerbSuffix(morpheme);
-                } else if (PosTag.isKindOf(tagNum, PosTag.S)) {
-                    if (tagNum == PosTag.SN) {
-                        result.setNounSuffix(morpheme);
-                    } else if (tagNum == PosTag.SV || tagNum == PosTag.SJ || tagNum == PosTag.SA) {
-                        result.setVerbSuffix(morpheme);
-                    }
-                }
-                else if (PosTag.isKindOf(tagNum, PosTag.N)) {
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(PosTag.N));
-                } else if (PosTag.isKindOf(tagNum, PosTag.V)) {
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(PosTag.V));
-                } else if (tagNum == PosTag.AD || tagNum == PosTag.DT || tagNum == PosTag.EX) { // 단일어: 부사, 관형사, 감탄사
-                    result.setStem(morpheme);
-                    result.setPos(PosTag.getTag(tagNum));
-                    result.setSimpleStemPos(PosTag.getTag(tagNum));
-                }
+//                if (tagNum == PosTag.JO) {
+//                    result.setJosa(morpheme);
+//                } else if (tagNum == PosTag.EM) {
+//                    result.setEnding(morpheme);
+//                } else if (tagNum == PosTag.EP) {
+//                    result.setPrefinalEnding(morpheme);
+//                } else if (tagNum == PosTag.CP) {
+//                    result.setVerbSuffix(morpheme);
+//                } else if (PosTag.isKindOf(tagNum, PosTag.S)) {
+//                    if (tagNum == PosTag.SN) {
+//                        result.setNounSuffix(morpheme);
+//                    } else if (tagNum == PosTag.SV || tagNum == PosTag.SJ || tagNum == PosTag.SA) {
+//                        result.setVerbSuffix(morpheme);
+//                    }
+//                }
+//                else if (PosTag.isKindOf(tagNum, PosTag.N)) {
+//                    result.setStem(morpheme);
+//                    result.setPos(PosTag.getTag(tagNum));
+//                    result.setSimpleStemPos(PosTag.getTag(PosTag.N));
+//                } else if (PosTag.isKindOf(tagNum, PosTag.V)) {
+//                    result.setStem(morpheme);
+//                    result.setPos(PosTag.getTag(tagNum));
+//                    result.setSimpleStemPos(PosTag.getTag(PosTag.V));
+//                } else if (tagNum == PosTag.AD || tagNum == PosTag.DT || tagNum == PosTag.EX) { // 단일어: 부사, 관형사, 감탄사
+//                    result.setStem(morpheme);
+//                    result.setPos(PosTag.getTag(tagNum));
+//                    result.setSimpleStemPos(PosTag.getTag(tagNum));
+//                }
 
             }
         }

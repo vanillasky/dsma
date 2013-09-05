@@ -14,16 +14,16 @@ import java.util.List;
  */
 public class WordEntry  {
 
-    public static final int IDX_NOUN = 0;  // 명사
-    public static final int IDX_VERB = 1;  // 동사
-    public static final int IDX_BUSA = 2;  // 부사
-    public static final int IDX_DOV = 3;   //
-    public static final int IDX_BEV = 4;   //
-    public static final int IDX_NE = 5;    //
-    public static final int IDX_ADJ = 6;   // 형용사
-    public static final int IDX_NPR = 7;   // 명사의 분류 (M:Measure)
-    public static final int IDX_CNOUNX = 8; //
-    public static final int IDX_REGURA = 9; // 불규칙
+//    public static final int IDX_NOUN = 0;  // 명사
+//    public static final int IDX_VERB = 1;  // 동사
+//    public static final int IDX_BUSA = 2;  // 부사
+//    public static final int IDX_DOV = 3;   //
+//    public static final int IDX_BEV = 4;   //
+//    public static final int IDX_NE = 5;    //
+//    public static final int IDX_ADJ = 6;   // 형용사
+//    public static final int IDX_NPR = 7;   // 명사의 분류 (M:Measure)
+//    public static final int IDX_CNOUNX = 8; //
+//    public static final int IDX_REGURA = 9; // 불규칙
 
     protected long posTag;
     protected String string;
@@ -94,23 +94,23 @@ public class WordEntry  {
         this.compounds = compounds;
     }
 
-    /**
-     * 명사로 사용할 수 있는지를 반환한다.
-     *
-     * @return true if the word can be noun.
-     */
-    public boolean availableAsNoun() {
-        return availableAs(IDX_NOUN);
-    }
-
-    /**
-     * 동사로 사용할 수 있는 단어인지를 반환한다.
-     *
-     * @return true if the word can be verb.
-     */
-    public boolean availableAsVerb() {
-        return availableAs(IDX_VERB);
-    }
+//    /**
+//     * 명사로 사용할 수 있는지를 반환한다.
+//     *
+//     * @return true if the word can be noun.
+//     */
+//    public boolean availableAsNoun() {
+//        return availableAs(IDX_NOUN);
+//    }
+//
+//    /**
+//     * 동사로 사용할 수 있는 단어인지를 반환한다.
+//     *
+//     * @return true if the word can be verb.
+//     */
+//    public boolean availableAsVerb() {
+//        return availableAs(IDX_VERB);
+//    }
 
     private boolean availableAs(int propertyIndex) {
         return getFeature(propertyIndex) == '1';
@@ -133,11 +133,6 @@ public class WordEntry  {
         long result = 0L;
         Long tagNum = 0L;
         for (String each : tags) {
-            if (each.equalsIgnoreCase("N")) {
-                each = "NN";
-            } else if (each.equalsIgnoreCase("V")) {
-                each = "VV";
-            }
 
             tagNum = PosTag.getTagNum(each.trim());
             if (tagNum != null) {

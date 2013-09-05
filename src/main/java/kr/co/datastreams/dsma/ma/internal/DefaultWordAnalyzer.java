@@ -39,11 +39,15 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
             return candidates;
         }
 
+        return analyze(word);
+    }
+
+    private List<AnalysisResult> analyze(Word word) {
         boolean josaFlag = true;
         boolean eomiFlag = true;
 
-        verbAnalyzer.analyze(candidates, word, word.getString().length());
-
+        //verbAnalyzer.analyze(candidates, word, word.getString().length());
+        String inputString = word.getString();
         for (int i=inputString.length()-1; i > 0; i--) {
             String stemPart = inputString.substring(0, i);
             String endingPart = inputString.substring(i);
@@ -54,9 +58,9 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
 //                analyzeJosa(candidates, stem, ending);
             }
 
-            if (eomiFlag) {
-                verbAnalyzer.analyze(candidates, word, i);
-            }
+//            if (eomiFlag) {
+//                verbAnalyzer.analyze(candidates, word, i);
+//            }
 
             // 조사의 두 번째 이상의 음절로 사용될 수 있는지 확인
             if (!SyllableDic.isSecondJosaSyllable(lastChar)) {
@@ -72,8 +76,7 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
                 break;
             }
         }
-
-        return candidates;
+        return null;  //To change body of created methods use File | Settings | File Templates.
     }
 
 

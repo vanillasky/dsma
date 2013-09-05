@@ -5,16 +5,15 @@ import kr.co.datastreams.commons.util.UnmodifiableIterator;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: shkim
  * Date: 13. 7. 18
  * Time: 오전 11:10
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class NodeIterator extends UnmodifiableIterator {
 
     private final ArrayList stack = new ArrayList();
-//    private final ArrayList<TrieNode> stack = new ArrayList<TrieNode>();
 
 
     public NodeIterator(TrieNode node) {

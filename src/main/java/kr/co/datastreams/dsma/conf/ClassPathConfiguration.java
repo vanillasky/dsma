@@ -51,13 +51,13 @@ public class ClassPathConfiguration implements Configuration {
         try {
             InputStream is = getClass().getResourceAsStream(filename);
             if (is == null)
-                throw new ConfigurationException("Configuration file loading failed:" + filename);
+                throw new ConfigurationException("Cannot load configuration file" + filename);
 
             reader = new InputStreamReader(is);
             properties.load(reader);
 
         } catch (Exception e) {
-            logger.error("Configuration file loading failed", e);
+            logger.error("Cannot load configuration file", e);
             throw new ConfigurationException(e.getMessage());
         } finally {
             if (reader != null) try {

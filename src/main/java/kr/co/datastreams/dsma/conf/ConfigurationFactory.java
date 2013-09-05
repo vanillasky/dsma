@@ -1,11 +1,5 @@
 package kr.co.datastreams.dsma.conf;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * User: shkim
  * Date: 13. 7. 3
@@ -19,11 +13,10 @@ import java.util.Map;
  */
 public class ConfigurationFactory {
 
-    private static final String LOG_CONFIGURATION_FIFLE = "/conf/dsma.properties";
-    private static final String LOG_CONFIGURATION = "dsma.configuration";
+    private static final String PROPERTIES_FILE = "/conf/dsma.properties";
+    private static final String DEFAULT_PROPERTY = "dsma.configuration";
 
-    private static final Map<String, Configuration> PROPS_CACHE = new HashMap<String, Configuration>();
-    private static final Configuration sysConf = ClassPathConfiguration.newInstance(LOG_CONFIGURATION_FIFLE);
+    private static final Configuration sysConf = ClassPathConfiguration.newInstance(PROPERTIES_FILE);
 
     private ConfigurationFactory() {
 
@@ -38,7 +31,7 @@ public class ConfigurationFactory {
     }
 
     private static Configuration resovleConfiguration(String key) {
-        String confSource = sysConf.get(LOG_CONFIGURATION);
+        String confSource = sysConf.get(DEFAULT_PROPERTY);
 
         if (confSource.equalsIgnoreCase("FILE")) {
             return FileConfiguration.newInstance(key);

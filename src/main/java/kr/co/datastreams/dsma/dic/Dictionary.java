@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,12 +24,10 @@ import java.util.List;
  *
  */
 public class Dictionary {
-    private static final String COMMENT_IDENTIFIER = "//";
     private static final Logger logger = LoggerFactory.getLogger(Dictionary.class);
-    private static final Dictionary dictionary = new Dictionary();
+    private static final Dictionary DICTIONARY = new Dictionary();
 
     private final Trie<String, WordEntry> trie = new Trie<String, WordEntry>();
-    private final HashSet<WordEntry> verbStemSet = new HashSet<WordEntry>();
     private final WordEntryComposer wordEntryComposer = new PosTagComposer();
 
     private Dictionary() {
@@ -48,7 +44,9 @@ public class Dictionary {
         loadWithComposer(wordEntryComposer, fileName);
 
         watch.end();
-        watch.println("dictionary "+ fileName + "loaded, ");
+        if (logger.isDebugEnabled()) {
+            watch.println("Dictionary "+ fileName + "loaded, ");
+        }
     }
 
     private void loadCompounds(String fileName) {
@@ -58,13 +56,14 @@ public class Dictionary {
         loadWithComposer(new CompoundWordEntryComposer(), fileName);
 
         watch.end();
-        watch.println("dictionary "+ fileName + "loaded, ");
+        if (logger.isDebugEnabled()) {
+            watch.println("Dictionary "+ fileName + "loaded, ");
+        }
     }
 
 
     private void loadWithComposer(WordEntryComposer composer, String fileName) {
         List<String> lines = FileUtil.readLines(fileName, "UTF-8");
-//        List<WordEntry> entries = new ArrayList<WordEntry>();
         WordEntry entry;
         for (Iterator<String> iter = lines.iterator(); iter.hasNext(); ) {
             entry = composer.compose(iter.next());
@@ -72,27 +71,10 @@ public class Dictionary {
                 trie.add(entry.getString(), entry);
             }
         }
-
-//        addToTrie(entries);
     }
-
-    private void addToTrie(List<WordEntry> entries) {
-        for (WordEntry entry : entries) {
-            trie.add(entry.getString(), entry);
-        }
-    }
-
-    private void logWrongFeaturedWords(String[] lines) {
-        if (logger.isWarnEnabled()) {
-            for (String each : lines) {
-                logger.warn("Invalid Word information: {}", each);
-            }
-        }
-    }
-
 
     public static WordEntry get(String word) {
-        return dictionary.getWord(word);
+        return DICTIONARY.getWord(word);
     }
 
     private WordEntry getWord(String key) {
@@ -100,11 +82,11 @@ public class Dictionary {
     }
 
     public static void printDictionary(PrintWriter writer) {
-        dictionary.trie.print(writer);
+        DICTIONARY.trie.print(writer);
     }
 
     public static Iterator getPrefixedBy(String prefix) {
-        return dictionary.trie.getPrefixedBy(prefix);
+        return DICTIONARY.trie.getPrefixedBy(prefix);
     }
 
 
@@ -116,8 +98,10 @@ public class Dictionary {
      * @return WordEntry that is possible to use as verb.
      */
     public static WordEntry getVerb(String word) {
-       return findWithPosTag(word, PosTag.V);
+//       return findWithPosTag(word, PosTag.V);
+        return null;
     }
+
 
     /**
      * 사전에 수록된 단어를 찾아서 체언 활용할 수 있으면 반환하고
@@ -127,7 +111,8 @@ public class Dictionary {
      * @return WordEntry that is possible to use as verb.
      */
     public static WordEntry getNoun(String word) {
-        return findWithPosTag(word, PosTag.N);
+//        return findWithPosTag(word, PosTag.N);
+        return null;
     }
 
     public static WordEntry findWithPosTag(String word, long tagNum) {

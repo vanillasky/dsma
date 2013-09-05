@@ -20,7 +20,7 @@ public class Trie<S, V> {
      * Maps the given key to the given value.
      * Find TrieEgde which starts with character(key.charAt(pos)) from the node(starts with root).
      * If there's no TrieEdge whose label starts with the character, creates new TrieNode with given value and add to the node.
-     * else adjust the position for the next step and swap working node with the child of found edge.
+     * else adjust the position for the next step and swap working node with the child of the exist edge.
      *
      */
     public void add(String key, V value) {
