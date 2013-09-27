@@ -11,11 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
+ *
  * User: shkim
  * Date: 13. 7. 23
  * Time: 오후 3:54
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class SyllableDic implements ConfKeys {
 

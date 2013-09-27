@@ -5,7 +5,7 @@ import kr.co.datastreams.dsma.dic.EomiDic;
 import kr.co.datastreams.dsma.dic.JosaDic;
 import kr.co.datastreams.dsma.ma.WordPattern;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 import kr.co.datastreams.dsma.ma.model.WordEntry;
 
 /**
@@ -18,7 +18,7 @@ import kr.co.datastreams.dsma.ma.model.WordEntry;
 public class HeuristicAnalyzer {
 
     //두 음절 이상의 단어는 처음 세,네, 두음절 순으로 용언을, 나머지를 어미로 가정
-    public AnalysisResult analyzeVerb(Word word) {
+    public AnalysisResult analyzeVerb(Eojeol word) {
         int[] tailLocations = {3,4,2};
         AnalysisResult candidate = null;
 
@@ -34,7 +34,7 @@ public class HeuristicAnalyzer {
         return candidate;
     }
 
-    private AnalysisResult confirmVerb(Word word, int start) {
+    private AnalysisResult confirmVerb(Eojeol word, int start) {
         if (word.getString().length() <= start) {
             return null;
         }
@@ -52,7 +52,7 @@ public class HeuristicAnalyzer {
     }
 
     //두 음절 이상의 단어는 처음 두,세,네, 두음절 순으로 체언을, 나머지를 조사로 가정
-    public AnalysisResult analyzeNoun(Word word) {
+    public AnalysisResult analyzeNoun(Eojeol word) {
         int[] tailLocations = {2,3,4};
         AnalysisResult candidate = null;
 
@@ -68,7 +68,7 @@ public class HeuristicAnalyzer {
         return candidate;
     }
 
-    private AnalysisResult confirmNoun(Word word, int start) {
+    private AnalysisResult confirmNoun(Eojeol word, int start) {
         if (word.getString().length() <= start) {
             return null;
         }
@@ -85,7 +85,7 @@ public class HeuristicAnalyzer {
         return candidate;
     }
 
-    public AnalysisResult analyze(Word word) {
+    public AnalysisResult analyze(Eojeol word) {
         AnalysisResult result = analyzeVerb(word);
         if (result != null) {
             return result;

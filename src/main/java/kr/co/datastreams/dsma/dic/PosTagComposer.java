@@ -1,26 +1,24 @@
 package kr.co.datastreams.dsma.dic;
 
-import kr.co.datastreams.commons.util.StringUtil;
-import kr.co.datastreams.dsma.dic.WordEntryComposer;
-import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.WordEntry;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created with IntelliJ IDEA.
+ * 단어<공백>TAG:TAG 형식의 라인에서 WordEntry 객체를 만들어 반환한다.
+ * //로 시작되는 라인은 처리하지 않는다.
+ * e.g)개시	NNG:MAG:DOVI:DOVT
+ *
  * User: shkim
  * Date: 13. 8. 12
  * Time: 오후 2:35
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class PosTagComposer implements WordEntryComposer {
-
+    private static final Logger logger = LoggerFactory.getLogger("Dictionary");
     private static final String COMMENT_IDENTIFIER = "//";
-    private static final String SEPARATOR = ",";
-
-    private final List<String> wrongFeaturedWords = new ArrayList<String>();
+    private static final String SEPARATOR = "\\s++";
+    private static final String TAG_SEPARATOR = ":";
 
     @Override
     public WordEntry compose(String line) {
@@ -29,23 +27,16 @@ public class PosTagComposer implements WordEntryComposer {
         }
 
         String[] wordData = line.split(SEPARATOR);
-        if (wordData.length < 3) {
-            wrongFeaturedWords.add(line);
-            return null;
+        if (wordData.length < 2) {
+            logger.warn("invalid word info.: {}", line);
+            return WordEntry.create(wordData[0]);
         }
 
-        wordData[2] = wordData[2].trim();
-        if (wordData[2].length() ==  0) {
-            wrongFeaturedWords.add(line);
-        } else {
-            return WordEntry.createWithPosTags(wordData[0].trim(), wordData[2].trim().split(":"));
-        }
+        String word = wordData[0].trim();
+        String tag = wordData[1].trim();
 
-        return null;
+        return WordEntry.createWithTags(word, tag.split(TAG_SEPARATOR));
+
     }
 
-    @Override
-    public String[] parseFailedLines() {
-        return wrongFeaturedWords.toArray(new String[wrongFeaturedWords.size()]);
-    }
 }

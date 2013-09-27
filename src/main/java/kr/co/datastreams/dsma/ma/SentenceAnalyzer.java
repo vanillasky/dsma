@@ -1,15 +1,9 @@
 package kr.co.datastreams.dsma.ma;
 
-import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.ma.internal.DefaultWordAnalyzer;
 import kr.co.datastreams.dsma.ma.internal.WordAnalyzer;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Sentence;
-import kr.co.datastreams.dsma.ma.model.Word;
-
-import java.util.Iterator;
-import java.util.List;
+import kr.co.datastreams.dsma.ma.model.*;
+import kr.co.datastreams.dsma.ma.tokenizer.CharTypeTokenizer;
 
 /**
  *
@@ -20,28 +14,48 @@ import java.util.List;
  */
 public class SentenceAnalyzer {
 
-    private final Tokenizer tokenizer = new Tokenizer();
+    private final CharTypeTokenizer tokenizer = new CharTypeTokenizer();
     private final WordAnalyzer wordAnalyzer = new DefaultWordAnalyzer();
 
-    public Sentence analyze(String inputString) {
-        if (StringUtil.nvl(inputString).trim().length() == 0) {
-            return Sentence.emptySentence();
-        }
+    //public Sentence analyze(String inputString) {
+        //System.out.println(Thread.currentThread().getName());
+//        return Sentence.create(0, "XL:" + inputString);
+//        if (StringUtil.nvl(inputString).trim().length() == 0) {
+//            return Sentence.emptySentence();
+//        }
+//
+//        Sentence sentence = Sentence.create(0, inputString);
+//
+//        preProcess(sentence);
+//        guessTail(sentence);
+//        confirmHead(sentence);
+//        postProcess(sentence);
+//
+//        return sentence;
+    //}
 
-        Sentence sentence = Sentence.create(inputString);
+    public Sentence analyze(PlainSentence inputSentence) {
+        System.out.println(Thread.currentThread().getName() + ", " + inputSentence.getSource());
+        return Sentence.create(inputSentence);
 
-        preProcess(sentence);
-        guessTail(sentence);
-        confirmHead(sentence);
-        postProcess(sentence);
-
-        return sentence;
+//        if (StringUtil.nvl(inputString).trim().length() == 0) {
+//            return Sentence.emptySentence();
+//        }
+//
+//        Sentence sentence = Sentence.create(0, inputString);
+//
+//        preProcess(sentence);
+//        guessTail(sentence);
+//        confirmHead(sentence);
+//        postProcess(sentence);
+//
+//        return sentence;
     }
 
 
-    protected void preProcess(Sentence sentence) {
-        List<Word> words = tokenizer.tokenize(sentence.getSource());
-        sentence.setWords(words);
+    protected void preProcess(PlainSentence sentence) {
+       //List<Eojeol> eojeols = tokenizer.tokenize(sentence.getSource());
+//        sentence.setWords(eojeols);
     }
 
     /**
@@ -52,16 +66,16 @@ public class SentenceAnalyzer {
      * @param sentence 입력 문장
      */
     protected void guessTail(Sentence sentence) {
-        for (Iterator<Word> it=sentence.getWords().iterator(); it.hasNext();) {
-            Word word = it.next();
-
-            if (word.is(CharType.HANGUL)) {
-                List<AnalysisResult> candidates = wordAnalyzer.analyzeWord(word);
-                word.addResults(candidates);
-            } else {
-                word.addResult(AnalysisResult.empty(word.getString()));
-            }
-        }
+//        for (Iterator<Eojeol> it=sentence.getWords().iterator(); it.hasNext();) {
+//            Eojeol word = it.next();
+//
+//            if (word.is(CharType.HANGUL)) {
+//                List<AnalysisResult> candidates = wordAnalyzer.analyzeWord(word);
+//               // word.addResults(candidates);
+//            } else {
+//                //word.addResult(AnalysisResult.empty(word.getString()));
+//            }
+//        }
     }
 
 

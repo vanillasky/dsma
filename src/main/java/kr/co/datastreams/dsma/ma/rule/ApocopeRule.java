@@ -45,16 +45,16 @@ public class ApocopeRule extends BaseEndingCombineRule {
             return Variant.EMPTY;
 
 
-        String candidate1 = EomiDic.search(String.valueOf('아' + endingPart));
-        String candidate2 = EomiDic.search(String.valueOf('어' + endingPart));
-        String candidate = candidate2 == null ? candidate1 : candidate2;
+        //String candidate1 = EomiDic.search(String.valueOf('아' + endingPart));
+        //String candidate2 = EomiDic.search(String.valueOf('어' + endingPart));
+        //String candidate = candidate2 == null ? candidate1 : candidate2;
 
-        if (candidate != null) {
-            String stem = stemPart.substring(0, stemPart.length());
-            String ending = candidate;
-
-            return Variant.createWithEnding(stem, ending);
-        }
+//        if (candidate != null) {
+//            String stem = stemPart.substring(0, stemPart.length());
+//            String ending = candidate;
+//
+//            return Variant.createWithEnding(stem, ending);
+//        }
 
         return Variant.EMPTY;
     }

@@ -1,6 +1,5 @@
 package kr.co.datastreams.dsma.ma;
 
-import javax.management.ObjectName;
 import java.util.*;
 
 /**
@@ -24,14 +23,14 @@ public class PosTag {
         ,"DOVI", "DOVT"
     };
 
-    private static final String[] IRRS = {
-        "IRRB"    //ㅂ 불규칙
-        ,"IRRS"   //ㅅ 불규칙
-        ,"IRRD"   //ㄷ 불규칙
-        ,"IRRL"    //ㄹ 불규칙
-        ,"IRRH"    //ㅎ 불규칙
-        ,"IRRLU"   //르 불규칙
-        ,"IRRLE"   //러 불규칙
+    public static enum IrregularType {
+        IRRB    //ㅂ 불규칙
+        ,IRRS   //ㅅ 불규칙
+        ,IRRD   //ㄷ 불규칙
+        ,IRRL    //ㄹ 불규칙
+        ,IRRH    //ㅎ 불규칙
+        ,IRRLU   //르 불규칙
+        ,IRRLE   //러 불규칙
     };
 
     private static final  Map<String, Long> TAG_NAME_HASH = Collections.synchronizedMap(new HashMap<String, Long>());
@@ -121,9 +120,6 @@ public class PosTag {
     public static final long SY;    //SF,SP,SS,SE,SO,SW
     public static final long O;     //SL,SH,SN
     public static final long DO;
-
-
-
 
     static {
         long tagNum = 0L;
@@ -218,8 +214,6 @@ public class PosTag {
         TAG_NAME_HASH.put("DO", Long.valueOf(DO));
         TAG_NUM_HASH.put(Long.valueOf(DO), "DO");
 
-        IRR_LIST.addAll(Arrays.asList(IRRS));
-
     }
 
     private PosTag() {
@@ -228,11 +222,19 @@ public class PosTag {
 
     public static long getTagNum(String tag) {
         if (tag == null) return 0L;
-        return TAG_NAME_HASH.get(tag).longValue();
+        Long value = TAG_NAME_HASH.get(tag);
+        if (value == null)
+            return 0L;
+
+        return value.longValue();
     }
 
     public static String getTag(long tagNum) {
         return TAG_NUM_HASH.get(tagNum);
+    }
+
+    public static boolean isTagOf(long tagNum, long compare) {
+        return (compare & Long.MAX_VALUE & tagNum) > 0L;
     }
 
 //    public static String decodeVerb(long verbTag) {

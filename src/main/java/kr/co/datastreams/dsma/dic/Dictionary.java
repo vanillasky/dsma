@@ -34,7 +34,7 @@ public class Dictionary {
         Configuration conf = ConfigurationFactory.getConfiguration();
         load(conf.get(ConfKeys.DICTIONARY_FILE));
         load(conf.get(ConfKeys.EXTENSION_DIC));
-        loadCompounds(conf.get(ConfKeys.COMPOUND_DIC));
+        //loadCompounds(conf.get(ConfKeys.COMPOUND_DIC));
     }
 
     private void load(String fileName) {
@@ -67,7 +67,7 @@ public class Dictionary {
         WordEntry entry;
         for (Iterator<String> iter = lines.iterator(); iter.hasNext(); ) {
             entry = composer.compose(iter.next());
-            if (entry != null) {
+            if (entry != null && entry.tag() > 0) {
                 trie.add(entry.getString(), entry);
             }
         }
@@ -98,8 +98,7 @@ public class Dictionary {
      * @return WordEntry that is possible to use as verb.
      */
     public static WordEntry getVerb(String word) {
-//       return findWithPosTag(word, PosTag.V);
-        return null;
+        return findWithPosTag(word, PosTag.V);
     }
 
 
@@ -111,8 +110,7 @@ public class Dictionary {
      * @return WordEntry that is possible to use as verb.
      */
     public static WordEntry getNoun(String word) {
-//        return findWithPosTag(word, PosTag.N);
-        return null;
+        return findWithPosTag(word, PosTag.N);
     }
 
     public static WordEntry findWithPosTag(String word, long tagNum) {
@@ -122,5 +120,9 @@ public class Dictionary {
         if (entry.isTagOf(tagNum)) return entry;
 
         return null;
+    }
+
+    public static WordEntry findEnding(String str) {
+        return EomiDic.search(str);
     }
 }

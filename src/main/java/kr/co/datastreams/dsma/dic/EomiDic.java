@@ -6,8 +6,10 @@ import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,8 @@ import java.util.Map;
 public class EomiDic implements ConfKeys {
 
     private static final EomiDic instance = new EomiDic();
-    private final Map<String, String> eomiMap = new HashMap<String, String>();
+    private final Map<String, WordEntry> eomiMap = new HashMap<String, WordEntry>();
+    private final WordEntryComposer wordEntryComposer = new PosTagComposer();
 
     private EomiDic() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -33,19 +36,20 @@ public class EomiDic implements ConfKeys {
             StopWatch watch = StopWatch.create();
             watch.start();
 
-            List<String> lines = FileUtil.readLines(fileName);
-            for (String line : lines) {
-                if (line.trim().length() == 0 || line.trim().startsWith("//")) {
-                    continue;
+            List<String> lines = FileUtil.readLines(EomiDic.class.getClassLoader(), fileName);
+            WordEntry entry;
+            for (Iterator<String> iter = lines.iterator(); iter.hasNext(); ) {
+                entry = wordEntryComposer.compose(iter.next());
+                if (entry != null) {
+                    eomiMap.put(entry.getString(), entry);
                 }
-
-                eomiMap.put(line.trim(), line);
             }
 
             watch.end();
             watch.println("dictionary "+ fileName + "loaded, ");
         }
     }
+
 
     public static boolean exists(String eomi) {
         return instance.existsEnding(eomi);
@@ -86,7 +90,7 @@ public class EomiDic implements ConfKeys {
         return exists ? ending : null;
     }
 
-    public static String search(String str) {
+    public static WordEntry search(String str) {
         return instance.eomiMap.get(str);
     }
 }

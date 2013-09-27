@@ -1,7 +1,7 @@
 package kr.co.datastreams.dsma.ma.internal;
 
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 
 import java.util.List;
 
@@ -22,5 +22,5 @@ public interface WordAnalyzer {
      * @param word - the word to analyzer
      * @return List<AnalysisResult>
      */
-    public List<AnalysisResult> analyzeWord(Word word);
+    public List<AnalysisResult> analyzeWord(Eojeol word);
 }

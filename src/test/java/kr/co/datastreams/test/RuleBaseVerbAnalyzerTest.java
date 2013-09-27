@@ -4,8 +4,8 @@ import kr.co.datastreams.dsma.ma.internal.RuleBaseVerbAnalyzer;
 import kr.co.datastreams.dsma.ma.internal.VerbAnalyzer;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.CharType;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 import kr.co.datastreams.dsma.ma.model.Variant;
-import kr.co.datastreams.dsma.ma.model.Word;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -175,7 +175,7 @@ public class RuleBaseVerbAnalyzerTest {
     public void testAanysisResult_용언_어미() throws Exception {
         VerbAnalyzer v = new RuleBaseVerbAnalyzer();
         List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
-        Word w = new Word("고요히", CharType.HANGUL);
+        Eojeol w = new Eojeol("고요히", CharType.HANGUL);
         v.analyze(candidates, w, w.length());
         System.out.println(candidates.get(0));
     }

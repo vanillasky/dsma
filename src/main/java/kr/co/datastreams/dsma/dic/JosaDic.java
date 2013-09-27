@@ -5,8 +5,10 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
+import kr.co.datastreams.dsma.ma.model.WordEntry;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +22,8 @@ import java.util.Map;
 public class JosaDic implements ConfKeys {
 
     private static final JosaDic instance = new JosaDic();
-    private final Map<String, String> josaMap = new HashMap<String, String>();
+    private final Map<String, WordEntry> josaMap = new HashMap<String, WordEntry>();
+    private final WordEntryComposer wordEntryComposer = new PosTagComposer();
 
     private JosaDic() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -33,13 +36,14 @@ public class JosaDic implements ConfKeys {
             watch.start();
 
             List<String> lines = FileUtil.readLines(fileName);
-            for (String line : lines) {
-                if (line.trim().length() == 0 || line.trim().startsWith("//")) {
-                    continue;
+            WordEntry entry;
+            for (Iterator<String> iter = lines.iterator(); iter.hasNext(); ) {
+                entry = wordEntryComposer.compose(iter.next());
+                if (entry != null) {
+                    josaMap.put(entry.getString(), entry);
                 }
-
-                josaMap.put(line.trim(), line);
             }
+
 
             watch.end();
             watch.println("dictionary "+ fileName + "loaded, ");
@@ -50,7 +54,14 @@ public class JosaDic implements ConfKeys {
         return instance.existsJosa(josa);
     }
 
+    public static String search(String word) {
+        WordEntry entry = instance.josaMap.get(word);
+        return entry == null ? null : entry.getString();
+    }
+
     private boolean existsJosa(String josa) {
         return josaMap.containsKey(josa);
     }
+
+
 }

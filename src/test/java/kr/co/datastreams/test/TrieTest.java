@@ -6,6 +6,8 @@ import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.PrintWriter;
+
 import static org.junit.Assert.*;
 /**
  * Created with IntelliJ IDEA.
@@ -16,11 +18,11 @@ import static org.junit.Assert.*;
  */
 public class TrieTest {
 
-    Trie<String, WordEntry> dic;
+    Trie<String, WordEntry> trie;
 
     @Before
     public void setUp() throws Exception {
-        dic = new Trie<String, WordEntry>();
+        trie = new Trie<String, WordEntry>();
     }
 
     @Test
@@ -33,15 +35,16 @@ public class TrieTest {
         WordEntry m8 = WordEntry.create("나비효과");
         WordEntry m7 = WordEntry.create("나비효리");
 
-        dic.add(m3.getString(), m3);
-        dic.add(m2.getString(), m2);
-        dic.add(m4.getString(), m4);
-        dic.add(m5.getString(), m5);
-        dic.add(m6.getString(), m6);
-        dic.add(m8.getString(), m8);
-        dic.add(m7.getString(), m7);
+        trie.add(m3.getString(), m3);
+        trie.add(m2.getString(), m2);
+        trie.add(m4.getString(), m4);
+        trie.add(m5.getString(), m5);
+        trie.add(m6.getString(), m6);
+        trie.add(m8.getString(), m8);
+        trie.add(m7.getString(), m7);
 
-        assertNotNull(dic.get("나비효과"));
+        assertNotNull(trie.get("나비효과"));
+        //trie.print(new PrintWriter(System.out));
     }
 
     @Test
@@ -59,22 +62,22 @@ public class TrieTest {
         WordEntry m11 = WordEntry.create("나비효리다가");
         WordEntry m12 = WordEntry.create("나비효리다가나");
 
-        dic.add(m1.getString(), m1);
-        dic.add(m3.getString(), m3);
-        dic.add(m2.getString(), m2);
-        dic.add(m4.getString(), m4);
-        dic.add(m5.getString(), m5);
-        dic.add(m6.getString(), m6);
-        dic.add(m8.getString(), m8);
-        dic.add(m7.getString(), m7);
-        dic.add(m9.getString(), m9);
-        dic.add(m10.getString(), m10);
-        dic.add(m11.getString(), m11);
-        dic.add(m12.getString(), m12);
+        trie.add(m1.getString(), m1);
+        trie.add(m3.getString(), m3);
+        trie.add(m2.getString(), m2);
+        trie.add(m4.getString(), m4);
+        trie.add(m5.getString(), m5);
+        trie.add(m6.getString(), m6);
+        trie.add(m8.getString(), m8);
+        trie.add(m7.getString(), m7);
+        trie.add(m9.getString(), m9);
+        trie.add(m10.getString(), m10);
+        trie.add(m11.getString(), m11);
+        trie.add(m12.getString(), m12);
 
 
 
-        ValueIterator iter = dic.getPrefixedBy("나비");
+        ValueIterator iter = trie.getPrefixedBy("나비");
         while (iter.hasNext()) {
             System.out.println(iter.next());
         }
@@ -87,35 +90,35 @@ public class TrieTest {
         int startOffset = 0, stopOffset = 5;
         int expected = -1;
 
-        int result = dic.match(str1, str2, startOffset, stopOffset);
+        int result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
 
         str2 = "abcde";
         startOffset = 0;
         stopOffset = str1.length();
         expected = -1;
-        result = dic.match(str1, str2, startOffset, stopOffset);
+        result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
 
         str2 = "bcd";
         startOffset = 1;
         stopOffset = 3;
         expected = 2;
-        result = dic.match(str1, str2, startOffset, stopOffset);
+        result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
 
         str2 = "abcd";
         startOffset = 1;
         stopOffset = str1.length();
         expected = 0;
-        result = dic.match(str1, str2, startOffset, stopOffset);
+        result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
 
         str2 = "bXd";
         startOffset = 1;
         stopOffset = 5;
         expected = 1;
-        result = dic.match(str1, str2, startOffset, stopOffset);
+        result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
         System.out.println(str1.charAt(result));
 
@@ -124,7 +127,7 @@ public class TrieTest {
         startOffset = 0;
         stopOffset = str1.length();
         expected = 2;
-        result = dic.match(str1, str2, startOffset, stopOffset);
+        result = trie.match(str1, str2, startOffset, stopOffset);
         assertEquals(expected, result);
         System.out.println(str1.charAt(result));
 

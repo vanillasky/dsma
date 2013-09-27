@@ -3,7 +3,7 @@ package kr.co.datastreams.test;
 import kr.co.datastreams.dsma.ma.internal.HeuristicAnalyzer;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
 import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -19,7 +19,7 @@ public class HeuristicAnalyzerTest {
     @Test
     public void testVerb() throws Exception {
         HeuristicAnalyzer analyzer = new HeuristicAnalyzer();
-        Word w = new Word("가다듬어", CharType.HANGUL);
+        Eojeol w = new Eojeol("가다듬어", CharType.HANGUL);
         AnalysisResult result = analyzer.analyze(w);
         assertEquals("가다듬", result.getStem());
         assertEquals("어", result.getEnding());
@@ -28,7 +28,7 @@ public class HeuristicAnalyzerTest {
     @Test
     public void testNoun() throws Exception {
         HeuristicAnalyzer analyzer = new HeuristicAnalyzer();
-        Word w = new Word("언제까지라도", CharType.HANGUL);
+        Eojeol w = new Eojeol("언제까지라도", CharType.HANGUL);
         AnalysisResult result = analyzer.analyze(w);
         System.out.println(result.asString());
         assertEquals("언제", result.getStem());

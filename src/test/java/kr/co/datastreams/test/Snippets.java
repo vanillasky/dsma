@@ -36,6 +36,14 @@ public class Snippets {
     public void testLong() throws Exception {
         System.out.println(Long.bitCount(Long.MIN_VALUE));
         System.out.println(Long.bitCount(Long.MAX_VALUE));
+        System.out.println(1L & Long.MAX_VALUE & 4L);
+        System.out.println(1L << 0);
+        System.out.println(1L << 1);
+        System.out.println(1L << 2);
+        System.out.println(1L << 3);
+        System.out.println(1L << 4);
+
+
     }
 
     @Test
@@ -51,4 +59,12 @@ public class Snippets {
         String s = "그것하어보니";
         System.out.println(s.charAt(s.lastIndexOf("보")-1));
     }
+
+    @Test
+    public void testProcessorCount() throws Exception {
+        int cnt = Runtime.getRuntime().availableProcessors();
+        System.out.println(cnt);
+    }
+
+
 }

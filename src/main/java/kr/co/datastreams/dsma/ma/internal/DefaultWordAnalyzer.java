@@ -3,7 +3,7 @@ package kr.co.datastreams.dsma.ma.internal;
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
 import kr.co.datastreams.dsma.dic.SyllableDic;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
      * @return
      */
     @Override
-    public List<AnalysisResult> analyzeWord(Word word) {
+    public List<AnalysisResult> analyzeWord(Eojeol word) {
         List<AnalysisResult> candidates = new ArrayList<AnalysisResult>();
         String inputString = word.getString();
 
@@ -42,7 +42,7 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
         return analyze(word);
     }
 
-    private List<AnalysisResult> analyze(Word word) {
+    private List<AnalysisResult> analyze(Eojeol word) {
         boolean josaFlag = true;
         boolean eomiFlag = true;
 
@@ -80,7 +80,7 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
     }
 
 
-    private boolean heuristicAnalyze(List<AnalysisResult> candidates, Word word) {
+    private boolean heuristicAnalyze(List<AnalysisResult> candidates, Eojeol word) {
         // Heuristic analyze
         AnalysisResult result = heuristicAnalyzer.analyze(word);
         if (result != null) {
@@ -91,10 +91,10 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
     }
 
     // 기분석 사전 조회
-    private boolean searchAnalyzedDictionary(List<AnalysisResult> candidates, Word word) {
-        Word analyzedWord = AnalyzedDic.find(word.getString().trim());
+    private boolean searchAnalyzedDictionary(List<AnalysisResult> candidates, Eojeol word) {
+        Eojeol analyzedWord = AnalyzedDic.find(word.getString().trim());
         if (analyzedWord != null) {
-            candidates.addAll(analyzedWord.getAnalysisResults());
+            //candidates.addAll(analyzedWord.getAnalysisResults());
             return true;
         }
         return false;

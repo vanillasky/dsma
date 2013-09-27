@@ -3,13 +3,10 @@ package kr.co.datastreams.dsma.ma.internal;
 import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.ma.IrregularVerb;
-import kr.co.datastreams.dsma.ma.MorphemeBuilder;
-import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.WordPattern;
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 import kr.co.datastreams.dsma.ma.model.Variant;
-import kr.co.datastreams.dsma.ma.model.Word;
 import kr.co.datastreams.dsma.ma.model.WordEntry;
 import kr.co.datastreams.dsma.ma.rule.*;
 
@@ -25,7 +22,7 @@ import java.util.List;
 public class RuleBaseVerbAnalyzer implements VerbAnalyzer {
 
     @Override
-    public void analyze(List<AnalysisResult> candidates, Word word, int location) {
+    public void analyze(List<AnalysisResult> candidates, Eojeol word, int location) {
         String stemPart = word.substring(0, location);
         String endingPart = word.substring(location);
 

@@ -1,6 +1,8 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.Dictionary;
+import kr.co.datastreams.dsma.dic.EomiDic;
+import kr.co.datastreams.dsma.dic.JosaDic;
 import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.WordEntry;
 import org.junit.Before;
@@ -35,16 +37,16 @@ public class DictionaryTest {
 
     @Test
     public void testGetPrefixedBy() throws Exception {
-        String[] expected = {"포르노", "포르르", "포르말린", "포르노그라피"};
+        String[] expected = {"포르노", "포르르", "포르말린", "포르볼","포르노그라피"};
         List<String> candidates = new ArrayList<String>();
         Iterator iter = Dictionary.getPrefixedBy("포르");
         assertNotNull(iter);
         while (iter.hasNext()) {
+
             WordEntry entry = (WordEntry)iter.next();
+            System.out.println(entry.getString());
             candidates.add(entry.getString());
-            System.out.println(entry);
         }
-        System.out.println(candidates.size());
         assertArrayEquals(expected, candidates.toArray(new String[candidates.size()]));
     }
 
@@ -56,13 +58,15 @@ public class DictionaryTest {
         assertTrue(entry.isTagOf(PosTag.N));
     }
 
+    @Test
+      public void testEomiDic() throws Exception {
+        String word = "거나";
+        assertEquals(word, EomiDic.search(word));
+    }
 
     @Test
-    public void testPosTag() throws  Exception {
-        WordEntry entry = Dictionary.getVerb("가다듬");
-        long tagNum = entry.tag();
-        System.out.println(tagNum);
-        System.out.println(PosTag.isTagOf(PosTag.VJ, tagNum));
-
+    public void testJosaDic() throws Exception {
+        String word = "가";
+        assertEquals(word, JosaDic.search(word));
     }
 }

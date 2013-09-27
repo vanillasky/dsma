@@ -1,9 +1,7 @@
 package kr.co.datastreams.dsma.ma.model;
 
+import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.ma.PosTag;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,20 +25,15 @@ public class WordEntry  {
 
     protected long posTag;
     protected String string;
-    protected char[] features;
-    protected List<CompoundWordEntry> compounds = new ArrayList<CompoundWordEntry>();
+    protected String[] tags;
+    protected PosTag.IrregularType irregularType;
 
-
-    public static WordEntry createWithPosTags(String word, String[] tags) {
+    public static WordEntry createWithTags(String word, String[] tags) {
         return new WordEntry(word, tags);
     }
 
     public static WordEntry create(String word) {
         return new WordEntry(word);
-    }
-
-    public static WordEntry createWithFeature(String word, char[] chars) {
-        return new WordEntry(word, chars);
     }
 
     private WordEntry(String word) {
@@ -49,71 +42,17 @@ public class WordEntry  {
 
     private WordEntry(String word, String[] tags) {
         this.string = word;
-        this.posTag = buildTags(tags);
+        this.tags = tags;
+        buildTags(tags);
     }
-
-
-    private WordEntry(String word, char[] features) {
-        this.string = word;
-        this.features = features;
-    }
-
-    private WordEntry(String word, char[] features, List<CompoundWordEntry> compounds) {
-        this.string = word;
-        this.features = features;
-        this.compounds = compounds;
-    }
-
-
 
     public String toString() {
        StringBuilder buf = new StringBuilder();
        buf.append("WordEntry { word: ").append(string)
-          .append(", features:").append(features != null ? String.valueOf(features) : "null")
-          .append(", compounds: ");
-       for (CompoundWordEntry each : compounds) {
-           buf.append(each).append(",");
-       }
-       buf.append("}");
+          .append(", tag:").append(StringUtil.join(tags, ","))
+          .append(", irregularType:").append(irregularType)
+          .append("}");
        return buf.toString();
-    }
-
-    public char[] getFeatures() {
-        return features;
-    }
-
-    public char getFeature(int index) {
-        return ( features != null && features.length > index ) ? features[index] : '0';
-    }
-
-    public List<CompoundWordEntry> getCompounds() {
-        return compounds;
-    }
-
-    void setCompounds(List<CompoundWordEntry> compounds) {
-        this.compounds = compounds;
-    }
-
-//    /**
-//     * 명사로 사용할 수 있는지를 반환한다.
-//     *
-//     * @return true if the word can be noun.
-//     */
-//    public boolean availableAsNoun() {
-//        return availableAs(IDX_NOUN);
-//    }
-//
-//    /**
-//     * 동사로 사용할 수 있는 단어인지를 반환한다.
-//     *
-//     * @return true if the word can be verb.
-//     */
-//    public boolean availableAsVerb() {
-//        return availableAs(IDX_VERB);
-//    }
-
-    private boolean availableAs(int propertyIndex) {
-        return getFeature(propertyIndex) == '1';
     }
 
     public String getString() {
@@ -129,19 +68,38 @@ public class WordEntry  {
     }
 
 
-    public static long buildTags(String[] tags) {
+    private void buildTags(String[] tags) {
         long result = 0L;
         Long tagNum = 0L;
         for (String each : tags) {
-
             tagNum = PosTag.getTagNum(each.trim());
-            if (tagNum != null) {
+            if (tagNum > 0) {
                 result = result | tagNum;
+            } else if (each.startsWith("IRR")) {
+                this.irregularType = parseIrregularType(each.trim());
             }
         }
-        return result;
+        this.posTag = result;
     }
 
+    private PosTag.IrregularType parseIrregularType(String tag) {
+        return tag.equalsIgnoreCase("IRRB") ? PosTag.IrregularType.IRRB :
+               tag.equalsIgnoreCase("IRRS") ? PosTag.IrregularType.IRRS :
+               tag.equalsIgnoreCase("IRRD") ? PosTag.IrregularType.IRRD :
+               tag.equalsIgnoreCase("IRRL") ? PosTag.IrregularType.IRRL :
+               tag.equalsIgnoreCase("IRRH") ? PosTag.IrregularType.IRRH :
+               tag.equalsIgnoreCase("IRRLU") ? PosTag.IrregularType.IRRLU :
+               tag.equalsIgnoreCase("IRRLE") ? PosTag.IrregularType.IRRLE : null;
+    }
+
+    public boolean isIrregular() {
+        return irregularType != null;
+    }
+
+
+    public PosTag.IrregularType getIrregularType() {
+        return irregularType;
+    }
 
 
 }

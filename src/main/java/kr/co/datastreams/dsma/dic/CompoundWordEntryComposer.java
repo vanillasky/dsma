@@ -55,8 +55,5 @@ public class CompoundWordEntryComposer implements WordEntryComposer {
     }
 
 
-    @Override
-    public String[] parseFailedLines() {
-        return wrongFeaturedWords.toArray(new String[wrongFeaturedWords.size()]);
-    }
+
 }

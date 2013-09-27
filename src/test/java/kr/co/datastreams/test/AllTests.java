@@ -20,12 +20,18 @@ import org.junit.runners.Suite;
     , RuleBaseVerbAnalyzerTest.class
     , HangulTest.class
     , SyllableDicTest.class
-    , TokenizerTest.class
+    , CharTypeTokenizerTest.class
     , ApocopeRuleTest.class
     , StartsWithNLMBEndingTest.class
     , AnalyzedDicTest.class
     , HeuristicAnalyzerTest.class
-
+    , TokenTest.class
+    , AnalysisJobTest.class
+    , AnalyzedDicTest.class
+    , MorphemeAnalyzerTest.class
+    , MemoizerTest.class
+    , FilterTokenPatternTest.class
+    , WordCounterTest.class
 })
 public class AllTests {
 }

@@ -51,7 +51,6 @@ public final class TrieNode<V> {
     public void addChild(String label, TrieNode<V> child) {
         int index = closestFirstCharIndexOf(label.charAt(0));
         children.add(index + 1, new TrieEdge<V>(label, child));
-        trim();
     }
 
     /**

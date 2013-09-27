@@ -1,7 +1,7 @@
 package kr.co.datastreams.dsma.ma.internal;
 
 import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public interface VerbAnalyzer {
      * @param Word - 어절
      * @param location - stem/ending part 분석 시작 위치
      */
-    public void analyze(List<AnalysisResult> candidates, Word word, int location);
+    public void analyze(List<AnalysisResult> candidates, Eojeol word, int location);
 
 
 }

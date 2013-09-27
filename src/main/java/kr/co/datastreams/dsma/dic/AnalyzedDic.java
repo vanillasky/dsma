@@ -5,11 +5,11 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Word;
+import kr.co.datastreams.dsma.ma.model.Eojeol;
+import kr.co.datastreams.dsma.ma.model.Morpheme;
+import kr.co.datastreams.dsma.ma.model.MorphemeList;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -23,9 +23,10 @@ import java.util.regex.Pattern;
 public class AnalyzedDic implements ConfKeys {
 
     public final static Pattern ANAL_RESULT_PATTERN = Pattern.compile("\\s*<([가-힣ㄱ-ㅎㅏ-ㅣ]++)\\s*,\\s*(\\w++)"); // <같, VV>
+    private final static String MORPHEMES_SEPARATOR = "\\|";
+    private final static AnalyzedDic instance = new AnalyzedDic();
 
-    private static final AnalyzedDic instance = new AnalyzedDic();
-    private final HashMap<String, Word> analyzedWords = new HashMap<String, Word>();
+    private final Map<String, Eojeol> analyzedWords = Collections.synchronizedMap(new HashMap<String, Eojeol>());
 
     private AnalyzedDic() {
         Configuration conf = ConfigurationFactory.getConfiguration();
@@ -43,9 +44,12 @@ public class AnalyzedDic implements ConfKeys {
                     continue;
                 }
 
-                Word word = Word.createAnalyzedHangul(line.split("\\s")[0].trim());
-                word.addResult(AnalysisResult.buildResult(word.getString(), parseMorphemes(line)));
-                analyzedWords.put(line.split("\\s")[0], word);
+                String headword = line.split("\\s")[0].trim();
+                List<String[]> morphemesGroups = parseMorphemes(line);
+                List<MorphemeList> candidates = asMorphemeLists(morphemesGroups);
+
+                Eojeol eojeol = Eojeol.createAnalyzed(headword, candidates);
+                analyzedWords.put(headword, eojeol);
             }
 
             watch.end();
@@ -53,19 +57,56 @@ public class AnalyzedDic implements ConfKeys {
         }
     }
 
+    /**
+     * 형태소 정보를 배열 형태로 가지고 있는 List로부터 MorphemeList의 List를 만들어 반환한다.
+     *
+     * @param morphemesGroups
+     * @return
+     */
+    private List<MorphemeList> asMorphemeLists(List<String[]> morphemesGroups) {
+        List<MorphemeList> candidates = new ArrayList<MorphemeList>(morphemesGroups.size());
 
-
-    // 같았다  <같, VV>  + <었, EP> + <다, EM> -> [0]=<같, VV>, [1]=<었, EP>, [2]=<다, EM>
-    private String[] parseMorphemes(String line) {
-        String analyzedInfoPart = line.substring(line.indexOf("<"), line.length());
-        return analyzedInfoPart.split("\\+");
+        for (String[] eachGroup : morphemesGroups) {
+            MorphemeList morphemeList = new MorphemeList();
+            for (String each : eachGroup) {
+                String temp = each.replaceAll("(<|>|\\s)", "");
+                Morpheme m = new Morpheme(temp.split(",")[0].trim(), temp.split(",")[1].trim());
+                morphemeList.add(m);
+            }
+            candidates.add(morphemeList);
+        }
+        return candidates;
     }
 
-    private Word get(String word) {
+
+    /**
+     * 기분석 사전의 라인을 파싱해서 형태소 정보를 반환한다.
+     * e.g.)
+     *   line: 같았다  <같, VV>  + <었, EP> + <다, EM>
+     *   result: List<String[1]> -> List(0):String[]{<같, VV>, <었, EP>, <다, EM>}
+     * @param line
+     * @return
+     */
+    private List<String[]> parseMorphemes(String line) {
+        line = line.replaceAll("\\s++<", "<").replaceAll(">\\s++", ">");
+
+        String morphemePart = line.substring(line.indexOf("<"), line.length());
+
+        String[] morphemesGroup = morphemePart.split(MORPHEMES_SEPARATOR);
+        List<String[]> result = new ArrayList<String[]>(morphemesGroup.length);
+
+        for (String eachMorphemes : morphemesGroup) {
+            result.add(eachMorphemes.split("\\+"));
+        }
+
+        return result;
+    }
+
+    private Eojeol get(String word) {
         return analyzedWords.get(word);
     }
 
-    public static Word find(String word) {
+    public static Eojeol find(String word) {
         return instance.get(word);
     }
 }
