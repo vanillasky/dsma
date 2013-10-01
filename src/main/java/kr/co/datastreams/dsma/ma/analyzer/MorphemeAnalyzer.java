@@ -1,14 +1,20 @@
 package kr.co.datastreams.dsma.ma.analyzer;
 
+import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.annotation.ThreadSafe;
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
-import kr.co.datastreams.dsma.ma.internal.HeuristicAnalyzer;
+import kr.co.datastreams.dsma.dic.Dictionary;
+import kr.co.datastreams.dsma.dic.JosaDic;
+import kr.co.datastreams.dsma.dic.SyllableDic;
+import kr.co.datastreams.dsma.ma.PosTag;
 import kr.co.datastreams.dsma.ma.model.*;
 import kr.co.datastreams.dsma.ma.tokenizer.Tokenizer;
+import kr.co.datastreams.dsma.util.Hangul;
 import kr.co.datastreams.dsma.util.WordCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -89,25 +95,119 @@ public class MorphemeAnalyzer implements IMorphemeAnalyzer {
      * @return
      */
     protected Eojeol analyzeToken(Token token) {
-        Eojeol result = null;
-        boolean josaFlag = true;
-        boolean eomiFlag = true;
+        Eojeol result;
 
         // 기분석 사전 탐색해서 있으면 인덱스만 바꿔서 반환
-        Eojeol analyzedEojeol = AnalyzedDic.find(token.getString());
-        if (analyzedEojeol != null) {
-            if (logger.isDebugEnabled()) logger.debug("Found word in analyzed dictionary: {}", token.getString());
-            return analyzedEojeol.copy(token.getIndex());
+        result = searchAnalyzedDic(token);
+        if (result != null) {
+            return result;
         }
 
-        result = heuristicSearch(token);
+//        // 경험적 방법으로 단어를 잘라서 찾아본다.
+//        result = heuristicSearch(token);
+//        if (result != null) {
+//            return result;
+//        }
 
-        String inputString = token.getString();
-
-
+        result = doAnalyze(token);
+        if (result == null) {
+            result = Eojeol.createFailure(token);
+        }
 
         return result;
     }
+
+    private Eojeol doAnalyze(Token token) {
+        boolean josaFlag = true;
+        boolean eomiFlag = true;
+        Eojeol result = null;
+
+
+        String inputString = token.getString();
+        for (int i=inputString.length()-1; i > 0; i--) {
+            String head = inputString.substring(0, i);
+            String tail = inputString.substring(i);
+            char firstCharOfTail = tail.charAt(0);
+            List<MorphemeList> candidates = new ArrayList<MorphemeList>();
+
+            // 단어의 마지막 음절이 조사의 첫음절로 사용되는 경우
+            if (josaFlag && SyllableDic.isFirstJosaSyllable(firstCharOfTail)) {
+                analyzeNoun(candidates, head, tail);
+            }
+
+//            if (eomiFlag) {
+//                verbAnalyzer.analyze(candidates, word, i);
+//            }
+
+            // 조사의 두 번째 이상의 음절로 사용될 수 있는지 확인
+            if (!SyllableDic.isSecondJosaSyllable(firstCharOfTail)) {
+                josaFlag = false;
+            }
+
+            // 어미의 두 번째 이상의 음절로 사용될 수 있는지 확인
+            if (!SyllableDic.isSecondEndingSyllable(firstCharOfTail)) {
+                eomiFlag = false;
+            }
+
+            if (josaFlag == false && eomiFlag == false) {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    private void analyzeNoun(List<MorphemeList> candidates, String head, String tail) {
+        if (StringUtil.nvl(head).length() == 0 || StringUtil.nvl(tail).length() == 0) return;
+
+        if (tail.startsWith("로")) {
+            if (head.endsWith("으")) {
+                Hangul h = Hangul.split(head.charAt(head.length()-2));
+                if (h.hasJong()) {
+                    WordEntry josa = JosaDic.search("으" + tail);
+                    System.out.println("자음으로 끝나는 단어 + 로 -> 조음소 '으' 처리: "+ josa);
+                }
+            } else {
+                Hangul h = Hangul.split(head.charAt(head.length()-1));
+                if (!h.hasJong() || h.jong == 'ㄹ') {
+
+                }
+            }
+        }
+
+        WordEntry nounWord = Dictionary.getNoun(head);
+        if (nounWord == null) {
+            return;
+        }
+
+        WordEntry josa = JosaDic.search(tail);
+        Hangul chr = Hangul.split(head.charAt(head.length()-1));
+        if (josa == null || !chr.isAppendableJosa(tail.substring(0, 1))) {
+            return;
+        }
+
+        Morpheme h = new Morpheme(head, PosTag.decodeNoun(nounWord.tag()));
+        Morpheme t = new Morpheme(tail, josa.tag());
+
+        System.out.println(h);
+        System.out.println(t);
+    }
+
+    private boolean isNoun(String word) {
+        return Dictionary.getNoun(word) == null ? false : true;
+    }
+
+    private Eojeol searchAnalyzedDic(Token token) {
+        Eojeol analyzedEojeol = AnalyzedDic.find(token.getString());
+        if (analyzedEojeol != null) {
+            if (logger.isDebugEnabled()) logger.debug("Found word in analyzed dictionary: {}", token.getString());
+            analyzedEojeol = analyzedEojeol.copy(token.getIndex());
+            analyzedEojeol.setScore(Score.AnalyzedDic);
+            return analyzedEojeol;
+        }
+        return null;
+    }
+
 
     private Eojeol heuristicSearch(Token token) {
         return heuristicSearcher.search(token);

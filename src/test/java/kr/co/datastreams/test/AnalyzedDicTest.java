@@ -76,7 +76,7 @@ public class AnalyzedDicTest {
 
         assertEquals(2, morphemes.size());
         System.out.println(eojeol.asMorphemeString());
-        assertEquals("감기는\n\t<감기,NNG>+<는,JX>\n\t<감기,VV>+<는,ETM>\n", eojeol.asMorphemeString());
+        assertEquals("감기는\t<AnalyzedDic>\n\t<감기,NNG>+<는,JX>\n\t<감기,VV>+<는,ETM>\n", eojeol.asMorphemeString());
     }
 
     @Test
@@ -86,18 +86,17 @@ public class AnalyzedDicTest {
         List<MorphemeList> morphemes = eojeol.getMorphemes();
 
         assertEquals(1, morphemes.size());
-        assertEquals(Eojeol.ResultCode.ANALYZED, eojeol.getResultCode());
-        assertEquals("같았다\n\t<같,VV>+<었,EP>+<다,EF>\n", eojeol.asMorphemeString());
+        assertEquals("같았다\t<AnalyzedDic>\n\t<같,VV>+<었,EP>+<다,EF>\n", eojeol.asMorphemeString());
 
         text = "있었다";
         eojeol = AnalyzedDic.find(text);
         morphemes = eojeol.getMorphemes();
         assertEquals(1, morphemes.size());
-        assertEquals("있었다\n\t<있,VV>+<었,EP>+<다,EF>\n", eojeol.asMorphemeString());
+        assertEquals("있었다\t<AnalyzedDic>\n\t<있,VV>+<었,EP>+<다,EF>\n", eojeol.asMorphemeString());
 
         text = "했지만";
         eojeol = AnalyzedDic.find(text);
-        assertEquals("했지만\n\t<하,VV>+<었,EP>+<지만,EC>\n", eojeol.asMorphemeString());
+        assertEquals("했지만\t<AnalyzedDic>\n\t<하,VV>+<었,EP>+<지만,EC>\n", eojeol.asMorphemeString());
     }
 
 //    @Test

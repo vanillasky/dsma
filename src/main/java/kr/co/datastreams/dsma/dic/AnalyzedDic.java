@@ -8,6 +8,7 @@ import kr.co.datastreams.dsma.conf.ConfigurationFactory;
 import kr.co.datastreams.dsma.ma.model.Eojeol;
 import kr.co.datastreams.dsma.ma.model.Morpheme;
 import kr.co.datastreams.dsma.ma.model.MorphemeList;
+import kr.co.datastreams.dsma.ma.model.Score;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -67,7 +68,7 @@ public class AnalyzedDic implements ConfKeys {
         List<MorphemeList> candidates = new ArrayList<MorphemeList>(morphemesGroups.size());
 
         for (String[] eachGroup : morphemesGroups) {
-            MorphemeList morphemeList = new MorphemeList();
+            MorphemeList morphemeList = new MorphemeList(Score.AnalyzedDic);
             for (String each : eachGroup) {
                 String temp = each.replaceAll("(<|>|\\s)", "");
                 Morpheme m = new Morpheme(temp.split(",")[0].trim(), temp.split(",")[1].trim());

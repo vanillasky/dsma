@@ -1,5 +1,7 @@
 package kr.co.datastreams.dsma.ma.model;
 
+import kr.co.datastreams.dsma.annotation.ThreadSafe;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,24 +17,23 @@ import java.util.List;
  */
 public class Eojeol implements Serializable, Comparable {
 
-    public static enum ResultCode {ANALYZED, SUCCESS, ASSUMPTION, FAILURE}; // 형태소 분석결과 반환값
+    private final String string;
+    private final CharType charType;
+    private final int index;
+    private final List<MorphemeList> morphemes;
+    private Score score;
 
-    protected final String string;
-    protected final CharType charType;
-    protected final int index;
-    private final ResultCode resultCode; // 분석결과 코드
-
-    private List<MorphemeList> morphemes = new ArrayList<MorphemeList>(); // 분석결과 리스트
-    private Integer[] selectedResults; // 분석 후보 중에서 선택된 분석결과의 index
-    private List<AnalysisResult> analysisResults = new ArrayList<AnalysisResult>();
-
-
-    public static Eojeol createAnalyzed(String string) {
-        return new Eojeol(string, CharType.HANGUL, 0, ResultCode.ANALYZED);
-    }
 
     public static Eojeol createAnalyzed(String string, List<MorphemeList> candidates) {
-        return new Eojeol(string, CharType.HANGUL, 0, ResultCode.ANALYZED, candidates);
+        return new Eojeol(string, CharType.HANGUL, 0, Score.AnalyzedDic, candidates);
+    }
+
+    public static Eojeol createHeuristic(Token token, List<MorphemeList> candidates) {
+        return new Eojeol(token, Score.Heuristic, candidates);
+    }
+
+    public static Eojeol createFailure(Token token) {
+        return new Eojeol(token.getString(), token.getCharType(), token.getIndex());
     }
 
     public Eojeol(String string, CharType charType) {
@@ -40,22 +41,26 @@ public class Eojeol implements Serializable, Comparable {
     }
 
     public Eojeol(String string, CharType charType, int index) {
-        this(string, charType, index, ResultCode.FAILURE);
+        this(string, charType, index, Score.Failure);
     }
 
-    public Eojeol(String string, CharType charType, int index, ResultCode resultCode) {
+    public Eojeol(Token token, Score score, List<MorphemeList> morphemeLists) {
+        this(token.getString(), token.getCharType(), token.getIndex(), score, morphemeLists);
+    }
+
+    public Eojeol(String string, CharType charType, int index, Score score) {
         this.string = string;
         this.charType = charType;
         this.index = index;
-        this.resultCode = resultCode;
-//        this.analysisResults = new ArrayList<AnalysisResult>();
+        this.score = score;
+        this.morphemes = new ArrayList<MorphemeList>();
     }
 
-    public Eojeol(String string, CharType charType, int index, ResultCode resultCode, List<MorphemeList> candidates) {
+    public Eojeol(String string, CharType charType, int index, Score score, List<MorphemeList> candidates) {
         this.string = string;
         this.charType = charType;
         this.index = index;
-        this.resultCode = resultCode;
+        this.score = score;
         this.morphemes = candidates;
     }
 
@@ -111,8 +116,9 @@ public class Eojeol implements Serializable, Comparable {
 
 
     public String asMorphemeString() {
+        Collections.sort(morphemes);
         StringBuilder sb  = new StringBuilder();
-        sb.append(string).append("\n");
+        sb.append(string).append("\t").append("<").append(score).append(">").append("\n");
         for (List<MorphemeList> each : morphemes) {
             sb.append("\t").append(each).append("\n");
         }
@@ -120,20 +126,13 @@ public class Eojeol implements Serializable, Comparable {
         return sb.toString();
     }
 
+
     public String getString() {
         return string;
     }
 
     public int getIndex() {
         return index;
-    }
-
-    public void addResults(List<AnalysisResult> candidates) {
-        analysisResults.addAll(candidates);
-    }
-
-    public void addResult(AnalysisResult result) {
-        analysisResults.add(result);
     }
 
     public int length() {
@@ -152,9 +151,13 @@ public class Eojeol implements Serializable, Comparable {
         return string.charAt(index);
     }
 
+    public Score getScore() {
+        return score;
+    }
 
-    public ResultCode getResultCode() {
-        return resultCode;
+
+    public void setScore(Score score) {
+        this.score = score;
     }
 
 

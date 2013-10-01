@@ -42,12 +42,36 @@ public class MorphemeAnalyzerTest {
     @Test
     public void testHeuristicSearch_Verb() throws Exception {
         String text = "가다듬어";
-        String expected = "가다듬어\n\t<가다듬,VV>+<어,EF>\n";
+        String expected = "가다듬어\t<Heuristic>\n\t<가다듬,VV>+<어,EF>\n";
         PlainSentence input = new PlainSentence(0, text);
 
         Sentence result = analyzer.analyze(input);
         List<Eojeol> eojeols = result.getEojeols();
         assertEquals(1, eojeols.size());
         assertEquals(expected, eojeols.get(0).asMorphemeString());
+    }
+
+
+    // 명사 + 조사
+    @Test
+    public void testNJ() throws Exception {
+//        String[] words = {"만두하고", "한국이랑", "야구와", "축구를", "좋아합니다", "그것만으로는"};
+//
+//        for (String each : words) {
+//            PlainSentence sentence = new PlainSentence(0, each);
+//            analyzer.analyze(sentence);
+//        }
+
+
+        String text = "그것만으로는";
+        String expected = "만두하고\t<Success>\n\t<는,JC>\n";
+        PlainSentence input = new PlainSentence(0, text);
+
+        Sentence result = analyzer.analyze(input);
+        List<Eojeol> eojeols = result.getEojeols();
+        assertEquals(1, eojeols.size());
+        assertEquals(expected, eojeols.get(0).asMorphemeString());
+
+
     }
 }

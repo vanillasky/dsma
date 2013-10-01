@@ -1,5 +1,6 @@
 package kr.co.datastreams.dsma.util;
 
+import kr.co.datastreams.dsma.Constraints;
 import kr.co.datastreams.dsma.dic.SyllableDic;
 
 import javax.print.attribute.HashDocAttributeSet;
@@ -230,4 +231,17 @@ public class Hangul {
         return ch == '시' || ch == 'ㅆ' || phonemes.endsWith('ㅆ');
     }
 
+
+
+
+    /**
+     * 조사가 붙을 수 있는지 확인한다.
+     *
+     * @param josa
+     * @return true if this josa can be appended
+     */
+    public boolean isAppendableJosa(String josa) {
+
+        return hasJong() ? Constraints.isAppendableJosaToJongSung(josa) : Constraints.isAppendableJosaWithoutJongsung(josa);
+    }
 }

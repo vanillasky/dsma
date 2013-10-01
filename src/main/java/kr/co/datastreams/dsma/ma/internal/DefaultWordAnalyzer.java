@@ -18,7 +18,7 @@ import java.util.List;
 public class DefaultWordAnalyzer implements WordAnalyzer {
 
     private VerbAnalyzer verbAnalyzer = new RuleBaseVerbAnalyzer();
-    private HeuristicAnalyzer heuristicAnalyzer = new HeuristicAnalyzer();
+    //private HeuristicAnalyzer heuristicAnalyzer = new HeuristicAnalyzer();
 
     /**
      * 단어 수준의 형태소 분석<br/>
@@ -82,7 +82,8 @@ public class DefaultWordAnalyzer implements WordAnalyzer {
 
     private boolean heuristicAnalyze(List<AnalysisResult> candidates, Eojeol word) {
         // Heuristic analyze
-        AnalysisResult result = heuristicAnalyzer.analyze(word);
+        //AnalysisResult result = heuristicAnalyzer.analyze(word);
+        AnalysisResult result = null;
         if (result != null) {
             candidates.add(result);
             return true;

@@ -11,9 +11,18 @@ import java.util.Iterator;
  * Time: 오후 4:38
  *
  */
-public class MorphemeList extends ArrayList {
-    Morpheme first = null;
-    Morpheme last = null;
+public class MorphemeList extends ArrayList implements Comparable<MorphemeList> {
+    private Morpheme first = null;
+    private Morpheme last = null;
+    private Score score;
+
+    public MorphemeList() {
+
+    }
+
+    public MorphemeList(Score score) {
+        this.score = score;
+    }
 
     public boolean add(Morpheme morpheme) {
         if (first == null) {
@@ -35,4 +44,12 @@ public class MorphemeList extends ArrayList {
         return result;
     }
 
+    public Score getScore() {
+        return score;
+    }
+
+    @Override
+    public int compareTo(MorphemeList o) {
+        return score.intValue() - o.getScore().intValue();
+    }
 }

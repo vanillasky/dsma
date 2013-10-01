@@ -54,9 +54,8 @@ public class JosaDic implements ConfKeys {
         return instance.existsJosa(josa);
     }
 
-    public static String search(String word) {
-        WordEntry entry = instance.josaMap.get(word);
-        return entry == null ? null : entry.getString();
+    public static WordEntry search(String word) {
+        return instance.josaMap.get(word);
     }
 
     private boolean existsJosa(String josa) {

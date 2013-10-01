@@ -237,27 +237,12 @@ public class PosTag {
         return (compare & Long.MAX_VALUE & tagNum) > 0L;
     }
 
-//    public static String decodeVerb(long verbTag) {
-//        if (isTagOf(VJ, verbTag)) {
-//            return getTag(VJ);
-//        } else if (isTagOf(VV, verbTag)) {
-//            return getTag(VV);
-//        }
-//
-//        return getTag(V);
-//    }
-//
-//    public static String decodeNoun(long tag) {
-//        if (isTagOf(NN, tag)) {
-//            return getTag(NN);
-//        } else if (isTagOf(NP, tag)) {
-//            return getTag(NP);
-//        } else if (isTagOf(NU, tag)) {
-//            return getTag(NU);
-//        } else if (isTagOf(NX, tag)) {
-//            return getTag(NX);
-//        }
-//        return getTag(N);
-//    }
+    public static String decodeVerb(long tag) {
+        return getTag(tag & V);
+    }
+
+    public static String decodeNoun(long tag) {
+        return getTag(tag & N);
+    }
 
 }

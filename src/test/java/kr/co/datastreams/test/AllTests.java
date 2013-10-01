@@ -24,7 +24,6 @@ import org.junit.runners.Suite;
     , ApocopeRuleTest.class
     , StartsWithNLMBEndingTest.class
     , AnalyzedDicTest.class
-    , HeuristicAnalyzerTest.class
     , TokenTest.class
     , AnalysisJobTest.class
     , AnalyzedDicTest.class
@@ -32,6 +31,9 @@ import org.junit.runners.Suite;
     , MemoizerTest.class
     , FilterTokenPatternTest.class
     , WordCounterTest.class
+    , HeuristicSearcherTest.class
+    , PosTagTest.class
+
 })
 public class AllTests {
 }

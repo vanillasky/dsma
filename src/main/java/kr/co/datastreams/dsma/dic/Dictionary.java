@@ -125,4 +125,8 @@ public class Dictionary {
     public static WordEntry findEnding(String str) {
         return EomiDic.search(str);
     }
+
+    public static WordEntry findJosa(String str) {
+        return JosaDic.search(str);
+    }
 }

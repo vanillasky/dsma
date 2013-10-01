@@ -1,5 +1,6 @@
 package kr.co.datastreams.dsma.ma.model;
 
+import kr.co.datastreams.dsma.annotation.ThreadSafe;
 import kr.co.datastreams.dsma.ma.PosTag;
 
 /**
@@ -9,6 +10,7 @@ import kr.co.datastreams.dsma.ma.PosTag;
  * Time: 오후 4:25
  *
  */
+@ThreadSafe
 public class Morpheme {
 
     private final String string;

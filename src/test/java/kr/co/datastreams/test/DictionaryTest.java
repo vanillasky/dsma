@@ -61,12 +61,12 @@ public class DictionaryTest {
     @Test
       public void testEomiDic() throws Exception {
         String word = "거나";
-        assertEquals(word, EomiDic.search(word));
+        assertEquals(word, EomiDic.search(word).getString());
     }
 
     @Test
     public void testJosaDic() throws Exception {
         String word = "가";
-        assertEquals(word, JosaDic.search(word));
+        assertEquals(word, JosaDic.search(word).getString());
     }
 }

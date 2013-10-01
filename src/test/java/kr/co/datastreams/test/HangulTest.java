@@ -131,4 +131,24 @@ public class HangulTest {
             assertTrue(result);
         }
     }
+
+    @Test
+    public void testIsAppendableJosa() throws Exception {
+        String charHasJong = "학생";
+        Hangul ch = Hangul.split(charHasJong.charAt(1));
+        assertTrue(ch.isAppendableJosa("은"));
+        assertTrue(ch.isAppendableJosa("이"));
+        assertFalse(ch.isAppendableJosa("가"));
+
+        String charNotHasJong = "학교";
+        Hangul ch2 = Hangul.split(charNotHasJong.charAt(1));
+        assertFalse(ch2.isAppendableJosa("은"));
+        assertFalse(ch2.isAppendableJosa("과"));
+        assertFalse(ch2.isAppendableJosa("아"));
+        assertFalse(ch2.isAppendableJosa("을"));
+
+        assertTrue(ch2.isAppendableJosa("가"));
+        assertTrue(ch2.isAppendableJosa("는"));
+        assertTrue(ch2.isAppendableJosa("와"));
+    }
 }

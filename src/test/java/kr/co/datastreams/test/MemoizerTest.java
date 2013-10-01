@@ -34,11 +34,11 @@ public class MemoizerTest {
         }
     };
 
-    Memoizer<String, Eojeol> cache; // = Memoizer.createCountable(computable);
+    Memoizer<String, Eojeol> cache = new Memoizer<String, Eojeol>(computable);
 
     @Test
     public void testCompute() throws Exception {
-        String expected = "감기는\n\t<감기,NNG>+<는,JX>\n\t<감기,VV>+<는,ETM>\n";
+        String expected = "감기는\t<AnalyzedDic>\n\t<감기,NNG>+<는,JX>\n\t<감기,VV>+<는,ETM>\n";
         Eojeol result = cache.compute("감기는");
         assertEquals(expected, result.asMorphemeString());
     }
@@ -67,6 +67,5 @@ public class MemoizerTest {
             TimeUnit.MILLISECONDS.sleep(100);
         }
 
-//        assertEquals(threadCount, cache.frequencyOfUse(word).intValue());
     }
 }
