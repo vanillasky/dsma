@@ -1,9 +1,8 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
-import kr.co.datastreams.dsma.ma.model.MorphemeList;
+import kr.co.datastreams.dsma.model.Eojeol;
+import kr.co.datastreams.dsma.model.MorphemeList;
 import org.junit.Before;
 import org.junit.Test;
 

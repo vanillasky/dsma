@@ -2,8 +2,8 @@ package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.PosTagComposer;
 import kr.co.datastreams.dsma.dic.WordEntryComposer;
-import kr.co.datastreams.dsma.ma.PosTag;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.PosTag;
+import kr.co.datastreams.dsma.model.WordEntry;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.model.Token;
-import kr.co.datastreams.dsma.ma.model.CharType;
+import kr.co.datastreams.dsma.model.Token;
+import kr.co.datastreams.dsma.model.CharType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class TokenTest {
     @Test
     public void testEquals() throws Exception {
         Token token = new Token("첫번째", CharType.HANGUL, 0);
-        assertTrue(token.equals("첫번째"));
+        assertTrue(token.equalsString("첫번째"));
     }
 
     @Test

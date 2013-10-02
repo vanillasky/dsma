@@ -5,7 +5,7 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.WordEntry;
 
 import java.util.HashMap;
 import java.util.Iterator;

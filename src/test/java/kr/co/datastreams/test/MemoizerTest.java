@@ -1,7 +1,7 @@
 package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
+import kr.co.datastreams.dsma.model.Eojeol;
 import kr.co.datastreams.dsma.util.cache.Computable;
 import kr.co.datastreams.dsma.util.cache.Memoizer;
 import org.junit.Test;

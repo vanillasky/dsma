@@ -1,11 +1,6 @@
 package kr.co.datastreams.dsma.util;
 
-import kr.co.datastreams.dsma.Constraints;
-import kr.co.datastreams.dsma.dic.SyllableDic;
-
-import javax.print.attribute.HashDocAttributeSet;
-import java.util.ArrayList;
-import java.util.List;
+import kr.co.datastreams.dsma.analyzer.rule.Constraints;
 
 /**
  *

@@ -3,12 +3,12 @@ package kr.co.datastreams.dsma.ma.internal;
 import kr.co.datastreams.commons.util.StringUtil;
 import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
-import kr.co.datastreams.dsma.ma.WordPattern;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
-import kr.co.datastreams.dsma.ma.model.Variant;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
-import kr.co.datastreams.dsma.ma.rule.*;
+import kr.co.datastreams.dsma.model.WordPattern;
+import kr.co.datastreams.dsma.model.AnalysisResult;
+import kr.co.datastreams.dsma.model.Eojeol;
+import kr.co.datastreams.dsma.model.Variant;
+import kr.co.datastreams.dsma.model.WordEntry;
+import kr.co.datastreams.dsma.analyzer.rule.*;
 
 import java.util.List;
 

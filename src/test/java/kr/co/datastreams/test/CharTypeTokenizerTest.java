@@ -1,9 +1,9 @@
 package kr.co.datastreams.test;
 
 
-import kr.co.datastreams.dsma.ma.tokenizer.CharTypeTokenizer;
-import kr.co.datastreams.dsma.ma.model.Token;
-import kr.co.datastreams.dsma.ma.tokenizer.Tokenizer;
+import kr.co.datastreams.dsma.tokenizer.CharTypeTokenizer;
+import kr.co.datastreams.dsma.model.Token;
+import kr.co.datastreams.dsma.tokenizer.Tokenizer;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,9 +1,9 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.analyzer.HeuristicSearcher;
-import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
-import kr.co.datastreams.dsma.ma.model.Token;
+import kr.co.datastreams.dsma.analyzer.HeuristicSearcher;
+import kr.co.datastreams.dsma.model.CharType;
+import kr.co.datastreams.dsma.model.Eojeol;
+import kr.co.datastreams.dsma.model.Token;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

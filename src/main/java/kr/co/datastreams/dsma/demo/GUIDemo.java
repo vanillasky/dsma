@@ -1,8 +1,8 @@
 package kr.co.datastreams.dsma.demo;
 
-import kr.co.datastreams.dsma.ma.tokenizer.CharTypeTokenizer;
-import kr.co.datastreams.dsma.ma.tokenizer.NewLineSeparator;
-import kr.co.datastreams.dsma.ma.AnalysisJob;
+import kr.co.datastreams.dsma.tokenizer.CharTypeTokenizer;
+import kr.co.datastreams.dsma.tokenizer.NewLineSeparator;
+import kr.co.datastreams.dsma.AnalysisJob;
 
 import javax.swing.*;
 import java.awt.*;

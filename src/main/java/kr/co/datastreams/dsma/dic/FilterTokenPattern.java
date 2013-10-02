@@ -5,7 +5,7 @@ import kr.co.datastreams.dsma.annotation.ThreadSafe;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.model.CharType;
+import kr.co.datastreams.dsma.model.CharType;
 
 import java.util.ArrayList;
 import java.util.List;

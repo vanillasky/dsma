@@ -3,8 +3,8 @@ package kr.co.datastreams.test;
 import kr.co.datastreams.dsma.dic.Dictionary;
 import kr.co.datastreams.dsma.dic.EomiDic;
 import kr.co.datastreams.dsma.dic.JosaDic;
-import kr.co.datastreams.dsma.ma.PosTag;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.PosTag;
+import kr.co.datastreams.dsma.model.WordEntry;
 import org.junit.Before;
 import org.junit.Test;
 

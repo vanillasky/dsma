@@ -1,6 +1,6 @@
 package kr.co.datastreams.test;
 
-import kr.co.datastreams.dsma.ma.PosTag;
+import kr.co.datastreams.dsma.model.PosTag;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

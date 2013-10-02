@@ -1,8 +1,8 @@
 package kr.co.datastreams.test.rule;
 
-import kr.co.datastreams.dsma.ma.model.Variant;
-import kr.co.datastreams.dsma.ma.rule.EndingCombineRule;
-import kr.co.datastreams.dsma.ma.rule.EndingStartsWithNLMB;
+import kr.co.datastreams.dsma.model.Variant;
+import kr.co.datastreams.dsma.analyzer.rule.EndingCombineRule;
+import kr.co.datastreams.dsma.analyzer.rule.EndingStartsWithNLMB;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

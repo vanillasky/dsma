@@ -1,6 +1,6 @@
 package kr.co.datastreams.dsma.dic;
 
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.WordEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,10 +5,10 @@ import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
-import kr.co.datastreams.dsma.ma.model.Morpheme;
-import kr.co.datastreams.dsma.ma.model.MorphemeList;
-import kr.co.datastreams.dsma.ma.model.Score;
+import kr.co.datastreams.dsma.model.Eojeol;
+import kr.co.datastreams.dsma.model.Morpheme;
+import kr.co.datastreams.dsma.model.MorphemeList;
+import kr.co.datastreams.dsma.model.Score;
 
 import java.util.*;
 import java.util.regex.Pattern;

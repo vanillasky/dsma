@@ -6,8 +6,8 @@ import kr.co.datastreams.dsma.conf.ConfKeys;
 import kr.co.datastreams.dsma.conf.Configuration;
 import kr.co.datastreams.dsma.conf.ConfigurationFactory;
 import kr.co.datastreams.dsma.dic.trie.Trie;
-import kr.co.datastreams.dsma.ma.PosTag;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.PosTag;
+import kr.co.datastreams.dsma.model.WordEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

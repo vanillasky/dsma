@@ -2,9 +2,9 @@ package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.ma.internal.DefaultWordAnalyzer;
 import kr.co.datastreams.dsma.ma.internal.WordAnalyzer;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
+import kr.co.datastreams.dsma.model.AnalysisResult;
+import kr.co.datastreams.dsma.model.CharType;
+import kr.co.datastreams.dsma.model.Eojeol;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

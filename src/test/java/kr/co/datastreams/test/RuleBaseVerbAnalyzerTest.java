@@ -2,10 +2,10 @@ package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.ma.internal.RuleBaseVerbAnalyzer;
 import kr.co.datastreams.dsma.ma.internal.VerbAnalyzer;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.CharType;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
-import kr.co.datastreams.dsma.ma.model.Variant;
+import kr.co.datastreams.dsma.model.AnalysisResult;
+import kr.co.datastreams.dsma.model.CharType;
+import kr.co.datastreams.dsma.model.Eojeol;
+import kr.co.datastreams.dsma.model.Variant;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,8 +1,6 @@
 package kr.co.datastreams.dsma.dic;
 
-import kr.co.datastreams.dsma.ma.model.WordEntry;
-
-import java.util.List;
+import kr.co.datastreams.dsma.model.WordEntry;
 
 /**
  *

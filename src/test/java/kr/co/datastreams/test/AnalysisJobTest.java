@@ -3,9 +3,10 @@ package kr.co.datastreams.test;
 import kr.co.datastreams.commons.util.FileUtil;
 import kr.co.datastreams.commons.util.StopWatch;
 import kr.co.datastreams.commons.util.StringUtil;
-import kr.co.datastreams.dsma.ma.tokenizer.CharTypeTokenizer;
-import kr.co.datastreams.dsma.ma.tokenizer.NewLineSeparator;
-import kr.co.datastreams.dsma.ma.AnalysisJob;
+import kr.co.datastreams.dsma.model.Sentence;
+import kr.co.datastreams.dsma.tokenizer.CharTypeTokenizer;
+import kr.co.datastreams.dsma.tokenizer.NewLineSeparator;
+import kr.co.datastreams.dsma.AnalysisJob;
 import org.junit.Test;
 
 import java.util.List;
@@ -43,6 +44,7 @@ public class AnalysisJobTest {
 
         int count = job.getFrequency("최경주는");
         System.out.println(count);
+        System.out.println(job);
        // assertEquals(5, count);
 
     }

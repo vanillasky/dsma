@@ -2,8 +2,8 @@ package kr.co.datastreams.dsma.ma.internal;
 
 import kr.co.datastreams.dsma.dic.AnalyzedDic;
 import kr.co.datastreams.dsma.dic.SyllableDic;
-import kr.co.datastreams.dsma.ma.model.AnalysisResult;
-import kr.co.datastreams.dsma.ma.model.Eojeol;
+import kr.co.datastreams.dsma.model.AnalysisResult;
+import kr.co.datastreams.dsma.model.Eojeol;
 
 import java.util.ArrayList;
 import java.util.List;

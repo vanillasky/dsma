@@ -2,11 +2,9 @@ package kr.co.datastreams.test;
 
 import kr.co.datastreams.dsma.dic.trie.Trie;
 import kr.co.datastreams.dsma.dic.trie.ValueIterator;
-import kr.co.datastreams.dsma.ma.model.WordEntry;
+import kr.co.datastreams.dsma.model.WordEntry;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.PrintWriter;
 
 import static org.junit.Assert.*;
 /**
