@@ -1,5 +1,6 @@
 package com.datastreams.nlp.ma.model;
 
+import com.datastreams.nlp.ma.constants.ConclusionPoint;
 import com.datastreams.nlp.ma.constants.PosTag;
 import com.datastreams.nlp.ma.constants.Score;
 import com.datastreams.nlp.ma.constants.WordPattern;
@@ -28,6 +29,9 @@ public class MorphemeList extends ArrayList implements Comparable<MorphemeList> 
     private Morpheme last;
     private Score score; // 가중치
     private WordPattern wordPattern;
+    private ConclusionPoint conclusion;
+
+
 
     public MorphemeList() {
 
@@ -35,18 +39,25 @@ public class MorphemeList extends ArrayList implements Comparable<MorphemeList> 
 
     public MorphemeList(Score score) {
         this.score = score;
+        this.conclusion = ConclusionPoint.NA;
     }
 
     public static MorphemeList create(Score score, WordPattern pattern, Morpheme... morphemes) {
+        return create(score, pattern, ConclusionPoint.NA, morphemes);
+    }
+
+    public static MorphemeList create(Score score, WordPattern pattern, ConclusionPoint point, Morpheme... morphemes) {
         MorphemeList mlist = new MorphemeList();
         for (Morpheme each : morphemes) {
-            mlist.add(each);
+            if (each != null) {
+                mlist.add(each);
+            }
         }
         mlist.score = score;
         mlist.wordPattern = pattern;
+        mlist.conclusion = point;
         return mlist;
     }
-
 
     public static MorphemeList create(MorphemeList source) {
         MorphemeList mlist = new MorphemeList();
@@ -56,25 +67,16 @@ public class MorphemeList extends ArrayList implements Comparable<MorphemeList> 
         }
         mlist.score = source.score;
         mlist.wordPattern = source.getWordPattern();
+        mlist.conclusion = source.conclusion;
         return mlist;
     }
 
     public static MorphemeList create(Score score, Morpheme... morphemes) {
-
-        MorphemeList mlist = new MorphemeList();
-        for (Morpheme each : morphemes) {
-            mlist.add(each);
-        }
-        mlist.score = score;
-        return mlist;
+        return create(score, WordPattern.UNKNOWN,  morphemes);
     }
 
     public static MorphemeList create(Morpheme... morphemes) {
-        MorphemeList mlist = new MorphemeList();
-        for (Morpheme each : morphemes) {
-            mlist.add(each);
-        }
-        return mlist;
+        return create(Score.Failure, morphemes);
     }
 
 
@@ -124,5 +126,9 @@ public class MorphemeList extends ArrayList implements Comparable<MorphemeList> 
 
     public MorphemeList copy() {
         return MorphemeList.create(this);
+    }
+
+    public ConclusionPoint getConclusion() {
+        return conclusion;
     }
 }

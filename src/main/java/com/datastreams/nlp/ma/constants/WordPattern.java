@@ -28,6 +28,7 @@ public enum WordPattern {
 
     , NVM(31, "체언+동사+어미")
     , ZZZ(90, "문장부호")   /* 문장부호, KS 완성형 기호열, 단독조사/어미 */
+    , UNKNOWN(999, "미등록패턴")
     ;
 
     private int value;

@@ -44,4 +44,60 @@ public class TokenTest {
         Collections.sort(tokens);
         assertEquals(token, tokens.get(0));
     }
+
+    @Test
+    public void testSplit() throws Exception {
+        Token token = new Token("첫번째", CharType.HANGUL, 0);
+        String[] chunk = token.split(0);
+        assertEquals("첫번째", chunk[1]);
+
+        chunk = token.split(1);
+        assertEquals("첫", chunk[0]);
+        assertEquals("번째", chunk[1]);
+
+        chunk = token.split(2);
+        assertEquals("첫번", chunk[0]);
+        assertEquals("째", chunk[1]);
+
+        Token token2 = Token.korean("학교에서만은");
+        chunk = token2.split(-1);
+        assertEquals("학교에서만", chunk[0]);
+        assertEquals("은", chunk[1]);
+
+    }
+
+    @Test
+    public void testScan() throws Exception {
+        Token token = Token.korean("학교에서만은");
+        String[] expectedHeads = new String[]{"학교", "학교에", "학교에서"};
+        String[] expectedTails = new String[]{"에서만은", "서만은", "만은"};
+
+        List<String[]> chunks = token.split(2,3,4);
+        int i =0;
+        for (String[] each : chunks) {
+            assertEquals(expectedHeads[i], each[0]);
+            assertEquals(expectedTails[i], each[1]);
+            i++;
+        }
+    }
+
+
+    @Test
+    public void testScan_인덱스초과() throws Exception {
+        Token token = Token.korean("학교에서만은");
+        String[] expectedHeads = new String[]{"학교", "학교에"};
+        String[] expectedTails = new String[]{"에서만은", "서만은"};
+
+        List<String[]> chunks = token.split(2,3,6);
+        int i =0;
+        for (String[] each : chunks) {
+            assertEquals(expectedHeads[i], each[0]);
+            assertEquals(expectedTails[i], each[1]);
+            i++;
+        }
+    }
+
+
+
+
 }

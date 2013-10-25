@@ -26,6 +26,7 @@ import java.util.List;
 public class RuleBaseTokenAnalyzerTest {
 
     TokenAnalyzer analyzer = new RuleBaseTokenAnalyzer();
+
     private EojeolFormatter formatter = new EojeolFormatter() {
 
         @Override
@@ -63,6 +64,8 @@ public class RuleBaseTokenAnalyzerTest {
         Token t2 = Token.korean("거리에서는");
         result = analyzer.execute(t2);
         expected = "<거리,NNG>+<에서는,JC>";
+
+        assertEquals(1, result.getMorphemes().size());
         assertEquals(expected, result.asMorphemeString(formatter));
         assertEquals(WordPattern.NJ, result.getMorphemes().get(0).getWordPattern());
 
@@ -75,6 +78,7 @@ public class RuleBaseTokenAnalyzerTest {
         String expected = "<갑자기,MAG>+<는,JC>";
         assertEquals(expected, result.asMorphemeString(formatter));
         assertEquals(WordPattern.ADVJ, result.getMorphemes().get(0).getWordPattern());
+        assertEquals(1, result.getMorphemes().size());
     }
 
     @Test
@@ -82,11 +86,14 @@ public class RuleBaseTokenAnalyzerTest {
         Token t3 = Token.korean("가격표시기보다는");
         Eojeol result = analyzer.execute(t3);
         String expected = "<가격표시기,NNG>+<보다는,JC>";
+
+        assertEquals(1, result.getMorphemes().size());
         assertEquals(expected, result.asMorphemeString(formatter));
         assertEquals(WordPattern.NJ, result.getMorphemes().get(0).getWordPattern());
         assertEquals(Score.Success, result.getMorphemes().get(0).getScore());
 
     }
+
 
     @Test
     public void testSimpleWord_NJ_명사추정범주() throws Exception {

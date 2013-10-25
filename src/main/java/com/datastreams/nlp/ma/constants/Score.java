@@ -19,6 +19,7 @@ public class Score {
     public static final Score Analysis = new Score(AnalysisScore.Analysis);  // 분석 레벨
     public static final Score Success = new Score(AnalysisScore.Correct);    // 분석 성공
     public static final Score Candidate = new Score(AnalysisScore.Candidate); // 후보 레벨
+    public static final Score Estimation = new Score(AnalysisScore.Estimation); // 추정 레벨
 
 
     public static final Score MeetSeparationConstraint = new Score(AnalysisScore.Analysis.intValue() + 5); // 문법형태소 분리제약을 충족함
@@ -47,6 +48,7 @@ public class Score {
     public static enum AnalysisScore {
           Failure(0)
         , Candidate(40)
+        , Estimation(50)
         , Analysis(90)
         , Correct(100)
         , ADic(101)

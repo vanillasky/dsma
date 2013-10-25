@@ -9,7 +9,7 @@ package com.datastreams.nlp.ma.dic;
  *
  */
 public interface SyllableFeatureIndex {
-    public static final int IDX_JOSA1 = 0; // 조사의 첫음절로 사용되는 음절 48개
+    public static final int IDX_JOSA1 = 0; // 조사의 첫음절로 사용되는 음절 48개 --> 보조사 '깨나': '깨'추가
     public static final int IDX_JOSA2 = 1; // 조사의 두 번째 이상의 음절로 사용되는 음절 58개
     public static final int IDX_EOMI1 = 2; // 어미의 첫음절로 사용되는 음절 72개
     public static final int IDX_EOMI2 = 3; // 어미의 두 번째 이상의 음절로 사용되는 음절 105개

@@ -9,10 +9,14 @@ package com.datastreams.nlp.ma.test;
  */
 
 
+import com.datastreams.nlp.ma.test.analyzer.NounAnalyzer_SplitJosa_Test;
+import com.datastreams.nlp.ma.test.analyzer.RuleBaseTokenAnalyzerTest;
 import com.datastreams.nlp.ma.test.common.MemoizerTest;
 import com.datastreams.nlp.ma.test.common.TrieTest;
 import com.datastreams.nlp.ma.test.common.WordCounterTest;
-import com.datastreams.nlp.ma.test.dic.*;
+import com.datastreams.nlp.ma.test.dic.AnalyzedDicTest;
+import com.datastreams.nlp.ma.test.dic.DictionaryTest;
+import com.datastreams.nlp.ma.test.dic.SyllableDicTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -33,6 +37,9 @@ import org.junit.runners.Suite;
     , AnalyzedDicTest.class
     , HangulTest.class
     , MorphemeTest.class
+    , NounAnalyzer_SplitJosa_Test.class
+    , RuleBaseTokenAnalyzerTest.class
+
 })
 
 public class AllTests {

@@ -1,8 +1,11 @@
 package com.datastreams.nlp.ma.model;
 
+import com.datastreams.nlp.common.annotation.Immutable;
 import com.datastreams.nlp.ma.constants.CharType;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 형태소 분석을 위한 토큰
@@ -13,6 +16,7 @@ import java.io.Serializable;
  * Time: 오후 2:58
  *
  */
+@Immutable
 public class Token implements Serializable, Comparable<Token> {
 
     protected final int index;
@@ -109,5 +113,38 @@ public class Token implements Serializable, Comparable<Token> {
 
     public int indexOf(String str) {
         return string.indexOf(str);
+    }
+
+    public String[] split(int splitIndex) {
+        String head;
+        String tail;
+
+        if (splitIndex < 0) {
+            head = string.substring(0, string.length()-1);
+            tail = String.valueOf(string.charAt(string.length()-1));
+        } else {
+            if (string.length() <= splitIndex)
+                return null;
+
+            head = string.substring(0, splitIndex);
+            tail = string.substring(splitIndex);
+        }
+
+        return new String[]{head, tail};
+    }
+
+    public List<String[]> split(int... indexes) {
+        List<String[]> result = new ArrayList<String[]>();
+        String head;
+        String tail;
+
+        for (int i=0; i < indexes.length; i++) {
+            if (indexes[i] >= string.length()) break;
+            head = string.substring(0, indexes[i]);
+            tail = string.substring(indexes[i]);
+            result.add(new String[]{head, tail});
+        }
+
+        return result;
     }
 }

@@ -13,6 +13,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
+ * <p>캐시를 이용하는 형태소 분석기</p>
+ *
+ * <p>
+ * 기본적인 형태소 분석 기능은 부모 클래스인 MorphemeAnalyzer를 이용한다.
+ * Memoization 기법을 이용하여 입력 어절이 캐시에 있으면 그대로 반환하고
+ * 캐시에 없는 경우에만 형태소 분석을 시도한다.
+ * </p>
+ *
  * User: shkim
  * Date: 13. 9. 26
  * Time: 오후 3:43
@@ -39,8 +47,10 @@ public class CachableMorphemeAnalyzer extends MorphemeAnalyzer {
 
     @Override
     public Eojeol analyzeEojeol(Token token) {
+
         Eojeol result = searchAnalyzedDic(token);
-        if (result != null) {
+
+        if (!result.isEmpty()) {
             return result;
         }
 
@@ -48,7 +58,7 @@ public class CachableMorphemeAnalyzer extends MorphemeAnalyzer {
             result = cache.compute(token);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            logger.error("Eojeol analysis failed.", e);
+            logger.error("CachableMorphemeAnalyzer Eojeol analysis failed.", e);
         }
 
         return result;

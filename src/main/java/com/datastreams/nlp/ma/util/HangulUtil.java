@@ -39,6 +39,8 @@ public class HangulUtil {
         'ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'
     };
 
+    // '에'로 끝나는 명사의 앞음절
+    // 누에/멍에/성에/벨기에/오보에/마로니에/샹들리에
     public static final char[] SYLLABLES_TO_CHECK_BEFORE_E = {
         '누', '멍', '성', '기', '보', '니', '리'
     };

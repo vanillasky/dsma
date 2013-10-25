@@ -7,11 +7,16 @@ import com.datastreams.nlp.ma.model.Token;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
+ *
+ * 어절단위 형태소 분석기
+ *
+ * 입력 어절(Token)을 받아서 형태소 분석결괴인 Eojeol 객체를 돌려준다.
+ *
+ *
  * User: shkim
  * Date: 13. 10. 18
  * Time: 오후 3:19
- * To change this template use File | Settings | File Templates.
+ *
  */
 public interface TokenAnalyzer {
     public Eojeol execute(Token token);

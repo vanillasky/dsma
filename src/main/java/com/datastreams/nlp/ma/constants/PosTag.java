@@ -246,7 +246,7 @@ public class PosTag {
     public static String getTag(long tagNum) {
         String tagName = TAG_NUM_HASH.get(tagNum);
         if (tagName == null && Long.bitCount(tagNum) > 1) {
-            tagName = TAG_NUM_HASH.get(tagNum & Long.highestOneBit(tagNum));
+            tagName = TAG_NUM_HASH.get(tagNum & Long.lowestOneBit(tagNum));
         }
         return tagName;
     }

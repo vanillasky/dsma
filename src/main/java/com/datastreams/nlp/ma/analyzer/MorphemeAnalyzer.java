@@ -22,7 +22,20 @@ import java.util.List;
 import static com.datastreams.nlp.ma.constants.CharType.*;
 
 /**
- * 형태소 분석기
+ * 문장 단위 형태소 분석기
+ *
+ * Breaks up the argument that can be PlainSentence or String object into tokens.
+ * Then try to analyze morphemes for each tokens.
+ *
+ * PlainSentence 또는 문자열(String)을 입력으로 받아서 어절단위로(Token) 분리한다.
+ * 특수 문자, 숫자 등 형태소 분석 대상이 아닌 문자들은 토큰분리 과정에서 공백으로 대치한다.
+ * 그리고 나서 분리된 어절별로 형태소 분석을 시도한다. 어절이 공백이면 무시한다.
+ * 어절이 기분석 사전에 수록되어 있으면 기분석 어절을 복사하는 것으로 어절 분석을 종료한다.
+ * 기분석 사전에 수록되지 않은 어절은 어절 단위 분석기인 TokenAnalyzer를 이용하여 형태소를 분석한다.
+ * 분석이 완료된 어절은(Eojeol) 문장단위 분석 결과인 Sentence 에 추가된다.
+ *
+ * MorphemeAnalyzer를 생성할 때 WordCountStrategy 객체를 인자로 넘겨주면 각 입력어절(Token)의 출현빈도를 계산할 수 있다.
+ *
  *
  * User: shkim
  * Date: 13. 9. 16
@@ -97,11 +110,14 @@ public class MorphemeAnalyzer implements IMorphemeAnalyzer {
      * @return
      */
     public Eojeol analyzeEojeol(Token token) {
+
         Eojeol result = searchAnalyzedDic(token);
-        if (result != null) {
-            return result;
+
+        if (result.isEmpty()) {
+            return tokenAnalyzer.execute(token);
         }
-        return tokenAnalyzer.execute(token);
+
+        return result;
     }
 
     /**
@@ -118,6 +134,6 @@ public class MorphemeAnalyzer implements IMorphemeAnalyzer {
             analyzedEojeol.setScore(Score.AnalyzedDic);
             return analyzedEojeol;
         }
-        return null;
+        return Eojeol.EMPTY;
     }
 }

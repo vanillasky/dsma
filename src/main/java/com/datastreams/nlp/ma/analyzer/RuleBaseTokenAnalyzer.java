@@ -45,17 +45,24 @@ public class RuleBaseTokenAnalyzer implements TokenAnalyzer {
 
     private static final Logger logger = LoggerFactory.getLogger(RuleBaseTokenAnalyzer.class);
     private static final boolean VERBOSE = true;
-    private final Estimator estimator = new Estimator();
+    private final NounAnalyzer nounAnalyzer = new NounAnalyzer();
 
     @Override
     public Eojeol execute(Token token) {
 
-        List<MorphemeList> candidates = estimator.estimate(token);
+        List<MorphemeList> candidates = nounAnalyzer.execute(token);
+
+        // [형태소 분리 제약1] 2음절 이상의 조사가 분리된 어절은 다른 가능성을 고려할 필요가 없다.
         if (candidates.size() > 0) {
-            System.out.println("Heuristic search 성공");
-        } else {
-            candidates = scanRightToLeft(token);
+            MorphemeList candidate = candidates.get(0);
+            if (candidate.getLast().length() > 2 && PosTag.isTagOf(PosTag.J, candidate.getLast().getTagNum())) {
+                if (logger.isDebugEnabled()) logger.debug("2음절 이상의 조사 발견, 분석 종료");
+                return new Eojeol(token, candidate.getScore(), candidates);
+            }
         }
+
+        //MorphemeSeparator verbProcessor = new VerbProcessor(token);
+        //List<MorphemeList> verbCandidates = verbProcessor.generateCandidates();
 
 
         Eojeol result = new Eojeol(token, Score.Analysis, candidates);
@@ -64,185 +71,7 @@ public class RuleBaseTokenAnalyzer implements TokenAnalyzer {
         return result;
     }
 
-    /**
-     *
-     * @param token
-     * @return
-     */
-    private List<MorphemeList> scanRightToLeft(Token token) {
-        boolean josaFlag = true;
-        boolean eomiFlag = true;
-        List<MorphemeList> candidates = new ArrayList<MorphemeList>();
-
-        String inputString = token.getString();
-
-        for (int i=inputString.length()-1; i > 0; i--) {
-            String head = inputString.substring(0, i);
-            String tail = inputString.substring(i);
-            char firstCharOfTail = tail.charAt(0);
-
-            if (josaFlag && SyllableDic.isFirstJosaSyllable(firstCharOfTail)) {
-                List<MorphemeList> josaCandidates = analyzeWithJosa(head, tail);
-                if (Constraints.filterWithLengthOfTail(candidates, josaCandidates)) {
-                    break;
-                }
-            }
-
-            if (eomiFlag) {
-                List<MorphemeList> eomiCandidates = analyzeWithEomi(head, tail);
-                if (Constraints.filterWithLengthOfTail(candidates, eomiCandidates)) {
-                    break;
-                }
-            }
-
-            // 조사의 두 번째 이상의 음절로 사용될 수 있는지 확인
-            if (!SyllableDic.isSecondJosaSyllable(firstCharOfTail)) {
-                josaFlag = false;
-            }
-
-            // 어미의 두 번째 이상의 음절로 사용될 수 있는지 확인
-            if (!SyllableDic.isSecondEndingSyllable(firstCharOfTail)) {
-                eomiFlag = false;
-            }
-
-            if (josaFlag == false && eomiFlag == false) {
-                break;
-            }
-        }
-
-        // 최장 문법 형태소 순으로 정렬
-        Collections.sort(candidates, new Comparator<MorphemeList>() {
-            @Override
-            public int compare(MorphemeList o1, MorphemeList o2) {
-            return o2.getLast().length() - o1.getLast().length();
-            }
-        });
-
-        return candidates;
-    }
-
-    private List<MorphemeList> analyzeWithEomi(String head, String tail) {
-        if (StringUtil.nvl(head).length() == 0 || StringUtil.nvl(tail).length() == 0) return Collections.EMPTY_LIST;
-
-
-        return Collections.EMPTY_LIST;
-    }
-
-    private List<MorphemeList> analyzeWithJosa(String head, String tail) {
-        if (StringUtil.nvl(tail).length() == 0) return Collections.EMPTY_LIST;
-        char lastCharOfHead = head.charAt(head.length() - 1);
-
-        if (!HangulUtil.isJosaAppendable(lastCharOfHead, tail)) {
-            return Collections.EMPTY_LIST;
-        }
-
-        List<MorphemeList> candidates = new ArrayList<MorphemeList>();
-
-        MorphemeList candidate = applyNJPattern(head, tail);
-        if (!candidate.isEmpty()) {
-            candidates.add(candidate.copy());
-        }
-
-
-        return candidates;
-    }
 
 
 
-    private MorphemeList applyNJPattern(String head, String tail) {
-
-        WordEntry josaEntry =  Dictionary.searchJosa(tail);
-        if (josaEntry == null) {
-            return MorphemeList.EMPTY;
-        }
-
-        MorphemeList morphemeList = confirmNounOrAdverb(head, tail, josaEntry);
-        if (!morphemeList.isEmpty()) {
-            return morphemeList;
-        }
-
-        return MorphemeList.EMPTY;
-    }
-
-
-    /**
-     * 명사+조사 또는 부사+조사 인지 확정한다.
-     * head 부분을 사전에서 찾을 수 없을 때에는 조사가 2음절 이상인 경우에는 명사추정 범주로,
-     * 2음절 보다 작은 경우에는 MorphemeList.EMPTY를 반환한다.
-     *
-     * @param head
-     * @param tail
-     * @param josaEntry
-     * @return
-     */
-    private MorphemeList confirmNounOrAdverb(String head, String tail, WordEntry josaEntry) {
-        Morpheme h;
-        Morpheme t = new Morpheme(tail, PosTag.decodeJosa(josaEntry.tag()));
-
-        WordEntry headEntry = Dictionary.searchNounOrAbVerb(head);
-        WordPattern pattern = WordPattern.NJ;
-
-        if (headEntry != null) {
-            if (PosTag.decodeNoun(headEntry.tag()) == null) { // 부사 + 조사
-                h = new Morpheme(head, PosTag.decodeAdverb(headEntry.tag()));
-                pattern = WordPattern.ADVJ;
-            } else {
-                h = new Morpheme(head, PosTag.decodeNoun(headEntry.tag())); // 명사 + 조사
-            }
-
-            return MorphemeList.create(Score.Success, pattern, h, t);
-        }
-
-
-        if (josaEntry.getString().length() > 1) {
-            h = new Morpheme(head, PosTag.NF);
-            return MorphemeList.create(Score.Candidate, pattern, h, t);
-        }
-
-        return MorphemeList.EMPTY;
-    }
-
-    /**
-     * 단일어 처리
-     * @param token
-     * @param candidates
-     */
-    public void buildSingleWord(Token token, List<MorphemeList> candidates) {
-        WordEntry entry = Dictionary.searchFixedWord(token.getString());
-
-//        if (entry != null) {
-//            MorphemeList morphemeList = new MorphemeList(Score.Success);
-//
-//            long tagNum = PosTag.NNG;
-//            if (entry.isTagOf(PosTag.N)) {
-//                tagNum = PosTag.extractNounTag(entry.tag());
-//                morphemeList.setWordPattern(WordPattern.N);
-//            }
-//            else if (entry.isTagOf(PosTag.AD)) {
-//                tagNum = PosTag.extractAdverbTag(entry.tag());
-//                morphemeList.setWordPattern(WordPattern.AID);
-//            }
-//            else if(entry.isTagOf(PosTag.IC)) {
-//                tagNum = entry.tag();
-//                morphemeList.setWordPattern(WordPattern.AID);
-//            }
-//
-//            Morpheme m = new Morpheme(token.getString(), tagNum);
-//            morphemeList.add(m);
-//
-//            candidates.add(morphemeList);
-//        } else {
-//            //TODO: 접미사가 분리되는 경우에는 접미사 분리 후에 어휘 사전 확인
-//            String word = token.getString();
-//            for (int i=word.length()-1, j=0; i > 0; i--,j++) {
-//                if (j > 1) break;
-//                String suffixCandidate = word.substring(i, word.length());
-//
-//                WordEntry suffix = SuffixDic.find(suffixCandidate);
-//                if (suffix != null) {
-//                    System.out.println("접미사 찾기("+word+"):" + suffix);
-//                }
-//            }
-//        }
-    }
 }

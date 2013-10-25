@@ -1,9 +1,14 @@
 package com.datastreams.nlp.ma.model;
 
 
+import com.datastreams.nlp.common.annotation.Immutable;
 import com.datastreams.nlp.common.annotation.ThreadSafe;
 import com.datastreams.nlp.ma.constants.CharType;
 import com.datastreams.nlp.ma.constants.PosTag;
+import com.datastreams.nlp.ma.dic.WordEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 한 개의 형태소와 매핑되는 객체
@@ -14,8 +19,10 @@ import com.datastreams.nlp.ma.constants.PosTag;
  *
  */
 @ThreadSafe
+@Immutable
 public class Morpheme {
 
+    private final List<Morpheme> suffixes;
     private final String source;
     private final long tagNum;
     private final CharType charType;
@@ -24,12 +31,21 @@ public class Morpheme {
         this.source = string;
         this.tagNum = tagNum;
         this.charType = CharType.HANGUL;
+        this.suffixes = new ArrayList<Morpheme>();
     }
 
     public Morpheme(Morpheme sourceObject) {
         this.source = sourceObject.getSource();
         this.tagNum = sourceObject.getTagNum();
         this.charType = sourceObject.charType;
+        this.suffixes = sourceObject.suffixes;
+    }
+
+    public Morpheme(WordEntry wordEntry) {
+        this.source = wordEntry.getString();
+        this.tagNum = wordEntry.tag();
+        this.charType = CharType.HANGUL;
+        this.suffixes = new ArrayList<Morpheme>();
     }
 
     public Morpheme(String string, String tag) {
@@ -92,5 +108,16 @@ public class Morpheme {
 
     public Morpheme copy() {
         return new Morpheme(this);
+    }
+
+    public Morpheme merge(Morpheme suffix) {
+        Morpheme m = new Morpheme(this.getSource() + suffix.getSource(), this.tagNum);
+        m.suffixes.add(suffix);
+        return m;
+    }
+
+    public Morpheme getSuffix() {
+        return suffixes.isEmpty() ? null : suffixes.get(0);
+
     }
 }

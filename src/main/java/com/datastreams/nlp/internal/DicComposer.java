@@ -36,17 +36,25 @@ public class DicComposer {
     };
 
     public static String[] verbFiles = {
-        "verb.dic",  // 용언
+        "verb.dic"  // 용언
     };
 
+    public static String[] suffixFiles = {
+        "suffix.dic"
+    };
+
+    public static String[] josaFiles = {
+        "josa.dic"
+    };
 
     public static void main(String[] args) {
         DicComposer composer = new DicComposer();
 
 
         //composer.buildDicTo("base.dic", wordFiles, new HashMap<String, StringBuilder>());
-        composer.buildDicTo("verb.dic", verbFiles, new HashMap<String, StringBuilder>());
-
+        //composer.buildDicTo("verb.dic", verbFiles, new HashMap<String, StringBuilder>());
+        //composer.buildDicTo("suffix.dic", suffixFiles, new HashMap<String, StringBuilder>());
+        composer.buildDicTo("josa.dic", josaFiles, new HashMap<String, StringBuilder>());
 
     }
 
